@@ -1,15 +1,17 @@
-package com.develhope.spring.admin;
+package com.develhope.spring.Venditore;
 
-public class Amministratore {
+public class Venditore {
 
     private String nome;
     private String cognome;
+    private String telefono;
     private String email;
     private String password;
 
-    public Amministratore(String nome, String cognome, String email, String password) {
+    public Venditore(String nome, String cognome, String telefono, String email, String password) {
         this.nome = nome;
         this.cognome = cognome;
+        this.telefono = telefono;
         this.email = email;
         this.password = password;
     }
@@ -30,6 +32,14 @@ public class Amministratore {
         this.cognome = cognome;
     }
 
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -48,9 +58,10 @@ public class Amministratore {
 
     @Override
     public String toString() {
-        return "Amministratore{" +
+        return "Venditore{" +
                 "nome='" + nome + '\'' +
                 ", cognome='" + cognome + '\'' +
+                ", telefono='" + telefono + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 '}';

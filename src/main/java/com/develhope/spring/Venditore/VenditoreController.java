@@ -1,5 +1,6 @@
-package com.develhope.spring.vendor;
+package com.develhope.spring.Venditore;
 
+import com.develhope.spring.Venditore.Venditore;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -7,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1")
-public class ControllerVenditore {
+public class VenditoreController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/venditore")
     public Venditore logInVenditore(

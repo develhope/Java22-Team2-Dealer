@@ -1,4 +1,4 @@
-package com.develhope.spring.vehicles;
+package com.develhope.spring.Veicoli;
 
 import java.math.BigDecimal;
 

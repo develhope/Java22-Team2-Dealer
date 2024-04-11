@@ -1,5 +1,6 @@
-package com.develhope.spring.customer;
+package com.develhope.spring.Amministratore;
 
+import com.develhope.spring.Amministratore.Amministratore;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -7,16 +8,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1")
-public class ControllerAcquirente {
+public class AmministratoreController {
 
-    @RequestMapping(method = RequestMethod.GET, path = "/acquirente")
-    public Acquirente logInAcquirente(
+    @RequestMapping(method = RequestMethod.GET, path = "/amministratore")
+    public Amministratore logInAmministratore(
             @RequestParam String nome,
             @RequestParam String cognome,
-            @RequestParam String telefono,
             @RequestParam String email,
             @RequestParam String password
     ) {
-        return new Acquirente(nome, cognome, telefono, email, password);
+        return new Amministratore(nome, cognome, email, password);
     }
 }
