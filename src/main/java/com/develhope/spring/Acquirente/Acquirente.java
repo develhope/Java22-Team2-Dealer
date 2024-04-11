@@ -1,4 +1,4 @@
-package com.develhope.spring.customer;
+package com.develhope.spring.Acquirente;
 
 public class Acquirente {
 
