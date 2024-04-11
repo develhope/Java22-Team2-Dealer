@@ -17,9 +17,9 @@ public class Veicoli {
     private boolean nuovoUsato;
     private boolean ordinabile;
     private boolean acquistabile;
-    private boolean nonDisp;
+    private boolean nonDisponibile;
 
-    public Veicoli(String marca, String modello, String cilindrata, String colore, String potenza, String tipoDiCambio, String annoImmatricolazione, String alimentazione, BigDecimal prezzo, String accessori, boolean nuovoUsato, boolean ordinabile, boolean acquistabile, boolean nonDisp) {
+    public Veicoli(String marca, String modello, String cilindrata, String colore, String potenza, String tipoDiCambio, String annoImmatricolazione, String alimentazione, BigDecimal prezzo, String accessori, boolean nuovoUsato, boolean ordinabile, boolean acquistabile, boolean nonDisponibile) {
         this.marca = marca;
         this.modello = modello;
         this.cilindrata = cilindrata;
@@ -33,7 +33,7 @@ public class Veicoli {
         this.nuovoUsato = nuovoUsato;
         this.ordinabile = ordinabile;
         this.acquistabile = acquistabile;
-        this.nonDisp = nonDisp;
+        this.nonDisponibile = nonDisponibile;
     }
 
     public String getMarca() {
@@ -140,12 +140,12 @@ public class Veicoli {
         this.acquistabile = acquistabile;
     }
 
-    public boolean isNonDisp() {
-        return nonDisp;
+    public boolean isNonDisponibile() {
+        return nonDisponibile;
     }
 
-    public void setNonDisp(boolean nonDisp) {
-        this.nonDisp = nonDisp;
+    public void setNonDisponibile(boolean nonDisponibile) {
+        this.nonDisponibile = nonDisponibile;
     }
 
     @Override
@@ -164,7 +164,7 @@ public class Veicoli {
                 ", nuovoUsato=" + nuovoUsato +
                 ", ordinabile=" + ordinabile +
                 ", acquistabile=" + acquistabile +
-                ", nonDisp=" + nonDisp +
+                ", nonDisp=" + nonDisponibile +
                 '}';
     }
 }
