@@ -1,14 +1,14 @@
 package com.develhope.spring.Ordine;
 
-import com.develhope.spring.Veicoli.Veicoli;
+import com.develhope.spring.Veicoli.Veicolo;
 
 public class Ordine {
     private Double anticipo;
     private Boolean flagPagato;
-    private StatoOrdineEnum statoOrdine;
-    private Veicoli veicoloOrdinato;
+    private StatoOrdine statoOrdine;
+    private Veicolo veicoloOrdinato;
 
-    public Ordine(Double anticipo, Boolean pagato, StatoOrdineEnum statoOrdine, Veicoli veicoloOrdinato) {
+    public Ordine(Double anticipo, Boolean pagato, StatoOrdine statoOrdine, Veicolo veicoloOrdinato) {
         this.anticipo = anticipo;
         this.flagPagato = pagato;
         this.statoOrdine = statoOrdine;
@@ -31,19 +31,19 @@ public class Ordine {
         this.flagPagato = flagPagato;
     }
 
-    public StatoOrdineEnum getStatoOrdine() {
+    public StatoOrdine getStatoOrdine() {
         return statoOrdine;
     }
 
-    public void setStatoOrdine(StatoOrdineEnum statoOrdine) {
+    public void setStatoOrdine(StatoOrdine statoOrdine) {
         this.statoOrdine = statoOrdine;
     }
 
-    public Veicoli getVeicoloOrdinato() {
+    public Veicolo getVeicoloOrdinato() {
         return veicoloOrdinato;
     }
 
-    public void setVeicoloOrdinato(Veicoli veicoloOrdinato) {
+    public void setVeicoloOrdinato(Veicolo veicoloOrdinato) {
         this.veicoloOrdinato = veicoloOrdinato;
     }
 
