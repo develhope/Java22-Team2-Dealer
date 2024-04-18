@@ -1,4 +1,4 @@
-package com.develhope.spring.Amministratore;
+package com.develhope.spring.entity;
 
 public class Amministratore {
 

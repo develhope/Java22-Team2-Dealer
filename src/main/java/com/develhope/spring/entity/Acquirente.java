@@ -1,4 +1,4 @@
-package com.develhope.spring.Acquirente;
+package com.develhope.spring.entity;
 
 public class Acquirente {
 

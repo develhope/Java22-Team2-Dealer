@@ -1,4 +1,4 @@
-package com.develhope.spring.Venditore;
+package com.develhope.spring.entity;
 
 public class Venditore {
 
