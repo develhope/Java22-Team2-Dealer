@@ -1,6 +1,4 @@
-package com.develhope.spring.Ordine;
-
-import com.develhope.spring.Veicoli.Veicolo;
+package com.develhope.spring.entity;
 
 public class Ordine {
     private Double anticipo;

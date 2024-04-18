@@ -1,6 +1,4 @@
-package com.develhope.spring.Ordine;
-
-import com.develhope.spring.Veicoli.Veicolo;
+package com.develhope.spring.entity;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
