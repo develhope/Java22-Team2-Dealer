@@ -1,56 +1,47 @@
 package com.develhope.spring.Ordine;
 
-import com.develhope.spring.Veicoli.Veicoli;
+import com.develhope.spring.Veicoli.Veicolo;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 public class Noleggio {
-    private LocalDate dataInizioNoleggio;
-    private LocalDate dataFineNoleggio;
-    private Double costoGiornalieroNoleggio;
-    private Double costoTotaleNoleggio;
+    private OffsetDateTime dataInizio;
+    private OffsetDateTime dataFine;
+    private BigDecimal costoGiornaliero;
     private Boolean flagPagato;
-    private Veicoli veicoloNoleggiato;
+    private Veicolo veicoloNoleggiato;
 
-    public Noleggio(LocalDate dataInizioNoleggio, LocalDate dataFineNoleggio, Double costoGiornalieroNoleggio, Double costoTotaleNoleggio, Boolean flagPagato, Veicoli veicoloNoleggiato) {
-        this.dataInizioNoleggio = dataInizioNoleggio;
-        this.dataFineNoleggio = dataFineNoleggio;
-        this.costoGiornalieroNoleggio = costoGiornalieroNoleggio;
-        this.costoTotaleNoleggio = costoTotaleNoleggio;
+    public Noleggio(OffsetDateTime dataInizio, OffsetDateTime dataFine, BigDecimal costoGiornaliero, Boolean flagPagato, Veicolo veicoloNoleggiato) {
+        this.dataInizio = dataInizio;
+        this.dataFine = dataFine;
+        this.costoGiornaliero = costoGiornaliero;
         this.flagPagato = flagPagato;
         this.veicoloNoleggiato = veicoloNoleggiato;
     }
 
-    public LocalDate getDataInizioNoleggio() {
-        return dataInizioNoleggio;
+    public OffsetDateTime getDataInizio() {
+        return dataInizio;
     }
 
-    public void setDataInizioNoleggio(LocalDate dataInizioNoleggio) {
-        this.dataInizioNoleggio = dataInizioNoleggio;
+    public void setDataInizio(OffsetDateTime dataInizio) {
+        this.dataInizio = dataInizio;
     }
 
-    public LocalDate getDataFineNoleggio() {
-        return dataFineNoleggio;
+    public OffsetDateTime getDataFine() {
+        return dataFine;
     }
 
-    public void setDataFineNoleggio(LocalDate dataFineNoleggio) {
-        this.dataFineNoleggio = dataFineNoleggio;
+    public void setDataFine(OffsetDateTime dataFine) {
+        this.dataFine = dataFine;
     }
 
-    public Double getCostoGiornalieroNoleggio() {
-        return costoGiornalieroNoleggio;
+    public BigDecimal getCostoGiornaliero() {
+        return costoGiornaliero;
     }
 
-    public void setCostoGiornalieroNoleggio(Double costoGiornalieroNoleggio) {
-        this.costoGiornalieroNoleggio = costoGiornalieroNoleggio;
-    }
-
-    public Double getCostoTotaleNoleggio() {
-        return costoTotaleNoleggio;
-    }
-
-    public void setCostoTotaleNoleggio(Double costoTotaleNoleggio) {
-        this.costoTotaleNoleggio = costoTotaleNoleggio;
+    public void setCostoGiornaliero(BigDecimal costoGiornaliero) {
+        this.costoGiornaliero = costoGiornaliero;
     }
 
     public Boolean getFlagPagato() {
@@ -61,21 +52,20 @@ public class Noleggio {
         this.flagPagato = flagPagato;
     }
 
-    public Veicoli getVeicoloNoleggiato() {
+    public Veicolo getVeicoloNoleggiato() {
         return veicoloNoleggiato;
     }
 
-    public void setVeicoloNoleggiato(Veicoli veicoloNoleggiato) {
+    public void setVeicoloNoleggiato(Veicolo veicoloNoleggiato) {
         this.veicoloNoleggiato = veicoloNoleggiato;
     }
 
     @Override
     public String toString() {
         return "Noleggio{" +
-                "dataInizioNoleggio=" + dataInizioNoleggio +
-                ", dataFineNoleggio=" + dataFineNoleggio +
-                ", costoGiornalieroNoleggio=" + costoGiornalieroNoleggio +
-                ", costoTotaleNoleggio=" + costoTotaleNoleggio +
+                "dataInizioNoleggio=" + dataInizio +
+                ", dataFineNoleggio=" + dataFine +
+                ", costoGiornalieroNoleggio=" + costoGiornaliero +
                 ", flagPagato=" + flagPagato +
                 ", veicoloNoleggiato=" + veicoloNoleggiato +
                 '}';

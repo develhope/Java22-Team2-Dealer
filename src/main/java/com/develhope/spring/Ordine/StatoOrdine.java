@@ -1,6 +1,6 @@
 package com.develhope.spring.Ordine;
 
-public enum StatoOrdineEnum {
+public enum StatoOrdine {
     ELIMINATO,
     IN_SOSPESO,
     IN_LAVORAZIONE,

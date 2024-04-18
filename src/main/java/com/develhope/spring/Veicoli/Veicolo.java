@@ -2,7 +2,7 @@ package com.develhope.spring.Veicoli;
 
 import java.math.BigDecimal;
 
-public class Veicoli {
+public class Veicolo {
 
     private String marca;
     private String modello;
@@ -19,7 +19,7 @@ public class Veicoli {
     private boolean acquistabile;
     private boolean nonDisponibile;
 
-    public Veicoli(String marca, String modello, String cilindrata, String colore, String potenza, String tipoDiCambio, String annoImmatricolazione, String alimentazione, BigDecimal prezzo, String accessori, boolean nuovoUsato, boolean ordinabile, boolean acquistabile, boolean nonDisponibile) {
+    public Veicolo(String marca, String modello, String cilindrata, String colore, String potenza, String tipoDiCambio, String annoImmatricolazione, String alimentazione, BigDecimal prezzo, String accessori, boolean nuovoUsato, boolean ordinabile, boolean acquistabile, boolean nonDisponibile) {
         this.marca = marca;
         this.modello = modello;
         this.cilindrata = cilindrata;
