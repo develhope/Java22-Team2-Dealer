@@ -1,9 +1,6 @@
 package com.develhope.spring.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +16,7 @@ public class Veicolo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String marca;
     private String modello;
     private String cilindrata;
@@ -33,5 +31,4 @@ public class Veicolo {
     private Boolean ordinabile;
     private Boolean acquistabile;
     private Boolean nonDisponibile;
-
 }
