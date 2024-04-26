@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/     // <-- modificare con il vostro db
+    url: jdbc:mysql://localhost:3306/dealer
     username: root
-    password:                             // <-- modificare con la vostra password
+    password: Ilcavalierenero
   jpa:
     database: mysql
     show_sql: true

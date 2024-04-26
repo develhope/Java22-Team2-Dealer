@@ -1,57 +1,26 @@
 package com.develhope.spring.entity;
 
+import com.develhope.spring.entity.enums.StatoOrdine;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+@Data
+@AllArgsConstructor
+@Entity
+@NoArgsConstructor
 public class Ordine {
-    private Double anticipo;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private BigDecimal anticipo;
     private Boolean flagPagato;
     private StatoOrdine statoOrdine;
-    private Veicolo veicoloOrdinato;
-
-    public Ordine(Double anticipo, Boolean pagato, StatoOrdine statoOrdine, Veicolo veicoloOrdinato) {
-        this.anticipo = anticipo;
-        this.flagPagato = pagato;
-        this.statoOrdine = statoOrdine;
-        this.veicoloOrdinato = veicoloOrdinato;
-    }
-
-    public Double getAnticipo() {
-        return anticipo;
-    }
-
-    public void setAnticipo(Double anticipo) {
-        this.anticipo = anticipo;
-    }
-
-    public Boolean getFlagPagato() {
-        return flagPagato;
-    }
-
-    public void setFlagPagato(Boolean flagPagato) {
-        this.flagPagato = flagPagato;
-    }
-
-    public StatoOrdine getStatoOrdine() {
-        return statoOrdine;
-    }
-
-    public void setStatoOrdine(StatoOrdine statoOrdine) {
-        this.statoOrdine = statoOrdine;
-    }
-
-    public Veicolo getVeicoloOrdinato() {
-        return veicoloOrdinato;
-    }
-
-    public void setVeicoloOrdinato(Veicolo veicoloOrdinato) {
-        this.veicoloOrdinato = veicoloOrdinato;
-    }
-
-    @Override
-    public String toString() {
-        return "Ordine{" +
-                "anticipo=" + anticipo +
-                ", pagato=" + flagPagato +
-                ", statoOrdine=" + statoOrdine +
-                ", VeicoloOrdinato=" + veicoloOrdinato +
-                '}';
-    }
+    private Long idVeicoloOrdinato;
 }
