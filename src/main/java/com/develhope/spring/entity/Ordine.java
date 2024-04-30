@@ -1,12 +1,10 @@
 package com.develhope.spring.entity;
 
 import com.develhope.spring.entity.enums.StatoOrdine;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
@@ -14,11 +12,13 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Entity
 @NoArgsConstructor
+@Table
 public class Ordine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long ordineId;
+
     private BigDecimal anticipo;
     private Boolean flagPagato;
     private StatoOrdine statoOrdine;

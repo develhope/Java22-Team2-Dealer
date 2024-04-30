@@ -1,9 +1,7 @@
 package com.develhope.spring.service;
 
 import com.develhope.spring.entity.Acquirente;
-import com.develhope.spring.entity.Veicolo;
 import com.develhope.spring.repository.AcquirenteRepository;
-import com.develhope.spring.repository.VeicoloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +14,8 @@ public class AcquirenteService {
     @Autowired
     private AcquirenteRepository acquirenteRepository;
 
-    public Acquirente addAcquirente(Acquirente acquirente) {
-        return acquirenteRepository.save(acquirente);
+    public void addAcquirente(Acquirente acquirente) {
+        acquirenteRepository.save(acquirente);
     }
 
     public Optional<Acquirente> deleteById(Long id) {
@@ -48,8 +46,6 @@ public class AcquirenteService {
 
     public Optional<Acquirente> getById(Long id) {
         return acquirenteRepository.findById(id);
-
     }
-
 
 }

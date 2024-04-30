@@ -3,15 +3,19 @@ package com.develhope.spring.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @AllArgsConstructor
 @Data
+@NoArgsConstructor
+@Table
 public class Amministratore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long amministratoreId;
 
     @Column(nullable = false)
     private String nome;

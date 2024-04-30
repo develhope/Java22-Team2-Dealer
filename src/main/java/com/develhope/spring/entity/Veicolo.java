@@ -3,6 +3,7 @@ package com.develhope.spring.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
@@ -11,11 +12,12 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table
 public class Veicolo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long veicoloId;
 
     private String marca;
     private String modello;
@@ -31,4 +33,5 @@ public class Veicolo {
     private Boolean ordinabile;
     private Boolean acquistabile;
     private Boolean nonDisponibile;
+
 }

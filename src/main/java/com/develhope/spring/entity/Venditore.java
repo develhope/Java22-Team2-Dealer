@@ -3,17 +3,19 @@ package com.develhope.spring.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table
 public class Venditore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long venditoreId;
 
     @Column(nullable = false)
     private String nome;
@@ -29,4 +31,5 @@ public class Venditore {
 
     @Column(nullable = false)
     private String password;
+
 }
