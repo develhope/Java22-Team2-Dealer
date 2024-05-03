@@ -1,7 +1,7 @@
 # Dealer app
 Si scriva un programma in Java utilizzando Spring/Springboot e tutte le librerie accessorie per la gestione di un autosalone.
 
-L’autosalone avrà degli utenti semplici (acquirenti) che possono effettuare l’ordine o l’acquisto di un modello in pronta consegna. O il noleggio di un veicolo.
+L’autosalone avrà degli utenti semplici (acquirenti) che possono effettuare l’ordine o l’acquisto di un modello in pronta consegna. O il noleggio di un vehicle.
 Avrà degli utenti di amministrazione (admin) che potranno aggiungere veicoli in pronta consegna, usati, ordinabili, noleggiabili e potranno gestire le vendite i noleggi e gli ordini.
 Avrà poi dei venditori che gestiranno le vendite e i noleggi.
 
@@ -26,7 +26,7 @@ Per ogni venditore avremo una serie di attributi:
 - password
 
 I veicoli possono essere di diversi tipi: auto, moto, scooter, furgoni.
-Per ogni veicolo avremo una serie di attributi:
+Per ogni vehicle avremo una serie di attributi:
 - Marca
 - Modello
 - Cilindrata
@@ -38,8 +38,8 @@ Per ogni veicolo avremo una serie di attributi:
 - Prezzo
 - Eventuale sconto sul prezzo di listino
 - Eventuali accessori a corredo
-- Flag che identifichi se il veicolo è nuovo o usato
-- Flag che identifichi se il veicolo è ordinabile, acquistabile o non più disponibile
+- Flag che identifichi se il vehicle è nuovo o usato
+- Flag che identifichi se il vehicle è ordinabile, acquistabile o non più disponibile
 
 Per ogni ordine/acquisto avremo:
 - Anticipo
@@ -56,24 +56,24 @@ Per un noleggio avremo:
 - Veicolo noleggiato
 
 Un cliente potrà:
-- Creare un ordine a partire da un veicolo contrassegnato come ordinabile
+- Creare un ordine a partire da un vehicle contrassegnato come ordinabile
 - Vedere i propri ordini
 - Cancellare un ordine
-- Creare un acquisto a partire da un veicolo contrassegnato come acquistabile
+- Creare un acquisto a partire da un vehicle contrassegnato come acquistabile
 - Vedere i propri acquisti
 - Creare un noleggio
 - Vedere i propri noleggi
 - Cancellare un noleggio
 - Cancellare la propria utenza
 - Modificare i dati dell’utente
-- Ricercare un veicolo secondo diversi criteri (prezzo, colore, marca, modello, ecc)
-- Ottenere i dettagli di un veicolo specifico
+- Ricercare un vehicle secondo diversi criteri (prezzo, colore, marca, modello, ecc)
+- Ottenere i dettagli di un vehicle specifico
 
 Un admin potrà:
-- Aggiungere un veicolo
-- Modificare un veicolo
-- Cancellare un veicolo
-- Cambiare lo stato di un veicolo
+- Aggiungere un vehicle
+- Modificare un vehicle
+- Cancellare un vehicle
+- Cambiare lo stato di un vehicle
 - Creare un ordine per un utente
 - Cancellare un ordine per un utente
 - Modificare un ordine per un utente
@@ -91,13 +91,13 @@ Un admin potrà:
 - Modificare un utente
 - Cancellare un venditore
 - Modificare un venditore
-- Ottenere il veicolo più venduto in un dato periodo
-- Ottenere il veicolo con valore più alto venduto fino a quel dato istante
-- Ottenere il veicolo più rircercato/ordinato
+- Ottenere il vehicle più venduto in un dato periodo
+- Ottenere il vehicle con valore più alto venduto fino a quel dato istante
+- Ottenere il vehicle più rircercato/ordinato
 
 Un venditore potrà:
-- Ottenere i dettagli di un veicolo specifico
-- Creare un ordine a partire da un veicolo ordinabile
+- Ottenere i dettagli di un vehicle specifico
+- Creare un ordine a partire da un vehicle ordinabile
 - Cancellare un ordine creato
 - Modificare un ordine creato
 - Verificare lo stato di un ordine specifico

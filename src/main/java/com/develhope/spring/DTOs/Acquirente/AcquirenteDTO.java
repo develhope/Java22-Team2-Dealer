@@ -1,21 +1,21 @@
-package com.develhope.spring.entity;
+package com.develhope.spring.DTOs.Acquirente;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 
-@Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "acquirente")
-@Getter
+@AllArgsConstructor
 @Setter
-public class Acquirente {
+@Getter
 
+public class AcquirenteDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "acquirente_id", nullable = false)
-    private Long id;
+    private Long acquirenteId;
 
     @Column(name = "nome", nullable = false)
     private String nome;
@@ -31,5 +31,5 @@ public class Acquirente {
 
     @Column(name = "password", nullable = false)
     private String password;
-
 }
+

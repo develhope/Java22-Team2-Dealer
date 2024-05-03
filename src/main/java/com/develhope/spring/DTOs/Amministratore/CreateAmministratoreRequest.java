@@ -1,21 +1,15 @@
-package com.develhope.spring.entity;
+package com.develhope.spring.DTOs.Amministratore;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
 import lombok.*;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "venditore")
-@Getter
 @Setter
-public class Venditore {
+@Getter
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "venditore_id", nullable = false)
-    private Long id;
+public class CreateAmministratoreRequest {
 
     @Column(name = "nome", nullable = false)
     private String nome;
@@ -23,13 +17,9 @@ public class Venditore {
     @Column(name = "cognome", nullable = false)
     private String cognome;
 
-    @Column(name = "telefono", nullable = false, unique = true)
-    private long telefono;
-
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "password", nullable = false)
     private String password;
-
 }
