@@ -1,9 +1,7 @@
-package com.develhope.spring.service;
+package com.develhope.spring.Amministratore;
 
-import com.develhope.spring.entity.Acquirente;
-import com.develhope.spring.entity.Amministratore;
-import com.develhope.spring.repository.AcquirenteRepository;
-import com.develhope.spring.repository.AministratoreRepository;
+import com.develhope.spring.Amministratore.Amministratore;
+import com.develhope.spring.Amministratore.AministratoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.develhope.spring.entity.enums;
+package com.develhope.spring.Veicolo;
 
 public enum TipoVeicolo {
     auto, moto, scooter, furgone;

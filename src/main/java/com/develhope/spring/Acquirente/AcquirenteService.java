@@ -1,7 +1,7 @@
-package com.develhope.spring.service;
+package com.develhope.spring.Acquirente;
 
-import com.develhope.spring.entity.Acquirente;
-import com.develhope.spring.repository.AcquirenteRepository;
+import com.develhope.spring.Acquirente.Acquirente;
+import com.develhope.spring.Acquirente.AcquirenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

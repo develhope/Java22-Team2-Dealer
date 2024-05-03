@@ -1,9 +1,9 @@
-package com.develhope.spring.controller;
+package com.develhope.spring.Acquirente;
 
-import com.develhope.spring.entity.Acquirente;
-import com.develhope.spring.entity.Noleggio;
-import com.develhope.spring.service.AcquirenteService;
-import com.develhope.spring.service.NoleggioService;
+import com.develhope.spring.Noleggio.Noleggio;
+import com.develhope.spring.Noleggio.NoleggioService;
+import com.develhope.spring.Ordine.OrdineAcquisto;
+import com.develhope.spring.Ordine.OrdineAcquistoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +20,9 @@ public class AcquirenteController {
 
     @Autowired
     private NoleggioService noleggioService;
+
+    @Autowired
+    private OrdineAcquistoService ordineAcquistoService;
 
     @PostMapping("/add")
     public ResponseEntity<String> addAcquirente(@RequestBody Acquirente acquirente) {
@@ -76,9 +79,7 @@ public class AcquirenteController {
     }
 
     @DeleteMapping("/{acquirenteId}/noleggi/remove/{noleggioId}")
-    public ResponseEntity<String> deleteNoleggioByAcquirenteId(
-            @PathVariable Long acquirenteId,
-            @PathVariable Long noleggioId) {
+    public ResponseEntity<String> deleteNoleggioByAcquirenteId(@PathVariable Long acquirenteId, @PathVariable Long noleggioId) {
         List<Noleggio> noleggi = noleggioService.findByAcquirente(acquirenteId);
         for (Noleggio noleggio : noleggi) {
             if (noleggio.getNoleggioId().equals(noleggioId)) {
@@ -89,4 +90,35 @@ public class AcquirenteController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/{acquirenteId}/ordini")
+    public ResponseEntity<List<OrdineAcquisto>> getOrdiniByAcquirenteId(@PathVariable Long acquirenteId) {
+        List<OrdineAcquisto> ordini = ordineAcquistoService.findOrdiniByAcquirenteId(acquirenteId);
+        if (ordini.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(ordini);
+    }
+
+    @PostMapping("/{acquirenteId}/ordini/add")
+    public ResponseEntity<OrdineAcquisto> addOrdine(@PathVariable Long acquirenteId, @RequestBody OrdineAcquisto ordine) {
+        Acquirente acquirente = acquirenteService.getById(acquirenteId).orElse(null);
+        if (acquirente == null) {
+            return ResponseEntity.notFound().build();
+        }
+        ordine.setAcquirente(acquirente);
+        OrdineAcquisto nuovoOrdine = ordineAcquistoService.createOrdine(ordine);
+        return ResponseEntity.ok(nuovoOrdine);
+    }
+
+    @DeleteMapping("/{acquirenteId}/ordini/remove/{ordineId}")
+    public ResponseEntity<String> deleteOrdineByAcquirenteId(@PathVariable Long acquirenteId, @PathVariable Long ordineId) {
+        List<OrdineAcquisto> ordini = ordineAcquistoService.findOrdiniByAcquirenteId(acquirenteId);
+        for (OrdineAcquisto ordine : ordini) {
+            if (ordine.getOrdineId().equals(ordineId)) {
+                ordineAcquistoService.deleteOrdine(ordineId);
+                return ResponseEntity.ok("Ordine eliminato correttamente.");
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

@@ -1,10 +1,7 @@
-package com.develhope.spring.service;
+package com.develhope.spring.Noleggio;
 
-import com.develhope.spring.entity.Noleggio;
-import com.develhope.spring.repository.AcquirenteRepository;
-import com.develhope.spring.repository.NoleggioRepository;
-import com.develhope.spring.repository.VeicoloRepository;
-import com.develhope.spring.repository.VenditoreRepository;
+import com.develhope.spring.Noleggio.NoleggioRepository;
+import com.develhope.spring.Noleggio.Noleggio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

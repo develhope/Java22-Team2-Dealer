@@ -1,5 +1,9 @@
-package com.develhope.spring.entity;
+package com.develhope.spring.Noleggio;
 
+import com.develhope.spring.Acquirente.Acquirente;
+import com.develhope.spring.Veicolo.Veicolo;
+import com.develhope.spring.Venditore.Venditore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,11 +23,17 @@ public class Noleggio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long noleggioId;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime dataInizio;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private OffsetDateTime dataFine;
+    @Column(nullable = false)
     private BigDecimal costoGiornaliero;
+    @Column(nullable = false)
     private BigDecimal costoTotale;
+    @Column(nullable = false)
     private Boolean flagPagato;
+    @Column(nullable = false)
     private Long idVeicoloNoleggiato;
 
     @ManyToOne

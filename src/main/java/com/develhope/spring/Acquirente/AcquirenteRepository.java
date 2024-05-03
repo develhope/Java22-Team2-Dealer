@@ -1,7 +1,6 @@
-package com.develhope.spring.repository;
+package com.develhope.spring.Acquirente;
 
-import com.develhope.spring.entity.Acquirente;
-import com.develhope.spring.entity.Veicolo;
+import com.develhope.spring.Acquirente.Acquirente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

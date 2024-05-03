@@ -1,4 +1,4 @@
-package com.develhope.spring.entity;
+package com.develhope.spring.Amministratore;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.develhope.spring.entity.enums;
+package com.develhope.spring.Ordine;
 
 public enum StatoOrdine {
     ELIMINATO,

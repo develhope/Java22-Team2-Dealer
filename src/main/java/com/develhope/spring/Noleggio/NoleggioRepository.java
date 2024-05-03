@@ -1,6 +1,6 @@
-package com.develhope.spring.repository;
+package com.develhope.spring.Noleggio;
 
-import com.develhope.spring.entity.Noleggio;
+import com.develhope.spring.Noleggio.Noleggio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

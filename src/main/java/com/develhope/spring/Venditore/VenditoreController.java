@@ -1,7 +1,5 @@
-package com.develhope.spring.controller;
+package com.develhope.spring.Venditore;
 
-import com.develhope.spring.entity.Venditore;
-import jakarta.persistence.Id;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
