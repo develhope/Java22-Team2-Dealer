@@ -1,5 +1,7 @@
 package com.develhope.spring.service;
-
+import com.develhope.spring.DTOs.Acquirente.AcquirenteDTO;
+import com.develhope.spring.DTOs.Acquirente.CreateAcquirenteRequest;
+import com.develhope.spring.Models.AcquirenteModel;
 import com.develhope.spring.entity.Acquirente;
 import com.develhope.spring.repository.AcquirenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +16,11 @@ public class AcquirenteService {
     @Autowired
     private AcquirenteRepository acquirenteRepository;
 
-    public void addAcquirente(Acquirente acquirente) {
-        acquirenteRepository.save(acquirente);
+    // create acquirente
+    public AcquirenteDTO createAcquirente(CreateAcquirenteRequest acquirenteRequest) {
+        AcquirenteModel acquirenteModel = new AcquirenteModel(acquirenteRequest.getNome(), acquirenteRequest.getCognome(), acquirenteRequest.getTelefono(), acquirenteRequest.getEmail(), acquirenteRequest.getPassword());
+        AcquirenteModel acquirenteModel1 =  AcquirenteModel.entityToModel(acquirenteRepository.save(AcquirenteModel.modelToEntity(acquirenteModel)));
+        return AcquirenteModel.modelToDto(acquirenteModel1);
     }
 
     public Optional<Acquirente> deleteById(Long id) {
