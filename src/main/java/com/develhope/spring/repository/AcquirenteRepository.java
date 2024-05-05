@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AcquirenteRepository extends JpaRepository<Acquirente, Long> {
-
+    Acquirente findByEmail(String email);
 }

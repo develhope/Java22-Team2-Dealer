@@ -52,4 +52,15 @@ public class AmministratoreService {
     public Optional<Amministratore> getById(Long id) {
         return amministratoreRepository.findById(id);
     }
+
+
+    public Amministratore register(CreateAmministratoreRequest amministratoreRequest) {
+        Amministratore amministratore = new Amministratore();
+        amministratore.setNome(amministratoreRequest.getNome());
+        amministratore.setCognome(amministratoreRequest.getCognome());
+        amministratore.setEmail(amministratoreRequest.getEmail());
+        amministratore.setPassword(amministratoreRequest.getPassword());  // dovresti criptare la password
+        return amministratoreRepository.save(amministratore);
+    }
+
 }

@@ -20,8 +20,7 @@ public class Noleggio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "noleggio_id")
     private Long noleggioId;
-
-    @Column(name = "data_inizio", insertable = false, updatable = false)
+    @Column(name = "data_inizio", updatable = false)
     private OffsetDateTime dataInizio;
     @Column(name = "data_fine", nullable = false)
     private OffsetDateTime dataFine;
@@ -31,8 +30,6 @@ public class Noleggio {
     private BigDecimal costoTotale;
     @Column(name = "flag_pagato", nullable = false)
     private Boolean flagPagato;
-    @Column(name = "id_veicolo_noleggiato", nullable = false)
-    private Long idVeicoloNoleggiato;
 
     @ManyToOne
     @JoinColumn(name = "acquirente_id", referencedColumnName = "acquirente_id", nullable = false)

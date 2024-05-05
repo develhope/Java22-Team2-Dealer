@@ -56,4 +56,14 @@ public class AmministratoreController {
     public Optional<Amministratore> getById(@PathVariable Long id) {
         return amministratoreService.getById(id);
     }
+
+    @PostMapping("/register/amministratore")
+    public ResponseEntity<?> registerAmministratore(@RequestBody CreateAmministratoreRequest createAmministratoreRequest) {
+        Amministratore amministratore = amministratoreService.register(createAmministratoreRequest);
+        if (amministratore == null) {
+            return ResponseEntity.badRequest().body("Errore durante la registrazione dell'amministratore");
+        }
+        return ResponseEntity.ok("Amministratore registrato con successo");
+    }
+
 }

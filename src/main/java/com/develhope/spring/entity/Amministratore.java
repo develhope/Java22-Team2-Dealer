@@ -16,16 +16,12 @@ public class Amministratore {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_amministratore", nullable = false)
     private Long amministratoreId;
-
     @Column(name = "nome", nullable = false)
     private String nome;
-
     @Column(name = "cognome", nullable = false)
     private String cognome;
-
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-
     @Column(name = "password", nullable = false)
     private String password;
 }

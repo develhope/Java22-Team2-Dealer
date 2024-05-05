@@ -3,12 +3,10 @@ package com.develhope.spring.service;
 import com.develhope.spring.DTOs.Venditore.CreateVenditoreRequest;
 import com.develhope.spring.DTOs.Venditore.VenditoreDTO;
 import com.develhope.spring.Models.VenditoreModel;
-import com.develhope.spring.entity.Acquirente;
 import com.develhope.spring.entity.Venditore;
 import com.develhope.spring.repository.VenditoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +54,15 @@ public class VenditoreService {
             venditoreRepository.deleteById(id);
         }
         return optionalVenditore;
+    }
+
+    public Venditore register(CreateVenditoreRequest venditoreRequest) {
+        Venditore venditore = new Venditore();
+        venditore.setNome(venditoreRequest.getNome());
+        venditore.setCognome(venditoreRequest.getCognome());
+        venditore.setEmail(venditoreRequest.getEmail());
+        venditore.setPassword(venditoreRequest.getPassword());  // dovresti criptare la password
+        return venditoreRepository.save(venditore);
     }
 
 }

@@ -53,4 +53,13 @@ public class AcquirenteService {
         return acquirenteRepository.findById(id);
     }
 
+    public Acquirente register(CreateAcquirenteRequest acquirenteRequest) {
+        Acquirente acquirente = new Acquirente();
+        acquirente.setNome(acquirenteRequest.getNome());
+        acquirente.setCognome(acquirenteRequest.getCognome());
+        acquirente.setEmail(acquirenteRequest.getEmail());
+        acquirente.setPassword(acquirenteRequest.getPassword());  // dovresti criptare la password
+        return acquirenteRepository.save(acquirente);
+    }
+
 }
