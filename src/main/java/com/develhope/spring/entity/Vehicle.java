@@ -1,20 +1,20 @@
 package com.develhope.spring.entity;
 
 import com.develhope.spring.entity.enums.Allestimento;
+import com.develhope.spring.entity.enums.TipoOrdine;
 import com.develhope.spring.entity.enums.TipoVeicolo;
 import com.develhope.spring.entity.enums.VehicleCondition;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.Year;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "vehicle")
-@Getter
-@Setter
 public class Vehicle {
 
     @Id
@@ -29,7 +29,7 @@ public class Vehicle {
     @Column(name = "modello", nullable = false)
     private String modello;
     @Column(name = "cilindrata", nullable = false)
-    private double cilindrata;
+    private int cilindrata;
     @Column(name = "colore", nullable = false)
     private String colore;
     @Column(name = "potenza", nullable = false)
@@ -37,7 +37,7 @@ public class Vehicle {
     @Column(name = "tipoDiCambio", nullable = false)
     private String tipoDiCambio;
     @Column(name = "annoImmatricolazione", nullable = false)
-    private String annoImmatricolazione;
+    private int annoImmatricolazione;
     @Column(name = "alimentazione", nullable = false)
     private String alimentazione;
     @Column(name = "prezzo", nullable = false)
@@ -50,11 +50,7 @@ public class Vehicle {
     @Enumerated(EnumType.STRING)
     @Column(name = "vehicleCondition", nullable = false)
     private VehicleCondition vehicleCondition;
-    @Column(name = "ordinabile", nullable = false)
-    private Boolean ordinabile;
-    @Column(name = "acquistabile", nullable = false)
-    private Boolean acquistabile;
-    @Column(name = "nonDisponibile", nullable = false)
-    private Boolean nonDisponibile;
+    @Column(name = "tipoOrdine", nullable = false)
+    private TipoOrdine tipoOrdine;
 
 }

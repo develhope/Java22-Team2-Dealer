@@ -4,11 +4,18 @@ import com.develhope.spring.DTOs.Vehicle.CreateVehicleRequest;
 import com.develhope.spring.DTOs.Vehicle.VehicleDTO;
 import com.develhope.spring.Models.VehicleModel;
 import com.develhope.spring.entity.Vehicle;
+import com.develhope.spring.entity.enums.Allestimento;
+import com.develhope.spring.entity.enums.TipoOrdine;
+import com.develhope.spring.entity.enums.TipoVeicolo;
+import com.develhope.spring.entity.enums.VehicleCondition;
 import com.develhope.spring.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +26,7 @@ public class VehicleService {
     private VehicleRepository vehicleRepository;
 
     public VehicleDTO createVehicle(CreateVehicleRequest vehicleRequest){
-        VehicleModel vehicle = new VehicleModel(vehicleRequest.getMarca(), vehicleRequest.getTipoVeicolo(), vehicleRequest.getModello(), vehicleRequest.getCilindrata(), vehicleRequest.getColore(), vehicleRequest.getPotenza(), vehicleRequest.getTipoDiCambio(), vehicleRequest.getAnnoImmatricolazione(), vehicleRequest.getAlimentazione(), vehicleRequest.getPrezzo(),vehicleRequest.getAllestimento(), vehicleRequest.getAccessori(),vehicleRequest.getVehicleCondition(),vehicleRequest.getOrdinabile(),vehicleRequest.getAcquistabile(),vehicleRequest.getNonDisponibile());
+        VehicleModel vehicle = new VehicleModel(vehicleRequest.getMarca(), vehicleRequest.getTipoVeicolo(), vehicleRequest.getModello(), vehicleRequest.getCilindrata(), vehicleRequest.getColore(), vehicleRequest.getPotenza(), vehicleRequest.getTipoDiCambio(), vehicleRequest.getAnnoImmatricolazione(), vehicleRequest.getAlimentazione(), vehicleRequest.getPrezzo(),vehicleRequest.getAllestimento(), vehicleRequest.getAccessori(),vehicleRequest.getVehicleCondition(),vehicleRequest.getTipoOrdine());
         VehicleModel vehicleModel1 =  VehicleModel.entityToModel(vehicleRepository.save(VehicleModel.modelToEntity(vehicle)));
         return VehicleModel.modelToDto(vehicleModel1);
     }
@@ -33,10 +40,6 @@ public class VehicleService {
         }
     }
 
-    public void addVeicolo(Vehicle vehicle) {
-        vehicleRepository.save(vehicle);
-    }
-
     public Optional<Vehicle> findById(Long id) {
         return vehicleRepository.findById(id);
     }
@@ -45,8 +48,57 @@ public class VehicleService {
         return vehicleRepository.searchByMarca(marca);
     }
 
-    public void deleteById(Long id) {
-        vehicleRepository.deleteById(id);
+    public List<Vehicle> searchByModello(String modello) {
+        return vehicleRepository.searchByModello(modello);
     }
+
+    public List<Vehicle> searchByTipoVeicolo(TipoVeicolo tipoVeicolo) {
+        return vehicleRepository.searchByTipoVeicolo(tipoVeicolo);
+    }
+
+    public List<Vehicle> searchByCilindrata(int cilindrata) {
+        return vehicleRepository.searchByCilindrata(cilindrata);
+    }
+
+    public List<Vehicle> searchByColore(String colore) {
+        return vehicleRepository.searchByColore(colore);
+    }
+
+    public List<Vehicle> searchByPotenza(int potenza) {
+        return vehicleRepository.searchByPotenza(potenza);
+    }
+
+    public List<Vehicle> searchByTipoDiCambio(String cambio) {
+        return vehicleRepository.searchByTipoDiCambio(cambio);
+    }
+
+    public List<Vehicle> searchByAnnoImmatricolazione(Integer annoImmatricolazione) {
+        return vehicleRepository.searchByAnnoImmatricolazione(annoImmatricolazione);
+    }
+
+    public List<Vehicle> searchByAlimentazione(String alimentazione) {
+        return vehicleRepository.searchByAlimentazione(alimentazione);
+    }
+
+    public List<Vehicle> searchByPrezzo(BigDecimal prezzo) {
+        return vehicleRepository.searchByPrezzo(prezzo);
+    }
+
+    public List<Vehicle> searchByAllestimento(Allestimento allestimento) {
+        return vehicleRepository.searchByAllestimento(allestimento);
+    }
+
+    public List<Vehicle> searchByAccessori(String accessori) {
+        return vehicleRepository.searchByAccessori(accessori);
+    }
+
+    public List<Vehicle> searchByVehicleCondition(VehicleCondition vehicleCondition) {
+        return vehicleRepository.searchByVehicleCondition(vehicleCondition);
+    }
+
+    public List<Vehicle> searchByTipoOrdine(TipoOrdine tipoOrdine) {
+        return vehicleRepository.searchByTipoOrdine(tipoOrdine);
+    }
+
 
 }

@@ -6,6 +6,7 @@ import com.develhope.spring.Models.OrdineModel;
 import com.develhope.spring.entity.Acquirente;
 import com.develhope.spring.entity.Vehicle;
 import com.develhope.spring.entity.Venditore;
+import com.develhope.spring.entity.enums.TipoOrdine;
 import com.develhope.spring.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class OrdineService {
 
         if (acquirente == null || vehicle == null || venditore == null ) {
             throw new IllegalArgumentException("Acquirente, Vehicle o Venditore non trovato");
-        } else if (!vehicle.getAcquistabile()) {
+        } else if (vehicle.getTipoOrdine() == TipoOrdine.NON_DISPONIBILE) {
             throw new IllegalArgumentException("Veicolo non acquistabile");
         }
 
