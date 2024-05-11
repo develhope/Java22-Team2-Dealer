@@ -33,7 +33,6 @@ public class VenditoreController {
         }
     }
 
-
     // rotta cancellazione venditore OK
     @DeleteMapping("/remove/{id}")
     public ResponseEntity<String> deleteVenditoreById(@PathVariable Long id) {
@@ -50,8 +49,7 @@ public class VenditoreController {
         return venditoreService.getAllVenditori();
     }
 
-
-//set id
+    //set id
     @PutMapping("/set/{id}")
     public ResponseEntity<String> setVenditoreById(@PathVariable Long id, @RequestBody Venditore venditoreMod) {
         Venditore venditore = venditoreService.updateVenditore(id, venditoreMod);

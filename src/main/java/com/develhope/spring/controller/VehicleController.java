@@ -25,6 +25,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/veicolo")
 public class VehicleController {
+
     @Autowired
     private VehicleService vehicleService;
 
@@ -60,7 +61,6 @@ public class VehicleController {
     public Optional<Vehicle> findById(@PathVariable Long id) {
         return vehicleService.findById(id);
     }
-
 
     @GetMapping("/modello/{modello}")
     public ResponseEntity<?> getByModello(@PathVariable String modello) {
@@ -180,36 +180,35 @@ public class VehicleController {
         }
     }
 
-        @GetMapping("/allestimento/{allestimento}")
-        public List<Vehicle> getByAllestimento (@PathVariable String allestimento){
-            Allestimento tipo = switch (allestimento.toUpperCase()) {
-                case "BASE" -> Allestimento.BASE;
-                case "SPORT" -> Allestimento.SPORT;
-                case "BUSINESS" -> Allestimento.BUSINESS;
-                default -> throw new IllegalArgumentException("Tipo di allestimento non valido: " + allestimento);
-            };
-            return vehicleService.searchByAllestimento(tipo);
-        }
-
-        @GetMapping("/tipoOrdine/{tipoOrdine}")
-        public List<Vehicle> getByTipoOrdine (@PathVariable String tipoOrdine){
-            TipoOrdine tipo = switch (tipoOrdine.toUpperCase()) {
-                case "ACQUISTABILE" -> TipoOrdine.ACQUISTABILE;
-                case "ORDINABILE" -> TipoOrdine.ORDINABILE;
-                default -> TipoOrdine.NON_DISPONIBILE;
-            };
-            return vehicleService.searchByTipoOrdine(tipo);
-        }
-
-        @GetMapping("/vehicleCondition/{vehicleCondition}")
-        public List<Vehicle> getByVehicleCondition (@PathVariable String vehicleCondition){
-            VehicleCondition tipo = switch (vehicleCondition.toUpperCase()) {
-                case "NUOVO" -> VehicleCondition.NUOVO;
-                case "USATO" -> VehicleCondition.USATO;
-                default -> throw new IllegalArgumentException("Tipo di condizione non valida: " + vehicleCondition);
-            };
-            return vehicleService.searchByVehicleCondition(tipo);
-        }
-
-
+    @GetMapping("/allestimento/{allestimento}")
+    public List<Vehicle> getByAllestimento (@PathVariable String allestimento){
+        Allestimento tipo = switch (allestimento.toUpperCase()) {
+            case "BASE" -> Allestimento.BASE;
+            case "SPORT" -> Allestimento.SPORT;
+            case "BUSINESS" -> Allestimento.BUSINESS;
+            default -> throw new IllegalArgumentException("Tipo di allestimento non valido: " + allestimento);
+        };
+        return vehicleService.searchByAllestimento(tipo);
     }
+
+    @GetMapping("/tipoOrdine/{tipoOrdine}")
+    public List<Vehicle> getByTipoOrdine (@PathVariable String tipoOrdine){
+        TipoOrdine tipo = switch (tipoOrdine.toUpperCase()) {
+            case "ACQUISTABILE" -> TipoOrdine.ACQUISTABILE;
+            case "ORDINABILE" -> TipoOrdine.ORDINABILE;
+            default -> TipoOrdine.NON_DISPONIBILE;
+        };
+        return vehicleService.searchByTipoOrdine(tipo);
+    }
+
+    @GetMapping("/vehicleCondition/{vehicleCondition}")
+    public List<Vehicle> getByVehicleCondition (@PathVariable String vehicleCondition){
+        VehicleCondition tipo = switch (vehicleCondition.toUpperCase()) {
+            case "NUOVO" -> VehicleCondition.NUOVO;
+            case "USATO" -> VehicleCondition.USATO;
+            default -> throw new IllegalArgumentException("Tipo di condizione non valida: " + vehicleCondition);
+        };
+        return vehicleService.searchByVehicleCondition(tipo);
+    }
+
+}

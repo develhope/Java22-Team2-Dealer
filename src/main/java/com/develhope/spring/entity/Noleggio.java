@@ -12,14 +12,13 @@ import java.time.OffsetDateTime;
 @Data
 @NoArgsConstructor
 @Table(name = "noleggio")
-@Getter
-@Setter
 public class Noleggio {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "noleggio_id")
     private Long noleggioId;
+
     @Column(name = "data_inizio", updatable = false)
     private OffsetDateTime dataInizio;
     @Column(name = "data_fine", nullable = false)

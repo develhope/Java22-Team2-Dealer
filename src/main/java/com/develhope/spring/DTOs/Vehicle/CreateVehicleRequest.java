@@ -12,7 +12,6 @@ import java.time.Year;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class CreateVehicleRequest {
 
     private String marca;
@@ -29,4 +28,5 @@ public class CreateVehicleRequest {
     private String accessori;
     private VehicleCondition vehicleCondition;
     private TipoOrdine tipoOrdine;
+
 }

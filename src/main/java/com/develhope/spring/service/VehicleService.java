@@ -40,12 +40,30 @@ public class VehicleService {
         }
     }
 
+    public void addVeicolo(Vehicle vehicle) {
+        vehicleRepository.save(vehicle);
+    }
+
     public Optional<Vehicle> findById(Long id) {
         return vehicleRepository.findById(id);
     }
 
     public List<Vehicle> searchByMarca(String marca) {
         return vehicleRepository.searchByMarca(marca);
+    }
+
+    public void deleteById(Long id) {
+        vehicleRepository.deleteById(id);
+    }
+
+    public ResponseEntity<?> getVehicleCondition(Long id) {
+        Optional<Vehicle> optionalVehicle = vehicleRepository.findById(id);
+        if (optionalVehicle.isPresent()) {
+            Vehicle vehicle = optionalVehicle.get();
+            return ResponseEntity.ok(vehicle.getVehicleCondition());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     public List<Vehicle> searchByModello(String modello) {
@@ -99,6 +117,5 @@ public class VehicleService {
     public List<Vehicle> searchByTipoOrdine(TipoOrdine tipoOrdine) {
         return vehicleRepository.searchByTipoOrdine(tipoOrdine);
     }
-
 
 }

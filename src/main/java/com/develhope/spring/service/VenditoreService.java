@@ -65,4 +65,17 @@ public class VenditoreService {
         return venditoreRepository.save(venditore);
     }
 
+    public Venditore updateVenditore(Long id, CreateVenditoreRequest updateVenditoreRequest) {
+        Venditore venditore = venditoreRepository.findById(id).orElse(null);
+        if(venditore != null) {
+            venditore.setNome(updateVenditoreRequest.getNome());
+            venditore.setCognome(updateVenditoreRequest.getCognome());
+            venditore.setTelefono(updateVenditoreRequest.getTelefono());
+            venditore.setEmail(updateVenditoreRequest.getEmail());
+            venditore.setPassword(updateVenditoreRequest.getPassword());
+            return venditoreRepository.save(venditore);
+        }
+        return null;
+    }
+
 }

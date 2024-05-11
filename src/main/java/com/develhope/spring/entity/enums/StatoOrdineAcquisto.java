@@ -1,6 +1,6 @@
 package com.develhope.spring.entity.enums;
 
-public enum StatoOrdine {
+public enum StatoOrdineAcquisto {
     ELIMINATO,
     IN_SOSPESO,
     IN_LAVORAZIONE,

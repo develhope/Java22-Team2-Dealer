@@ -17,11 +17,11 @@ public class VenditoreModel {
     private Long venditoreId;
     private String nome;
     private String cognome;
-    private long telefono;
+    private String telefono;
     private String email;
     private String password;
 
-    public VenditoreModel(String nome, String cognome, long telefono, String email, String password) {
+    public VenditoreModel(String nome, String cognome, String telefono, String email, String password) {
         this.nome = nome;
         this.cognome = cognome;
         this.telefono = telefono;
@@ -29,7 +29,7 @@ public class VenditoreModel {
         this.password = password;
     }
 
-    public VenditoreModel(Long venditoreId, String nome, String cognome, long telefono, String email, String password) {
+    public VenditoreModel(Long venditoreId, String nome, String cognome, String telefono, String email, String password) {
         this.venditoreId = venditoreId;
         this.nome = nome;
         this.cognome = cognome;
