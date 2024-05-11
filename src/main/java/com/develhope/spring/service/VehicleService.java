@@ -4,6 +4,7 @@ import com.develhope.spring.DTOs.Vehicle.CreateVehicleRequest;
 import com.develhope.spring.DTOs.Vehicle.VehicleDTO;
 import com.develhope.spring.Models.VehicleModel;
 import com.develhope.spring.entity.Vehicle;
+import com.develhope.spring.entity.enums.VehicleCondition;
 import com.develhope.spring.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,4 +50,13 @@ public class VehicleService {
         vehicleRepository.deleteById(id);
     }
 
+    public ResponseEntity<?> getVehicleCondition(Long id) {
+        Optional<Vehicle> optionalVehicle = vehicleRepository.findById(id);
+        if (optionalVehicle.isPresent()) {
+            Vehicle vehicle = optionalVehicle.get();
+            return ResponseEntity.ok(vehicle.getVehicleCondition());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

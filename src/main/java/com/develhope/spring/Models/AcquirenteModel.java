@@ -18,11 +18,11 @@ public class AcquirenteModel {
     private Long acquirenteId;
     private String nome;
     private String cognome;
-    private long telefono;
+    private String telefono;
     private String email;
     private String password;
 
-    public AcquirenteModel(Long acquirenteId, String nome, String cognome, long telefono, String email, String password) {
+    public AcquirenteModel(Long acquirenteId, String nome, String cognome, String telefono, String email, String password) {
         this.acquirenteId = acquirenteId;
         this.nome = nome;
         this.cognome = cognome;
@@ -31,7 +31,7 @@ public class AcquirenteModel {
         this.password = password;
     }
 
-    public AcquirenteModel(String nome, String cognome, long telefono, String email, String password) {
+    public AcquirenteModel(String nome, String cognome, String telefono, String email, String password) {
 
         this.nome = nome;
         this.cognome = cognome;

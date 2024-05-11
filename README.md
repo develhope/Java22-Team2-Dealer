@@ -1,7 +1,7 @@
 # Dealer app
 Si scriva un programma in Java utilizzando Spring/Springboot e tutte le librerie accessorie per la gestione di un autosalone.
 
-L’autosalone avrà degli utenti semplici (acquirenti) che possono effettuare l’ordine o l’acquisto di un modello in pronta consegna. O il noleggio di un vehicle.
+L’autosalone avrà degli utenti semplici (acquirenti) che possono effettuare l’ordineAcquisto o l’acquisto di un modello in pronta consegna. O il noleggio di un vehicle.
 Avrà degli utenti di amministrazione (admin) che potranno aggiungere veicoli in pronta consegna, usati, ordinabili, noleggiabili e potranno gestire le vendite i noleggi e gli ordini.
 Avrà poi dei venditori che gestiranno le vendite e i noleggi.
 
@@ -41,10 +41,10 @@ Per ogni vehicle avremo una serie di attributi:
 - Flag che identifichi se il vehicle è nuovo o usato
 - Flag che identifichi se il vehicle è ordinabile, acquistabile o non più disponibile
 
-Per ogni ordine/acquisto avremo:
+Per ogni ordineAcquisto/acquisto avremo:
 - Anticipo
 - Flag pagato
-- Stato ordine
+- Stato ordineAcquisto
 - Veicolo ordinato/acquistato
 
 Per un noleggio avremo:
@@ -56,9 +56,9 @@ Per un noleggio avremo:
 - Veicolo noleggiato
 
 Un cliente potrà:
-- Creare un ordine a partire da un vehicle contrassegnato come ordinabile
+- Creare un ordineAcquisto a partire da un vehicle contrassegnato come ordinabile
 - Vedere i propri ordini
-- Cancellare un ordine
+- Cancellare un ordineAcquisto
 - Creare un acquisto a partire da un vehicle contrassegnato come acquistabile
 - Vedere i propri acquisti
 - Creare un noleggio
@@ -74,9 +74,9 @@ Un admin potrà:
 - Modificare un vehicle
 - Cancellare un vehicle
 - Cambiare lo stato di un vehicle
-- Creare un ordine per un utente
-- Cancellare un ordine per un utente
-- Modificare un ordine per un utente
+- Creare un ordineAcquisto per un utente
+- Cancellare un ordineAcquisto per un utente
+- Modificare un ordineAcquisto per un utente
 - Creare un noleggio per un utente
 - Cancellare un noleggio per un utente
 - Modificare un noleggio per un utente
@@ -97,11 +97,11 @@ Un admin potrà:
 
 Un venditore potrà:
 - Ottenere i dettagli di un vehicle specifico
-- Creare un ordine a partire da un vehicle ordinabile
-- Cancellare un ordine creato
-- Modificare un ordine creato
-- Verificare lo stato di un ordine specifico
-- Aggiornare lo stato di un ordine specifico
+- Creare un ordineAcquisto a partire da un vehicle ordinabile
+- Cancellare un ordineAcquisto creato
+- Modificare un ordineAcquisto creato
+- Verificare lo stato di un ordineAcquisto specifico
+- Aggiornare lo stato di un ordineAcquisto specifico
 - Verificare tutti gli ordini filtrati per uno stato
 - Creare un noleggio
 - Cancellare un noleggio

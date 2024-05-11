@@ -24,4 +24,5 @@ public class Amministratore {
     private String email;
     @Column(name = "password", nullable = false)
     private String password;
+
 }

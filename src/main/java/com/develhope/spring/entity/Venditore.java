@@ -21,7 +21,7 @@ public class Venditore {
     @Column(name = "cognome", nullable = false)
     private String cognome;
     @Column(name = "telefono", nullable = false, unique = true)
-    private long telefono;
+    private String telefono;
     @Column(name = "email", nullable = false, unique = true)
     private String email;
     @Column(name = "password", nullable = false)

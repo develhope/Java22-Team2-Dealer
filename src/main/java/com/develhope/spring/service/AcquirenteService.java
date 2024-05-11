@@ -62,4 +62,16 @@ public class AcquirenteService {
         return acquirenteRepository.save(acquirente);
     }
 
+    public Acquirente updateAcquirente(Long id, CreateAcquirenteRequest updateAcquirenteRequest) {
+        Acquirente acquirente = acquirenteRepository.findById(id).orElse(null);
+        if(acquirente != null) {
+            acquirente.setNome(updateAcquirenteRequest.getNome());
+            acquirente.setCognome(updateAcquirenteRequest.getCognome());
+            acquirente.setTelefono(updateAcquirenteRequest.getTelefono());
+            acquirente.setEmail(updateAcquirenteRequest.getEmail());
+            acquirente.setPassword(updateAcquirenteRequest.getPassword());
+            return acquirenteRepository.save(acquirente);
+        }
+        return null;
+    }
 }

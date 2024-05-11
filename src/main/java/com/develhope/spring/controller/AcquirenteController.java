@@ -4,14 +4,14 @@ import com.develhope.spring.DTOs.Acquirente.AcquirenteDTO;
 import com.develhope.spring.DTOs.Acquirente.CreateAcquirenteRequest;
 import com.develhope.spring.DTOs.Noleggio.CreateNoleggioRequest;
 import com.develhope.spring.DTOs.Noleggio.NoleggioDTO;
-import com.develhope.spring.DTOs.Ordine.CreateOrdineRequest;
-import com.develhope.spring.DTOs.Ordine.OrdineDTO;
+import com.develhope.spring.DTOs.Ordine.CreateOrdineAcquistoRequest;
+import com.develhope.spring.DTOs.Ordine.OrdineAcquistoDTO;
 import com.develhope.spring.Models.NoleggioModel;
 import com.develhope.spring.entity.Acquirente;
 import com.develhope.spring.entity.Noleggio;
 import com.develhope.spring.service.AcquirenteService;
 import com.develhope.spring.service.NoleggioService;
-import com.develhope.spring.service.OrdineService;
+import com.develhope.spring.service.OrdineAcquistoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -31,7 +31,7 @@ public class AcquirenteController {
     private NoleggioService noleggioService;
 
     @Autowired
-    private OrdineService ordineService;
+    private OrdineAcquistoService ordineAcquistoService;
 
     // rotta creazione acquirente
     @PostMapping("/add")
@@ -98,14 +98,14 @@ public class AcquirenteController {
         if (acquirente == null) {
             return ResponseEntity.badRequest().body("Acquirente non trovato con ID: " + acquirenteId);
         }
-        NoleggioDTO nuovoNoleggio = noleggioService.createNoleggio(createNoleggioRequest);
+        NoleggioDTO nuovoNoleggio = noleggioService.createNoleggioForAcquirente(acquirenteId, createNoleggioRequest);
         if (nuovoNoleggio == null) {
             return ResponseEntity.badRequest().body("Impossibile creare il noleggio");
         }
         return ResponseEntity.ok(nuovoNoleggio);
     }
 
-// rotta cancellazione noleggio
+    // rotta cancellazione noleggio
     @DeleteMapping("/{acquirenteId}/noleggi/remove/{noleggioId}")
     public ResponseEntity<String> deleteNoleggioByAcquirenteId(
             @PathVariable Long acquirenteId,
@@ -120,15 +120,16 @@ public class AcquirenteController {
 
     // rotta creazione ordine dell'acquirente
     @PostMapping("/{acquirenteId}/ordine/add")
-    public ResponseEntity<?> addOrdine(@Validated @PathVariable Long acquirenteId, @Validated @RequestBody CreateOrdineRequest createOrdineRequest) {
+    public ResponseEntity<?> addOrdine(@Validated @PathVariable Long acquirenteId, @Validated @RequestBody CreateOrdineAcquistoRequest createOrdineAcquistoRequest) {
         Acquirente acquirente = acquirenteService.getById(acquirenteId).orElse(null);
         if (acquirente == null) {
             return ResponseEntity.badRequest().body("Acquirente non trovato con ID: " + acquirenteId);
         }
-        OrdineDTO nuovoOrdine = ordineService.createOrdine(createOrdineRequest);
+        OrdineAcquistoDTO nuovoOrdine = ordineAcquistoService.createOrdineAcquisto(acquirenteId, createOrdineAcquistoRequest);
         if (nuovoOrdine == null) {
             return ResponseEntity.badRequest().body("Impossibile creare l'ordine");
         }
         return ResponseEntity.ok(nuovoOrdine);
     }
+
 }
