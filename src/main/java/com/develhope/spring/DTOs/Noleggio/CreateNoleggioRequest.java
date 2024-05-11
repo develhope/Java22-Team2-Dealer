@@ -8,7 +8,6 @@ import java.time.OffsetDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class CreateNoleggioRequest {
 
     private OffsetDateTime dataInizio;
@@ -19,4 +18,5 @@ public class CreateNoleggioRequest {
     private Long acquirenteId;
     private Long vehicleId;
     private Long venditoreId;
+
 }

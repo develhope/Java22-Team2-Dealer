@@ -11,10 +11,10 @@ import java.time.OffsetDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class NoleggioDTO {
 
     private Long noleggioId;
+
     private OffsetDateTime dataInizio;
     private OffsetDateTime dataFine;
     private BigDecimal costoGiornaliero;
@@ -23,4 +23,5 @@ public class NoleggioDTO {
     private Acquirente acquirente;
     private Vehicle vehicle;
     private Venditore venditore;
+
 }

@@ -12,10 +12,10 @@ import java.time.Year;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class VehicleDTO {
 
     private Long veicoloId;
+
     private String marca;
     private TipoVeicolo tipoVeicolo;
     private String modello;

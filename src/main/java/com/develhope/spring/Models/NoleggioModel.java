@@ -16,7 +16,6 @@ import java.time.OffsetDateTime;
 @Data
 @Setter
 @Getter
-
 public class NoleggioModel {
 
     @Id

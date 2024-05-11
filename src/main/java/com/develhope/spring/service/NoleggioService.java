@@ -38,30 +38,6 @@ public class NoleggioService {
     @Autowired
     private VenditoreRepository venditoreRepository;
 
-    // create noleggio
-    public NoleggioDTO createNoleggio(CreateNoleggioRequest createNoleggioRequest) {
-        OffsetDateTime dateTime = createNoleggioRequest.getDataInizio() != null ? createNoleggioRequest.getDataInizio() : OffsetDateTime.now();
-        OffsetDateTime dateTime2 = createNoleggioRequest.getDataFine();
-
-        Acquirente acquirente = acquirenteRepository.findById(createNoleggioRequest.getAcquirenteId()).orElse(null);
-        Vehicle vehicle = vehicleRepository.findById(createNoleggioRequest.getVehicleId()).orElse(null);
-        Venditore venditore = venditoreRepository.findById(createNoleggioRequest.getVenditoreId()).orElse(null);
-
-        if (acquirente == null || vehicle == null || venditore == null ) {
-            throw new IllegalArgumentException("Acquirente, Vehicle o Venditore non trovato");
-        } else if (vehicle.getTipoOrdine() == TipoOrdine.NON_DISPONIBILE) {
-            throw new IllegalArgumentException("Veicolo non ordinabile");
-        }
-
-        long numeroGiorni = ChronoUnit.DAYS.between(dateTime, dateTime2);
-
-        BigDecimal costoTotale = createNoleggioRequest.getCostoGiornaliero().multiply(BigDecimal.valueOf(numeroGiorni));
-
-        NoleggioModel noleggioModel = new NoleggioModel(dateTime, dateTime2, createNoleggioRequest.getCostoGiornaliero(), costoTotale, createNoleggioRequest.getFlagPagato(), acquirente, vehicle, venditore);
-        NoleggioModel noleggioModel1 = NoleggioModel.entityToModel(noleggioRepository.save(NoleggioModel.modelToEntity(noleggioModel)));
-        return NoleggioModel.modelToDto(noleggioModel1);
-    }
-
     // delete noleggio
     public void deleteNoleggio(Long noleggioId) {
         noleggioRepository.deleteById(noleggioId);
@@ -90,6 +66,54 @@ public class NoleggioService {
     // find by noleggio id
     public Optional<Noleggio> findById(Long noleggioId) {
         return noleggioRepository.findById(noleggioId);
+    }
+
+    // create noleggio
+    public NoleggioDTO createNoleggioForAcquirente(Long acquirenteId, CreateNoleggioRequest createNoleggioRequest) {
+        OffsetDateTime dateTime = createNoleggioRequest.getDataInizio() != null ? createNoleggioRequest.getDataInizio() : OffsetDateTime.now();
+        OffsetDateTime dateTime2 = createNoleggioRequest.getDataFine();
+
+        Acquirente acquirente = acquirenteRepository.findById(acquirenteId).orElse(null);
+        Vehicle vehicle = vehicleRepository.findById(createNoleggioRequest.getVehicleId()).orElse(null);
+        Venditore venditore = venditoreRepository.findById(createNoleggioRequest.getVenditoreId()).orElse(null);
+
+        if (acquirente == null || vehicle == null || venditore == null ) {
+            throw new IllegalArgumentException("Acquirente, Vehicle o Venditore non trovato");
+        } else if (vehicle.getTipoOrdine() == TipoOrdine.NON_DISPONIBILE) {
+            throw new IllegalArgumentException("Veicolo non ordinabile");
+        }
+
+        long numeroGiorni = ChronoUnit.DAYS.between(dateTime, dateTime2);
+
+        BigDecimal costoTotale = createNoleggioRequest.getCostoGiornaliero().multiply(BigDecimal.valueOf(numeroGiorni));
+
+        NoleggioModel noleggioModel = new NoleggioModel(dateTime, dateTime2, createNoleggioRequest.getCostoGiornaliero(), costoTotale, createNoleggioRequest.getFlagPagato(), acquirente, vehicle, venditore);
+        NoleggioModel noleggioModel1 = NoleggioModel.entityToModel(noleggioRepository.save(NoleggioModel.modelToEntity(noleggioModel)));
+        return NoleggioModel.modelToDto(noleggioModel1);
+    }
+
+    public Optional<Noleggio> deleteNoleggioForAcquirente(Long acquirenteId, Long id) {
+        Optional<Noleggio> optionalNoleggio = noleggioRepository.findById(id);
+        if (optionalNoleggio.isPresent()) {
+            Noleggio noleggio = optionalNoleggio.get();
+            if (noleggio.getAcquirente().getId().equals(acquirenteId)) {
+                noleggioRepository.delete(noleggio);
+                return optionalNoleggio;
+            }
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Noleggio> updateNoleggioForAcquirente(Long acquirenteId, Long id, CreateNoleggioRequest createNoleggioRequest) {
+        Optional<Noleggio> optionalNoleggio = noleggioRepository.findById(id);
+        if (optionalNoleggio.isPresent()) {
+            Noleggio noleggio = optionalNoleggio.get();
+            if (noleggio.getAcquirente().getId().equals(acquirenteId)) {
+                noleggio = noleggioRepository.save(noleggio);
+                return Optional.of(noleggio);
+            }
+        }
+        return Optional.empty();
     }
 }
 

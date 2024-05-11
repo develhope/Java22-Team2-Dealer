@@ -1,6 +1,6 @@
-package com.develhope.spring.DTOs.Ordine;
+package com.develhope.spring.DTOs.OrdineAcquisto;
 
-import com.develhope.spring.entity.enums.StatoOrdine;
+import com.develhope.spring.entity.enums.StatoOrdineAcquisto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,15 +11,15 @@ import java.time.OffsetDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class CreateOrdineRequest {
+public class CreateOrdineAcquistoRequest {
 
     private OffsetDateTime dataOrdine;
     private OffsetDateTime dataConsegna;
     private BigDecimal anticipo;
     private Boolean flagPagato;
-    private StatoOrdine statoOrdine;
+    private StatoOrdineAcquisto statoOrdineAcquisto;
     private Long acquirenteId;
     private Long vehicleId;
     private Long venditoreId;
+
 }

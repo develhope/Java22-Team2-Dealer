@@ -21,6 +21,7 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vehicle_id", nullable = false)
     private Long vehicleId;
+
     @Column(name = "marca", nullable = false)
     private String marca;
     @Enumerated(EnumType.STRING)
