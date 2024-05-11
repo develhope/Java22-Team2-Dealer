@@ -1,6 +1,7 @@
 package com.develhope.spring.DTOs.Vehicle;
 
 import com.develhope.spring.entity.enums.Allestimento;
+import com.develhope.spring.entity.enums.TipoOrdine;
 import com.develhope.spring.entity.enums.TipoVeicolo;
 import com.develhope.spring.entity.enums.VehicleCondition;
 import lombok.*;
@@ -26,9 +27,7 @@ public class VehicleDTO {
     private Allestimento allestimento;
     private String accessori;
     private VehicleCondition vehicleCondition;
-    private Boolean ordinabile;
-    private Boolean acquistabile;
-    private Boolean nonDisponibile;
+    private TipoOrdine tipoOrdine;
 
 }
 

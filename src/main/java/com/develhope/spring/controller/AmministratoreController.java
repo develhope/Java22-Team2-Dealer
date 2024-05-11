@@ -117,9 +117,7 @@ public class AmministratoreController {
             vehicle.setAllestimento(updateVehicleRequest.getAllestimento());
             vehicle.setAccessori(updateVehicleRequest.getAccessori());
             vehicle.setVehicleCondition(updateVehicleRequest.getVehicleCondition());
-            vehicle.setOrdinabile(updateVehicleRequest.getOrdinabile());
-            vehicle.setAcquistabile(updateVehicleRequest.getAcquistabile());
-            vehicle.setNonDisponibile(updateVehicleRequest.getNonDisponibile());
+            vehicle.setTipoOrdine(updateVehicleRequest.getTipoOrdine());
 
             vehicleService.addVeicolo(vehicle);
 

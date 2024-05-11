@@ -9,6 +9,7 @@ import com.develhope.spring.entity.Acquirente;
 import com.develhope.spring.entity.Noleggio;
 import com.develhope.spring.entity.Vehicle;
 import com.develhope.spring.entity.Venditore;
+import com.develhope.spring.entity.enums.TipoOrdine;
 import com.develhope.spring.repository.AcquirenteRepository;
 import com.develhope.spring.repository.NoleggioRepository;
 import com.develhope.spring.repository.VehicleRepository;
@@ -78,7 +79,7 @@ public class NoleggioService {
 
         if (acquirente == null || vehicle == null || venditore == null ) {
             throw new IllegalArgumentException("Acquirente, Vehicle o Venditore non trovato");
-        } else if (!vehicle.getOrdinabile()) {
+        } else if (vehicle.getTipoOrdine() == TipoOrdine.NON_DISPONIBILE) {
             throw new IllegalArgumentException("Veicolo non ordinabile");
         }
 

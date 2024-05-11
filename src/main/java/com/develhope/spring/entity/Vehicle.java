@@ -1,6 +1,7 @@
 package com.develhope.spring.entity;
 
 import com.develhope.spring.entity.enums.Allestimento;
+import com.develhope.spring.entity.enums.TipoOrdine;
 import com.develhope.spring.entity.enums.TipoVeicolo;
 import com.develhope.spring.entity.enums.VehicleCondition;
 import jakarta.persistence.*;
@@ -51,11 +52,7 @@ public class Vehicle {
     @Enumerated(EnumType.STRING)
     @Column(name = "vehicleCondition", nullable = false)
     private VehicleCondition vehicleCondition;
-    @Column(name = "ordinabile", nullable = false)
-    private Boolean ordinabile;
-    @Column(name = "acquistabile", nullable = false)
-    private Boolean acquistabile;
-    @Column(name = "nonDisponibile", nullable = false)
-    private Boolean nonDisponibile;
+    @Column(name = "tipo_ordine", nullable = false)
+    private TipoOrdine tipoOrdine;
 
 }

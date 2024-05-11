@@ -7,6 +7,7 @@ import com.develhope.spring.entity.Acquirente;
 import com.develhope.spring.entity.OrdineAcquisto;
 import com.develhope.spring.entity.Vehicle;
 import com.develhope.spring.entity.Venditore;
+import com.develhope.spring.entity.enums.TipoOrdine;
 import com.develhope.spring.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class OrdineAcquistoService {
 
         if (acquirente == null || vehicle == null || venditore == null ) {
             throw new IllegalArgumentException("Acquirente, Vehicle o Venditore non trovato");
-        } else if (!vehicle.getAcquistabile()) {
+        } else if (vehicle.getTipoOrdine() == TipoOrdine.NON_DISPONIBILE) {
             throw new IllegalArgumentException("Veicolo non acquistabile");
         }
 
@@ -58,7 +59,7 @@ public class OrdineAcquistoService {
 
         if (acquirente == null || vehicle == null || venditore == null) {
             throw new IllegalArgumentException("Acquirente, Vehicle o Venditore non trovato");
-        } else if (!vehicle.getAcquistabile()) {
+        } else if (vehicle.getTipoOrdine() == TipoOrdine.NON_DISPONIBILE) {
             throw new IllegalArgumentException("Veicolo non acquistabile");
         }
 
@@ -115,7 +116,7 @@ public class OrdineAcquistoService {
 
         if (acquirente == null || vehicle == null || venditore == null) {
             throw new IllegalArgumentException("Acquirente, Vehicle o Venditore non trovato");
-        } else if (!vehicle.getAcquistabile()) {
+        } else if (vehicle.getTipoOrdine() == TipoOrdine.NON_DISPONIBILE) {
             throw new IllegalArgumentException("Veicolo non acquistabile");
         }
 
