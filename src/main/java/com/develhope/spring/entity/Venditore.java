@@ -3,6 +3,8 @@ package com.develhope.spring.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -25,5 +27,12 @@ public class Venditore {
     private String email;
     @Column(name = "password", nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "venditore")
+    private List<Noleggio> noleggi;
+
+    @OneToMany
+    @JoinColumn(name = "vehicle_id", referencedColumnName = "vehicle_id", nullable = false)
+    private List<Vehicle> vehicles;
 
 }

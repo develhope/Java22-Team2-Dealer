@@ -60,6 +60,24 @@ public class NoleggioModel {
         this.venditore = venditore;
     }
 
+    public NoleggioModel(OffsetDateTime dataInizio, OffsetDateTime dataFine, BigDecimal costoGiornaliero, BigDecimal costoTotale, Boolean flagPagato) {
+        this.dataInizio = dataInizio;
+        this.dataFine = dataFine;
+        this.costoGiornaliero = costoGiornaliero;
+        this.costoTotale = costoTotale;
+        this.flagPagato = flagPagato;
+    }
+
+    public NoleggioModel(Long noleggioId, OffsetDateTime dataInizio, OffsetDateTime dataFine, BigDecimal costoGiornaliero, BigDecimal costoTotale, Boolean flagPagato) {
+        this.noleggioId = noleggioId;
+        this.dataInizio = dataInizio;
+        this.dataFine = dataFine;
+        this.costoGiornaliero = costoGiornaliero;
+        this.costoTotale = costoTotale;
+        this.flagPagato = flagPagato;
+
+    }
+
     public NoleggioModel(OffsetDateTime dataInizio, OffsetDateTime dataFine, BigDecimal costoGiornaliero, BigDecimal costoTotale, Boolean flagPagato, Acquirente acquirente, Vehicle vehicle, Venditore venditore) {
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
