@@ -3,6 +3,7 @@ package com.develhope.spring.service;
 import com.develhope.spring.DTOs.Noleggio.CreateNoleggioRequest;
 import com.develhope.spring.DTOs.Noleggio.NoleggioDTO;
 
+import com.develhope.spring.DTOs.Noleggio.UpdateNoleggioRequest;
 import com.develhope.spring.Models.NoleggioModel;
 
 import com.develhope.spring.entity.Acquirente;
@@ -120,7 +121,7 @@ public class NoleggioService {
         return Optional.empty();
     }
 
-    public Optional<Noleggio> updateNoleggioForAcquirente(Long acquirenteId, Long id, CreateNoleggioRequest createNoleggioRequest) {
+    public Optional<Noleggio> updateNoleggioForAcquirente(Long acquirenteId, Long id, UpdateNoleggioRequest updateNoleggioRequest) {
         Optional<Noleggio> optionalNoleggio = noleggioRepository.findById(id);
         if (optionalNoleggio.isPresent()) {
             Noleggio noleggio = optionalNoleggio.get();

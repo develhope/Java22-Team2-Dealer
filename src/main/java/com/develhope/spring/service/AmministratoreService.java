@@ -2,6 +2,7 @@ package com.develhope.spring.service;
 
 import com.develhope.spring.DTOs.Amministratore.AmministratoreDTO;
 import com.develhope.spring.DTOs.Amministratore.CreateAmministratoreRequest;
+import com.develhope.spring.DTOs.Venditore.UpdateVenditoreRequest;
 import com.develhope.spring.Models.AmministratoreModel;
 import com.develhope.spring.entity.Amministratore;
 import com.develhope.spring.repository.AmministratoreRepository;
@@ -36,13 +37,13 @@ public class AmministratoreService {
         return amministratoreRepository.findAll();
     }
 
-    public Amministratore updateAmministratore(Long id, Amministratore amministratoreMod) {
+    public Amministratore updateAmministratore(Long id, UpdateVenditoreRequest updateVenditoreRequest) {
         Amministratore amministratore = amministratoreRepository.findById(id).orElse(null);
         if (amministratore != null) {
-            amministratore.setNome(amministratoreMod.getNome());
-            amministratore.setCognome(amministratoreMod.getCognome());
-            amministratore.setEmail(amministratoreMod.getEmail());
-            amministratore.setPassword(amministratoreMod.getPassword());
+            amministratore.setNome(updateVenditoreRequest.getNome());
+            amministratore.setCognome(updateVenditoreRequest.getCognome());
+            amministratore.setEmail(updateVenditoreRequest.getEmail());
+            amministratore.setPassword(updateVenditoreRequest.getPassword());
             amministratoreRepository.save(amministratore);
             return amministratore;
         }
