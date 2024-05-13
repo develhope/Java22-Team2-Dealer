@@ -2,6 +2,7 @@ package com.develhope.spring.service;
 
 import com.develhope.spring.DTOs.OrdineAcquisto.CreateOrdineAcquistoRequest;
 import com.develhope.spring.DTOs.OrdineAcquisto.OrdineAcquistoDTO;
+import com.develhope.spring.DTOs.OrdineAcquisto.UpdateOrdineAcquistoRequest;
 import com.develhope.spring.Models.OrdineAcquistoModel;
 import com.develhope.spring.entity.Acquirente;
 import com.develhope.spring.entity.OrdineAcquisto;
@@ -83,17 +84,17 @@ public class OrdineAcquistoService {
         }
     }
 
-    public Optional<OrdineAcquisto> updateOrdineForAcquirente(Long acquirenteId, Long ordineId, CreateOrdineAcquistoRequest createOrdineAcquistoRequest) {
+    public Optional<OrdineAcquisto> updateOrdineForAcquirente(Long acquirenteId, Long ordineId, UpdateOrdineAcquistoRequest updateOrdineAcquistoRequest) {
         Optional<OrdineAcquisto> optionalOrdine = ordineAcquistoRepository.findById(ordineId);
         if (optionalOrdine.isPresent()) {
             OrdineAcquisto ordineAcquisto = optionalOrdine.get();
             if (ordineAcquisto.getAcquirente().getId().equals(acquirenteId)) {
 
-                ordineAcquisto.setDataOrdineAcquisto(createOrdineAcquistoRequest.getDataOrdine() != null ? createOrdineAcquistoRequest.getDataOrdine() : ordineAcquisto.getDataOrdineAcquisto());
-                ordineAcquisto.setDataConsegna(createOrdineAcquistoRequest.getDataConsegna() != null ? createOrdineAcquistoRequest.getDataConsegna() : ordineAcquisto.getDataConsegna());
-                ordineAcquisto.setAnticipo(createOrdineAcquistoRequest.getAnticipo() != null ? createOrdineAcquistoRequest.getAnticipo() : ordineAcquisto.getAnticipo());
-                ordineAcquisto.setFlagPagato(createOrdineAcquistoRequest.getFlagPagato() != null ? createOrdineAcquistoRequest.getFlagPagato() : ordineAcquisto.getFlagPagato());
-                ordineAcquisto.setStatoOrdineAcquisto(createOrdineAcquistoRequest.getStatoOrdineAcquisto() != null ? createOrdineAcquistoRequest.getStatoOrdineAcquisto() : ordineAcquisto.getStatoOrdineAcquisto());
+                ordineAcquisto.setDataOrdineAcquisto(updateOrdineAcquistoRequest.getDataOrdine() != null ? updateOrdineAcquistoRequest.getDataOrdine() : ordineAcquisto.getDataOrdineAcquisto());
+                ordineAcquisto.setDataConsegna(updateOrdineAcquistoRequest.getDataConsegna() != null ? updateOrdineAcquistoRequest.getDataConsegna() : ordineAcquisto.getDataConsegna());
+                ordineAcquisto.setAnticipo(updateOrdineAcquistoRequest.getAnticipo() != null ? updateOrdineAcquistoRequest.getAnticipo() : ordineAcquisto.getAnticipo());
+                ordineAcquisto.setFlagPagato(updateOrdineAcquistoRequest.getFlagPagato() != null ? updateOrdineAcquistoRequest.getFlagPagato() : ordineAcquisto.getFlagPagato());
+                ordineAcquisto.setStatoOrdineAcquisto(updateOrdineAcquistoRequest.getStatoOrdineAcquisto() != null ? updateOrdineAcquistoRequest.getStatoOrdineAcquisto() : ordineAcquisto.getStatoOrdineAcquisto());
 
                 ordineAcquistoRepository.save(ordineAcquisto);
 
@@ -140,17 +141,17 @@ public class OrdineAcquistoService {
         }
     }
 
-    public Optional<OrdineAcquisto> updateAcquistoForAcquirente(Long acquirenteId, Long ordineId, CreateOrdineAcquistoRequest createOrdineAcquistoRequest) {
+    public Optional<OrdineAcquisto> updateAcquistoForAcquirente(Long acquirenteId, Long ordineId, UpdateOrdineAcquistoRequest updateOrdineAcquistoRequest) {
         Optional<OrdineAcquisto> optionalAcquisto = ordineAcquistoRepository.findById(ordineId);
         if (optionalAcquisto.isPresent()) {
             OrdineAcquisto ordineAcquisto = optionalAcquisto.get();
             if (ordineAcquisto.getAcquirente().getId().equals(acquirenteId)) {
 
-                ordineAcquisto.setDataOrdineAcquisto(createOrdineAcquistoRequest.getDataOrdine() != null ? createOrdineAcquistoRequest.getDataOrdine() : ordineAcquisto.getDataOrdineAcquisto());
-                ordineAcquisto.setDataConsegna(createOrdineAcquistoRequest.getDataConsegna() != null ? createOrdineAcquistoRequest.getDataConsegna() : ordineAcquisto.getDataConsegna());
-                ordineAcquisto.setAnticipo(createOrdineAcquistoRequest.getAnticipo() != null ? createOrdineAcquistoRequest.getAnticipo() : ordineAcquisto.getAnticipo());
-                ordineAcquisto.setFlagPagato(createOrdineAcquistoRequest.getFlagPagato() != null ? createOrdineAcquistoRequest.getFlagPagato() : ordineAcquisto.getFlagPagato());
-                ordineAcquisto.setStatoOrdineAcquisto(createOrdineAcquistoRequest.getStatoOrdineAcquisto() != null ? createOrdineAcquistoRequest.getStatoOrdineAcquisto() : ordineAcquisto.getStatoOrdineAcquisto());
+                ordineAcquisto.setDataOrdineAcquisto(updateOrdineAcquistoRequest.getDataOrdine() != null ? updateOrdineAcquistoRequest.getDataOrdine() : ordineAcquisto.getDataOrdineAcquisto());
+                ordineAcquisto.setDataConsegna(updateOrdineAcquistoRequest.getDataConsegna() != null ? updateOrdineAcquistoRequest.getDataConsegna() : ordineAcquisto.getDataConsegna());
+                ordineAcquisto.setAnticipo(updateOrdineAcquistoRequest.getAnticipo() != null ? updateOrdineAcquistoRequest.getAnticipo() : ordineAcquisto.getAnticipo());
+                ordineAcquisto.setFlagPagato(updateOrdineAcquistoRequest.getFlagPagato() != null ? updateOrdineAcquistoRequest.getFlagPagato() : ordineAcquisto.getFlagPagato());
+                ordineAcquisto.setStatoOrdineAcquisto(updateOrdineAcquistoRequest.getStatoOrdineAcquisto() != null ? updateOrdineAcquistoRequest.getStatoOrdineAcquisto() : ordineAcquisto.getStatoOrdineAcquisto());
 
                 ordineAcquistoRepository.save(ordineAcquisto);
 

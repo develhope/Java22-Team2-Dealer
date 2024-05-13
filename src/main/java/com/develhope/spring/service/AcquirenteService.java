@@ -1,6 +1,7 @@
 package com.develhope.spring.service;
 import com.develhope.spring.DTOs.Acquirente.AcquirenteDTO;
 import com.develhope.spring.DTOs.Acquirente.CreateAcquirenteRequest;
+import com.develhope.spring.DTOs.Acquirente.UpdateAcquirenteRequest;
 import com.develhope.spring.Models.AcquirenteModel;
 import com.develhope.spring.entity.Acquirente;
 import com.develhope.spring.repository.AcquirenteRepository;
@@ -62,7 +63,7 @@ public class AcquirenteService {
         return acquirenteRepository.save(acquirente);
     }
 
-    public Acquirente updateAcquirente(Long id, CreateAcquirenteRequest updateAcquirenteRequest) {
+    public Acquirente updateAcquirente(Long id, UpdateAcquirenteRequest updateAcquirenteRequest) {
         Acquirente acquirente = acquirenteRepository.findById(id).orElse(null);
         if(acquirente != null) {
             acquirente.setNome(updateAcquirenteRequest.getNome());

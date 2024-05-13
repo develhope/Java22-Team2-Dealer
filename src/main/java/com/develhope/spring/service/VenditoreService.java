@@ -1,6 +1,7 @@
 package com.develhope.spring.service;
 
 import com.develhope.spring.DTOs.Venditore.CreateVenditoreRequest;
+import com.develhope.spring.DTOs.Venditore.UpdateVenditoreRequest;
 import com.develhope.spring.DTOs.Venditore.VenditoreDTO;
 import com.develhope.spring.Models.VenditoreModel;
 import com.develhope.spring.entity.Venditore;
@@ -32,7 +33,7 @@ public class VenditoreService {
         return venditoreRepository.findById(id);
     }
 
-    // Update
+    // TODO possibile doppione
     public Venditore updateVenditore(Long id, Venditore venditoreMod) {
         Venditore venditore = venditoreRepository.findById(id).orElse(null);
         if(venditore != null) {
@@ -65,7 +66,7 @@ public class VenditoreService {
         return venditoreRepository.save(venditore);
     }
 
-    public Venditore updateVenditore(Long id, CreateVenditoreRequest updateVenditoreRequest) {
+    public Venditore updateVenditore(Long id, UpdateVenditoreRequest updateVenditoreRequest) {
         Venditore venditore = venditoreRepository.findById(id).orElse(null);
         if(venditore != null) {
             venditore.setNome(updateVenditoreRequest.getNome());
