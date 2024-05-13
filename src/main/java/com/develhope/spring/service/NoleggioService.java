@@ -39,8 +39,12 @@ public class NoleggioService {
     private VenditoreRepository venditoreRepository;
 
     // delete noleggio
-    public void deleteNoleggio(Long noleggioId) {
-        noleggioRepository.deleteById(noleggioId);
+    public Optional<Noleggio> deleteNoleggio(Long noleggioId) {
+        Optional<Noleggio> optionalNoleggio = noleggioRepository.findById(noleggioId);
+        if (optionalNoleggio.isPresent()) {
+            noleggioRepository.deleteById(noleggioId);
+        }
+        return optionalNoleggio;
     }
 
     // find all
@@ -92,6 +96,18 @@ public class NoleggioService {
         return NoleggioModel.modelToDto(noleggioModel1);
     }
 
+    public NoleggioDTO createNoleggio(CreateNoleggioRequest createNoleggioRequest){
+        OffsetDateTime dateTime = createNoleggioRequest.getDataInizio() != null ? createNoleggioRequest.getDataInizio() : OffsetDateTime.now();
+        OffsetDateTime dateTime2 = createNoleggioRequest.getDataFine();
+        long numeroGiorni = ChronoUnit.DAYS.between(dateTime, dateTime2);
+
+        BigDecimal costoTotale = createNoleggioRequest.getCostoGiornaliero().multiply(BigDecimal.valueOf(numeroGiorni));
+
+        NoleggioModel noleggioModel = new NoleggioModel(dateTime, dateTime2, createNoleggioRequest.getCostoGiornaliero(), costoTotale, createNoleggioRequest.getFlagPagato());
+        NoleggioModel noleggioModel1 = NoleggioModel.entityToModel(noleggioRepository.save(NoleggioModel.modelToEntity(noleggioModel)));
+        return NoleggioModel.modelToDto(noleggioModel1);
+    }
+
     public Optional<Noleggio> deleteNoleggioForAcquirente(Long acquirenteId, Long id) {
         Optional<Noleggio> optionalNoleggio = noleggioRepository.findById(id);
         if (optionalNoleggio.isPresent()) {
@@ -114,6 +130,19 @@ public class NoleggioService {
             }
         }
         return Optional.empty();
+    }
+
+    public Noleggio updateNoleggioById(Long id, CreateNoleggioRequest createNoleggioRequest){
+        Noleggio noleggio = noleggioRepository.findById(id).orElse(null);
+        if(noleggio != null) {
+            noleggio.setDataInizio(createNoleggioRequest.getDataInizio());
+            noleggio.setDataFine(createNoleggioRequest.getDataFine());
+            noleggio.setCostoGiornaliero(createNoleggioRequest.getCostoGiornaliero());
+            noleggio.setCostoTotale(createNoleggioRequest.getCostoTotale());
+            noleggio.setFlagPagato(createNoleggioRequest.getFlagPagato());
+            return noleggioRepository.save(noleggio);
+        }
+        return null;
     }
 }
 

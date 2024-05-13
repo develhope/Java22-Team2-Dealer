@@ -34,7 +34,7 @@ public class Noleggio {
     @JoinColumn(name = "acquirente_id", referencedColumnName = "acquirente_id", nullable = false)
     private Acquirente acquirente;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "vehicle_id", referencedColumnName = "vehicle_id", nullable = false)
     private Vehicle vehicle;
 
