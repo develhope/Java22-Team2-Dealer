@@ -8,11 +8,8 @@ import lombok.Data;
 public class JwtDto {
 
     private String nome;
-
     private String cognome;
-
     private String email;
-
     private String tipoUtente;
 
 }

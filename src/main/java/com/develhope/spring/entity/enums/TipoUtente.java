@@ -1,4 +1,4 @@
-package com.develhope.spring.DTOs.auth;
+package com.develhope.spring.entity.enums;
 
 public enum TipoUtente {
 

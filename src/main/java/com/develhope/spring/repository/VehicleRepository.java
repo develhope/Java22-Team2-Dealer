@@ -17,6 +17,7 @@ import java.util.List;
 
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
+
     @Query("SELECT v FROM Vehicle v WHERE LOWER(v.marca) LIKE LOWER(CONCAT('%', :partialMarca, '%'))")
     List<Vehicle> searchByMarca(@Param("partialMarca") String partialMarca);
 

@@ -5,7 +5,7 @@ import com.develhope.spring.DTOs.Amministratore.CreateAmministratoreRequest;
 import com.develhope.spring.DTOs.Venditore.CreateVenditoreRequest;
 import com.develhope.spring.DTOs.auth.JwtDto;
 import com.develhope.spring.DTOs.auth.LoginDto;
-import com.develhope.spring.DTOs.auth.TipoUtente;
+import com.develhope.spring.entity.enums.TipoUtente;
 import com.develhope.spring.exception.AuthenticationException;
 import com.develhope.spring.security.JWTUtils;
 import com.develhope.spring.service.AcquirenteService;

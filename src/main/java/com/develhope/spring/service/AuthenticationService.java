@@ -2,7 +2,7 @@ package com.develhope.spring.service;
 
 import com.develhope.spring.DTOs.auth.JwtDto;
 import com.develhope.spring.DTOs.auth.LoginDto;
-import com.develhope.spring.DTOs.auth.TipoUtente;
+import com.develhope.spring.entity.enums.TipoUtente;
 import com.develhope.spring.exception.AuthenticationException;
 import com.develhope.spring.repository.AcquirenteRepository;
 import com.develhope.spring.repository.AmministratoreRepository;

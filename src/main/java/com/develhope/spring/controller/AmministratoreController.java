@@ -262,7 +262,7 @@ public class AmministratoreController {
         }
     }
 
-    //rotta per la creazione di un acquisto per un acquirente NO
+    //rotta per la creazione di un acquisto per un acquirente
     @Operation(summary = "sell a vehicle",
             description = "This endpoint allows an administrator to sell a vehicle to a customer.")
     @ApiResponses(value = {

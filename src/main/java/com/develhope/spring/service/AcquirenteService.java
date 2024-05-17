@@ -4,7 +4,9 @@ import com.develhope.spring.DTOs.Acquirente.CreateAcquirenteRequest;
 import com.develhope.spring.DTOs.Acquirente.UpdateAcquirenteRequest;
 import com.develhope.spring.Models.AcquirenteModel;
 import com.develhope.spring.entity.Acquirente;
+import com.develhope.spring.entity.OrdineAcquisto;
 import com.develhope.spring.repository.AcquirenteRepository;
+import com.develhope.spring.repository.OrdineAcquistoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,9 @@ public class AcquirenteService {
 
     @Autowired
     private AcquirenteRepository acquirenteRepository;
+
+    @Autowired
+    private OrdineAcquistoRepository ordineAcquistoRepository;
 
     // create acquirente
     public AcquirenteDTO createAcquirente(CreateAcquirenteRequest acquirenteRequest) {
@@ -76,4 +81,14 @@ public class AcquirenteService {
         return null;
     }
 
+
+    public List<OrdineAcquisto> getOrdiniByAcquirenteId(Long acquirenteId) {
+        return ordineAcquistoRepository.findByAcquirenteId(acquirenteId);
+    }
+
+    public List<OrdineAcquisto> getAcquistiByAcquirenteId(Long acquirenteId) {
+        return ordineAcquistoRepository.findByAcquirenteId(acquirenteId);
+    }
+
 }
+
