@@ -1,5 +1,7 @@
 package com.develhope.spring.security;
 
+import com.auth0.jwt.interfaces.Header;
+import com.develhope.spring.DTOs.auth.JwtDto;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.util.StringUtils;
@@ -16,19 +18,19 @@ public class AmministratoreFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        var httpRequest = (HttpServletRequest) request;
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-        var header = httpRequest.getHeader("Authorization");
+        String header = httpRequest.getHeader("Authorization");
         if (!StringUtils.hasText(header)) {
             throw new ServletException("Authorization header is missing");
         }
 
-        var jwt = header.substring(7);
+        String jwt = header.substring(7);
         if (!StringUtils.hasText(jwt)) {
             throw new ServletException("Token is invalid");
         }
 
-        var jwtDto = jwtUtils.verifyToken(jwt);
+        JwtDto jwtDto = jwtUtils.verifyToken(jwt);
         if (!jwtDto.getTipoUtente().equals("AMMINISTRATORE")) {
             throw new ServletException("Invalid user type");
         }
