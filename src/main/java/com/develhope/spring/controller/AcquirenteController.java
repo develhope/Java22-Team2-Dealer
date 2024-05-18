@@ -7,7 +7,6 @@ import com.develhope.spring.DTOs.Noleggio.NoleggioDTO;
 import com.develhope.spring.DTOs.OrdineAcquisto.CreateOrdineAcquistoRequest;
 import com.develhope.spring.DTOs.OrdineAcquisto.OrdineAcquistoDTO;
 import com.develhope.spring.Models.NoleggioModel;
-import com.develhope.spring.Models.OrdineAcquistoModel;
 import com.develhope.spring.entity.Acquirente;
 import com.develhope.spring.entity.Noleggio;
 import com.develhope.spring.entity.OrdineAcquisto;
@@ -20,7 +19,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Content;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -224,6 +222,13 @@ public class AcquirenteController {
     }
 
     //Cancellare un ordine
+    @Operation(summary = "delete order")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200", description = "Successfully deleted order",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "No orders found")
+    })
     @DeleteMapping("/{acquirenteId}/ordini/{ordineId}")
     public ResponseEntity<?> deleteOrdineForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long ordineId) {
         Optional<OrdineAcquisto> optionalOrdine = ordineAcquistoService.deleteOrdineForAcquirente(acquirenteId, ordineId);
@@ -235,12 +240,26 @@ public class AcquirenteController {
     }
 
     // Route to get all orders and purchases by customer ID
+    @Operation(summary = "Get all order")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200", description = "Successfully got all orders",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "No orders found")
+    })
     @GetMapping("/ordini/{acquirenteId}")
     public ResponseEntity<List<OrdineAcquisto>> getOrdiniByAcquirenteId(@PathVariable Long acquirenteId) {
         List<OrdineAcquisto> ordini = acquirenteService.getOrdiniByAcquirenteId(acquirenteId);
         return ResponseEntity.ok(ordini);
     }
 
+    @Operation(summary = "Get all purchases")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200", description = "Successfully got all purchases",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "No purchases found")
+    })
     @GetMapping("/acquisti/{acquirenteId}")
     public ResponseEntity<List<OrdineAcquisto>> getAcquistiByAcquirenteId(@PathVariable Long acquirenteId) {
         List<OrdineAcquisto> acquisti = acquirenteService.getAcquistiByAcquirenteId(acquirenteId);
