@@ -200,4 +200,68 @@ public class AcquirenteController {
         return ResponseEntity.ok(nuovoOrdine);
     }
 
+
+    //Route create purchase's customer
+    @Operation(summary = "sell a vehicle",
+            description = "This endpoint allows an administrator to sell a vehicle to a customer.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200", description = "Ok",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
+    })
+    @PostMapping("/{acquirenteId}/createAcquisto")
+    public ResponseEntity<?> createAcquistoForAcquirente(@PathVariable Long acquirenteId, @Validated @RequestBody CreateOrdineAcquistoRequest createOrdineAcquistoRequest) {
+        OrdineAcquistoDTO result = ordineAcquistoService.createAcquistoForAcquirente(acquirenteId, createOrdineAcquistoRequest);
+        if (result == null) {
+            return ResponseEntity.status(400).body("Impossibile creare l'acquisto per l'acquirente con ID: " + acquirenteId);
+        } else {
+            return ResponseEntity.ok().body(result);
+        }
+    }
+
+    //Cancellare un ordine
+    @Operation(summary = "delete order")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200", description = "Successfully deleted order",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "No orders found")
+    })
+    @DeleteMapping("/{acquirenteId}/ordini/{ordineId}")
+    public ResponseEntity<?> deleteOrdineForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long ordineId) {
+        Optional<OrdineAcquisto> optionalOrdine = ordineAcquistoService.deleteOrdineForAcquirente(acquirenteId, ordineId);
+        if (optionalOrdine.isPresent()) {
+            return ResponseEntity.ok("Ordine eliminato con successo");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Route to get all orders and purchases by customer ID
+    @Operation(summary = "Get all order")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200", description = "Successfully got all orders",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "No orders found")
+    })
+    @GetMapping("/ordini/{acquirenteId}")
+    public ResponseEntity<List<OrdineAcquisto>> getOrdiniByAcquirenteId(@PathVariable Long acquirenteId) {
+        List<OrdineAcquisto> ordini = acquirenteService.getOrdiniByAcquirenteId(acquirenteId);
+        return ResponseEntity.ok(ordini);
+    }
+
+    @Operation(summary = "Get all purchases")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200", description = "Successfully got all purchases",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "No purchases found")
+    })
+    @GetMapping("/acquisti/{acquirenteId}")
+    public ResponseEntity<List<OrdineAcquisto>> getAcquistiByAcquirenteId(@PathVariable Long acquirenteId) {
+        List<OrdineAcquisto> acquisti = acquirenteService.getAcquistiByAcquirenteId(acquirenteId);
+        return ResponseEntity.ok(acquisti);
+    }
 }
