@@ -137,13 +137,23 @@ public class VehicleController {
     })
     @GetMapping("/tipoVeicolo/{tipoVeicolo}")
     public List<Vehicle> getByTipoVeicolo(@PathVariable String tipoVeicolo) {
-        TipoVeicolo tipo = switch (tipoVeicolo.toUpperCase()) {
-            case "SCOOTER" -> TipoVeicolo.SCOOTER;
-            case "FURGONE" -> TipoVeicolo.FURGONE;
-            case "AUTO" -> TipoVeicolo.AUTO;
-            case "MOTO" -> TipoVeicolo.MOTO;
-            default -> throw new IllegalArgumentException("Tipo veicolo non valido: " + tipoVeicolo);
-        };
+        TipoVeicolo tipo = null;
+        switch (tipoVeicolo.toUpperCase()) {
+            case "SCOOTER":
+                tipo = TipoVeicolo.SCOOTER;
+                break;
+            case "FURGONE":
+                tipo = TipoVeicolo.FURGONE;
+                break;
+            case "AUTO":
+                tipo = TipoVeicolo.AUTO;
+                break;
+            case "MOTO":
+                tipo = TipoVeicolo.MOTO;
+                break;
+            default:
+                throw new IllegalArgumentException("Tipo veicolo non valido: " + tipoVeicolo);
+        }
         return vehicleService.searchByTipoVeicolo(tipo);
     }
 

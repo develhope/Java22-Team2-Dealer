@@ -9,7 +9,6 @@ import com.develhope.spring.DTOs.OrdineAcquisto.OrdineAcquistoDTO;
 import com.develhope.spring.Models.NoleggioModel;
 import com.develhope.spring.entity.Acquirente;
 import com.develhope.spring.entity.Noleggio;
-import com.develhope.spring.entity.OrdineAcquisto;
 import com.develhope.spring.service.AcquirenteService;
 import com.develhope.spring.service.NoleggioService;
 import com.develhope.spring.service.OrdineAcquistoService;
@@ -32,7 +31,6 @@ public class AcquirenteController {
 
     @Autowired
     private AcquirenteService acquirenteService;
-
 
     @Autowired
     private NoleggioService noleggioService;
@@ -202,6 +200,7 @@ public class AcquirenteController {
         return ResponseEntity.ok(nuovoOrdine);
     }
 
+
     //Route create purchase's customer
     @Operation(summary = "sell a vehicle",
             description = "This endpoint allows an administrator to sell a vehicle to a customer.")
@@ -266,4 +265,3 @@ public class AcquirenteController {
         return ResponseEntity.ok(acquisti);
     }
 }
-
