@@ -7,10 +7,8 @@ import com.develhope.spring.DTOs.Noleggio.NoleggioDTO;
 import com.develhope.spring.DTOs.OrdineAcquisto.CreateOrdineAcquistoRequest;
 import com.develhope.spring.DTOs.OrdineAcquisto.OrdineAcquistoDTO;
 import com.develhope.spring.Models.NoleggioModel;
-import com.develhope.spring.Models.OrdineAcquistoModel;
 import com.develhope.spring.entity.Acquirente;
 import com.develhope.spring.entity.Noleggio;
-import com.develhope.spring.entity.OrdineAcquisto;
 import com.develhope.spring.service.AcquirenteService;
 import com.develhope.spring.service.NoleggioService;
 import com.develhope.spring.service.OrdineAcquistoService;
@@ -20,7 +18,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.Content;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +31,6 @@ public class AcquirenteController {
 
     @Autowired
     private AcquirenteService acquirenteService;
-
 
     @Autowired
     private NoleggioService noleggioService;
@@ -204,47 +200,4 @@ public class AcquirenteController {
         return ResponseEntity.ok(nuovoOrdine);
     }
 
-    //Route create purchase's customer
-    @Operation(summary = "sell a vehicle",
-            description = "This endpoint allows an administrator to sell a vehicle to a customer.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-    })
-    @PostMapping("/{acquirenteId}/createAcquisto")
-    public ResponseEntity<?> createAcquistoForAcquirente(@PathVariable Long acquirenteId, @Validated @RequestBody CreateOrdineAcquistoRequest createOrdineAcquistoRequest) {
-        OrdineAcquistoDTO result = ordineAcquistoService.createAcquistoForAcquirente(acquirenteId, createOrdineAcquistoRequest);
-        if (result == null) {
-            return ResponseEntity.status(400).body("Impossibile creare l'acquisto per l'acquirente con ID: " + acquirenteId);
-        } else {
-            return ResponseEntity.ok().body(result);
-        }
-    }
-
-    //Cancellare un ordine
-    @DeleteMapping("/{acquirenteId}/ordini/{ordineId}")
-    public ResponseEntity<?> deleteOrdineForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long ordineId) {
-        Optional<OrdineAcquisto> optionalOrdine = ordineAcquistoService.deleteOrdineForAcquirente(acquirenteId, ordineId);
-        if (optionalOrdine.isPresent()) {
-            return ResponseEntity.ok("Ordine eliminato con successo");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    // Route to get all orders and purchases by customer ID
-    @GetMapping("/ordini/{acquirenteId}")
-    public ResponseEntity<List<OrdineAcquisto>> getOrdiniByAcquirenteId(@PathVariable Long acquirenteId) {
-        List<OrdineAcquisto> ordini = acquirenteService.getOrdiniByAcquirenteId(acquirenteId);
-        return ResponseEntity.ok(ordini);
-    }
-
-    @GetMapping("/acquisti/{acquirenteId}")
-    public ResponseEntity<List<OrdineAcquisto>> getAcquistiByAcquirenteId(@PathVariable Long acquirenteId) {
-        List<OrdineAcquisto> acquisti = acquirenteService.getAcquistiByAcquirenteId(acquirenteId);
-        return ResponseEntity.ok(acquisti);
-    }
 }
-

@@ -2,7 +2,6 @@ package com.develhope.spring.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.develhope.spring.DTOs.auth.JwtDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -36,14 +35,14 @@ public class JWTUtils {
     }
 
     public JwtDto verifyToken(String jwt) {
-        DecodedJWT decodedJwt = JWT.require(getAlgorithm())
+        var decodedJwt = JWT.require(getAlgorithm())
                 .build()
                 .verify(jwt);
 
-        String nome = decodedJwt.getClaim("nome").asString();
-        String cognome = decodedJwt.getClaim("cognome").asString();
-        String email = decodedJwt.getClaim("email").asString();
-        String tipoUtente = decodedJwt.getClaim("tipoUtente").asString();
+        var nome = decodedJwt.getClaim("nome").asString();
+        var cognome = decodedJwt.getClaim("cognome").asString();
+        var email = decodedJwt.getClaim("email").asString();
+        var tipoUtente = decodedJwt.getClaim("tipoUtente").asString();
 
         return JwtDto.builder()
                 .nome(nome)
