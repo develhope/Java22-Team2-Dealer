@@ -16,11 +16,6 @@ import com.develhope.spring.DTOs.Venditore.UpdateVenditoreRequest;
 import com.develhope.spring.entity.*;
 import com.develhope.spring.entity.enums.VehicleCondition;
 import com.develhope.spring.service.*;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -51,14 +46,6 @@ public class AmministratoreController {
     private VenditoreService venditoreService;
 
     //rotta creazione veicolo OK
-    @Operation(summary = "Add a vehicle",
-            description = "This endpoint allows an administrator to create a new vehicle.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-    })
     @PostMapping("/addVehicle")
     public ResponseEntity<?> createVehicle(@Validated @RequestBody CreateVehicleRequest createVehicleRequest) {
         VehicleDTO result = vehicleService.createVehicle(createVehicleRequest);
@@ -70,14 +57,6 @@ public class AmministratoreController {
     }
 
     //rotta update veicolo OK
-    @Operation(summary = "update a vehicle",
-            description = "This endpoint allows an administrator to update a vehicle.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleService.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-    })
     @PatchMapping("/updateVehicle/{id}")
     public ResponseEntity<?> updateVehicle(@PathVariable Long id, @Validated @RequestBody UpdateVehicleRequest updateVehicleRequest) {
         Optional<Vehicle> optionalVehicle = vehicleService.findById(id);
@@ -107,28 +86,12 @@ public class AmministratoreController {
     }
 
     //rotta cancellazione veicolo da id OK
-    @Operation(summary = "delete a vehicle",
-            description = "This endpoint allows an administrator to delete a vehicle.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleController.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-    })
     @DeleteMapping("/deleteVehicle/{id}")
     public ResponseEntity<?> deleteVehicle(@PathVariable Long id) {
         return vehicleService.deleteVehicle(id);
     }
 
     //rotta per modifica condizione veicolo OK
-    @Operation(summary = "change vehicle condition",
-            description = "This endpoint allows an administrator to change a vehicle's conditions.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleService.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-    })
     @PutMapping("/changeVehicleCondition/{id}")
     public ResponseEntity<?> changeVehicleCondition(@PathVariable Long id, @RequestParam VehicleCondition newCondition) {
         Optional<Vehicle> optionalVehicle = vehicleService.findById(id);
@@ -145,14 +108,6 @@ public class AmministratoreController {
     }
 
     //rotta per la creazione di un ordine per un acquirente OK
-    @Operation(summary = "create an order",
-            description = "This endpoint allows an administrator to create an order for a customer.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-    })
     @PostMapping("/acquirente/{acquirenteId}/createOrdine")
     public ResponseEntity<?> createOrdineForAcquirente(@PathVariable Long acquirenteId, @Validated @RequestBody CreateOrdineAcquistoRequest createOrdineAcquistoRequest) {
         OrdineAcquistoDTO result = ordineAcquistoService.createOrdineForAcquirente(acquirenteId, createOrdineAcquistoRequest);
@@ -164,14 +119,6 @@ public class AmministratoreController {
     }
 
     //rotta per l'eliminazione di un ordine per un acquirente OK
-    @Operation(summary = "delete a order",
-            description = "This endpoint allows an administrator to delete a order for a customer.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoService.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-    })
     @DeleteMapping("/acquirente/{acquirenteId}/deleteOrdine/{id}")
     public ResponseEntity<?> deleteOrdineForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long id) {
         Optional<OrdineAcquisto> optionalOrdine = ordineAcquistoService.deleteOrdineForAcquirente(acquirenteId, id);
@@ -183,14 +130,6 @@ public class AmministratoreController {
     }
 
     //rotta per l'update di un ordine per un acquirente OK
-    @Operation(summary = "update a order",
-            description = "This endpoint allows an administrator to update a order for a customer.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoService.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-    })
     @PatchMapping("/acquirente/{acquirenteId}/updateOrdine/{id}")
     public ResponseEntity<?> updateOrdineForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long id, @RequestBody UpdateOrdineAcquistoRequest updateOrdineAcquistoRequest) {
         Optional<OrdineAcquisto> optionalOrdine = ordineAcquistoService.updateOrdineForAcquirente(acquirenteId, id, updateOrdineAcquistoRequest);
@@ -202,14 +141,6 @@ public class AmministratoreController {
     }
 
     //rotta per la creazione di un noleggio per un acquirente OK
-    @Operation(summary = "create a rental",
-            description = "This endpoint allows an administrator to create a rental for a customer.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AcquirenteService.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-    })
     @PostMapping("/acquirente/{acquirenteId}/createNoleggio")
     public ResponseEntity<?> createNoleggioForAcquirente(@PathVariable Long acquirenteId, @Validated @RequestBody CreateNoleggioRequest createNoleggioRequest) {
         Acquirente acquirente = acquirenteService.getById(acquirenteId).orElse(null);
@@ -225,14 +156,6 @@ public class AmministratoreController {
     }
 
     //rotta per l'eliminazione di un noleggio per un acquirente OK
-    @Operation(summary = "delete a rental",
-            description = "This endpoint allows an administrator to delete a rental for a customer.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = NoleggioService.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-    })
     @DeleteMapping("/acquirente/{acquirenteId}/deleteNoleggio/{id}")
     public ResponseEntity<?> deleteNoleggioForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long id) {
         Optional<Noleggio> optionalNoleggio = noleggioService.deleteNoleggioForAcquirente(acquirenteId, id);
@@ -244,14 +167,6 @@ public class AmministratoreController {
     }
 
     //rotta per l'update di un noleggio per un acquirente OK
-    @Operation(summary = "update a rental",
-            description = "This endpoint allows an administrator to update a rental for a customer.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = NoleggioService.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-    })
     @PatchMapping("/acquirente/{acquirenteId}/updateNoleggio/{id}")
     public ResponseEntity<?> updateNoleggioForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long id, @RequestBody UpdateNoleggioRequest updateNoleggioRequest) {
         Optional<Noleggio> optionalNoleggio = noleggioService.updateNoleggioForAcquirente(acquirenteId, id, updateNoleggioRequest);
@@ -263,14 +178,6 @@ public class AmministratoreController {
     }
 
     //rotta per la creazione di un acquisto per un acquirente NO
-    @Operation(summary = "sell a vehicle",
-            description = "This endpoint allows an administrator to sell a vehicle to a customer.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-    })
     @PostMapping("/acquirente/{acquirenteId}/createAcquisto")
     public ResponseEntity<?> createAcquistoForAcquirente(@PathVariable Long acquirenteId, @Validated @RequestBody CreateOrdineAcquistoRequest createOrdineAcquistoRequest) {
         OrdineAcquistoDTO result = ordineAcquistoService.createAcquistoForAcquirente(acquirenteId, createOrdineAcquistoRequest);
@@ -282,14 +189,6 @@ public class AmministratoreController {
     }
 
     //rotta per l'eliminazione di un acquisto per un acquirente OK
-    @Operation(summary = "delete a sale",
-            description = "This endpoint allows an administrator to delete a sale for a customer.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoService.class))}),
-            @ApiResponse(responseCode = "404", description = "\"Acquisto non trovato per l'acquirente con ID: \" + acquirenteId")
-    })
     @DeleteMapping("/acquirente/{acquirenteId}/deleteAcquisto/{id}")
     public ResponseEntity<?> deleteAcquistoForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long id) {
         Optional<OrdineAcquisto> optionalAcquisto = ordineAcquistoService.deleteAcquistoForAcquirente(acquirenteId, id);
@@ -301,14 +200,6 @@ public class AmministratoreController {
     }
 
     //rotta per l'update di un acquisto per un acquirente OK
-    @Operation(summary = "update a sale",
-            description = "This endpoint allows an administrator to update a sale for a customer.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoService.class))}),
-            @ApiResponse(responseCode = "404", description = "\"Acquisto non trovato per l'acquirente con ID: \" + acquirenteId")
-    })
     @PatchMapping("/acquirente/{acquirenteId}/updateAcquisto/{id}")
     public ResponseEntity<?> updateAcquistoForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long id, @RequestBody UpdateOrdineAcquistoRequest updateOrdineAcquistoRequest) {
         Optional<OrdineAcquisto> optionalAcquisto = ordineAcquistoService.updateAcquistoForAcquirente(acquirenteId, id, updateOrdineAcquistoRequest);
@@ -326,28 +217,12 @@ public class AmministratoreController {
     // ?  Verificare il guadagno del salone in un determinato periodo
 
     //rotta per la verifica dello stato di un veicolo
-    @Operation(summary = "get vehicle condition",
-            description = "This endpoint allows an administrator to check a vehicle condition.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleService.class))}),
-            @ApiResponse(responseCode = "404", description = "not found")
-    })
     @GetMapping("/vehicleCondition/{id}")
     public ResponseEntity<?> getVehicleCondition(@PathVariable Long id) {
         return vehicleService.getVehicleCondition(id);
     }
 
     // rotta cancellazione acquirente
-    @Operation(summary = "delete a customer",
-            description = "This endpoint allows an administrator to delete a customer.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AcquirenteService.class))}),
-            @ApiResponse(responseCode = "415", description = "Acquirente non trovato.")
-    })
     @DeleteMapping("/removeAcquirente/{id}")
     public ResponseEntity<String> deleteAcquirenteById(@PathVariable Long id) {
         Optional<Acquirente> optionalAcquirente = acquirenteService.deleteById(id);
@@ -358,14 +233,6 @@ public class AmministratoreController {
     }
 
     // rotta per la modifica di un acquirente OK
-    @Operation(summary = "update a customer",
-            description = "This endpoint allows an administrator to update a customer's data.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AcquirenteService.class))}),
-            @ApiResponse(responseCode = "404", description = "Acquirente non trovato")
-    })
     @PatchMapping("/updateAcquirente/{id}")
     public ResponseEntity<?> updateAcquirente(@PathVariable Long id, @RequestBody UpdateAcquirenteRequest updateAcquirenteRequest) {
         Acquirente acquirente = acquirenteService.updateAcquirente(id, updateAcquirenteRequest);
@@ -377,14 +244,6 @@ public class AmministratoreController {
     }
 
     // rotta cancellazione venditore OK
-    @Operation(summary = "delete a seller",
-            description = "This endpoint allows an administrator to delete a seller.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VenditoreService.class))}),
-            @ApiResponse(responseCode = "404", description = "Venditore non trovato.")
-    })
     @DeleteMapping("/removeVenditore/{id}")
     public ResponseEntity<String> deleteVenditoreById(@PathVariable Long id) {
         Optional<Venditore> optionalVenditore = venditoreService.deleteById(id);
@@ -395,14 +254,6 @@ public class AmministratoreController {
     }
 
     // rotta per la modifica di un venditore OK
-    @Operation(summary = "update a seller",
-            description = "This endpoint allows an administrator to update a seller.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VenditoreService.class))}),
-            @ApiResponse(responseCode = "404", description = "Venditore non trovato.")
-    })
     @PatchMapping("/updateVenditore/{id}")
     public ResponseEntity<?> updateVenditore(@PathVariable Long id, @RequestBody UpdateVenditoreRequest updateVenditoreRequest) {
         Venditore venditore = venditoreService.updateVenditore(id, updateVenditoreRequest);
