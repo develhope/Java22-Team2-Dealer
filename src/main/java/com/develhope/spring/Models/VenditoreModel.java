@@ -47,7 +47,7 @@ public class VenditoreModel {
     }
 
     public static VenditoreModel entityToModel(Venditore venditore) {
-        return new VenditoreModel(venditore.getId(), venditore.getNome(), venditore.getCognome(), venditore.getTelefono(), venditore.getEmail(), venditore.getPassword());
+        return new VenditoreModel(venditore.getVenditoreId(), venditore.getNome(), venditore.getCognome(), venditore.getTelefono(), venditore.getEmail(), venditore.getPassword());
     }
 
     public static VenditoreModel dtoToModel(VenditoreDTO venditoreDTO) {

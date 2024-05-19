@@ -9,18 +9,22 @@ import com.develhope.spring.DTOs.OrdineAcquisto.OrdineAcquistoDTO;
 import com.develhope.spring.Models.NoleggioModel;
 import com.develhope.spring.entity.Acquirente;
 import com.develhope.spring.entity.Noleggio;
+import com.develhope.spring.entity.OrdineAcquisto;
 import com.develhope.spring.service.AcquirenteService;
 import com.develhope.spring.service.NoleggioService;
 import com.develhope.spring.service.OrdineAcquistoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.media.Content;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -188,36 +192,16 @@ public class AcquirenteController {
             @ApiResponse(responseCode = "400", description = "Unable to create the order.")
     })
     @PostMapping("/{acquirenteId}/ordine/add")
-    public ResponseEntity<?> addOrdine(@Validated @PathVariable Long acquirenteId, @Validated @RequestBody CreateOrdineAcquistoRequest createOrdineAcquistoRequest) {
+    public ResponseEntity<?> addOrdine(@Validated @PathVariable Long acquirenteId, @PathVariable Long vehicleId, @Validated @RequestBody OrdineAcquisto ordineAcquisto) {
         Acquirente acquirente = acquirenteService.getById(acquirenteId).orElse(null);
         if (acquirente == null) {
             return ResponseEntity.badRequest().body("Acquirente non trovato con ID: " + acquirenteId);
         }
-        OrdineAcquistoDTO nuovoOrdine = ordineAcquistoService.createOrdineAcquisto(acquirenteId, createOrdineAcquistoRequest);
+        OrdineAcquisto nuovoOrdine = ordineAcquistoService.createOrdineAcquisto(acquirenteId, vehicleId, ordineAcquisto);
         if (nuovoOrdine == null) {
             return ResponseEntity.badRequest().body("Unable to create the order.");
         }
         return ResponseEntity.ok(nuovoOrdine);
-    }
-
-
-    //Route create purchase's customer
-    @Operation(summary = "sell a vehicle",
-            description = "This endpoint allows an administrator to sell a vehicle to a customer.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-    })
-    @PostMapping("/{acquirenteId}/createAcquisto")
-    public ResponseEntity<?> createAcquistoForAcquirente(@PathVariable Long acquirenteId, @Validated @RequestBody CreateOrdineAcquistoRequest createOrdineAcquistoRequest) {
-        OrdineAcquistoDTO result = ordineAcquistoService.createAcquistoForAcquirente(acquirenteId, createOrdineAcquistoRequest);
-        if (result == null) {
-            return ResponseEntity.status(400).body("Impossibile creare l'acquisto per l'acquirente con ID: " + acquirenteId);
-        } else {
-            return ResponseEntity.ok().body(result);
-        }
     }
 
     //Cancellare un ordine
@@ -229,12 +213,14 @@ public class AcquirenteController {
             @ApiResponse(responseCode = "400", description = "No orders found")
     })
     @DeleteMapping("/{acquirenteId}/ordini/{ordineId}")
-    public ResponseEntity<?> deleteOrdineForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long ordineId) {
-        Optional<OrdineAcquisto> optionalOrdine = ordineAcquistoService.deleteOrdineForAcquirente(acquirenteId, ordineId);
-        if (optionalOrdine.isPresent()) {
-            return ResponseEntity.ok("Ordine eliminato con successo");
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> deleteOrdineForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long ordineAcquistoId) {
+        try {
+            ordineAcquistoService.deleteOrdineAcquisto(acquirenteId, ordineAcquistoId);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Ordine cancellato con successo: " + ordineAcquistoId);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ordine non trovato per cancellazione: " + ordineAcquistoId);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante la cancellazione dell'ordine: " + e.getMessage());
         }
     }
 
@@ -248,7 +234,7 @@ public class AcquirenteController {
     })
     @GetMapping("/ordini/{acquirenteId}")
     public ResponseEntity<List<OrdineAcquisto>> getOrdiniByAcquirenteId(@PathVariable Long acquirenteId) {
-        List<OrdineAcquisto> ordini = acquirenteService.getOrdiniByAcquirenteId(acquirenteId);
+        List<OrdineAcquisto> ordini = ordineAcquistoService.getOrdiniAcquistiByAcquirente(acquirenteId);
         return ResponseEntity.ok(ordini);
     }
 
@@ -261,7 +247,8 @@ public class AcquirenteController {
     })
     @GetMapping("/acquisti/{acquirenteId}")
     public ResponseEntity<List<OrdineAcquisto>> getAcquistiByAcquirenteId(@PathVariable Long acquirenteId) {
-        List<OrdineAcquisto> acquisti = acquirenteService.getAcquistiByAcquirenteId(acquirenteId);
+        List<OrdineAcquisto> acquisti = ordineAcquistoService.getOrdiniAcquistiByAcquirente(acquirenteId);
         return ResponseEntity.ok(acquisti);
     }
+
 }

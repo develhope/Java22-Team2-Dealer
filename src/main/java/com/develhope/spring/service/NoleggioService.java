@@ -65,7 +65,7 @@ public class NoleggioService {
 
     // find by venditore
     public List<Noleggio> findByVenditore(Long venditoreId) {
-        return noleggioRepository.findByVenditoreId(venditoreId);
+        return noleggioRepository.findByVenditoreVenditoreId(venditoreId);
     }
 
     // find by noleggio id

@@ -13,6 +13,6 @@ public interface NoleggioRepository extends JpaRepository<Noleggio, Long> {
 
     List<Noleggio> findByVehicle_VehicleId(Long veicoloId);
 
-    List<Noleggio> findByVenditoreId(Long venditoreId);
+    List<Noleggio> findByVenditoreVenditoreId(Long venditoreId);
 
 }

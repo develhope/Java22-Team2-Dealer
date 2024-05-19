@@ -7,11 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class UpdateAcquirenteRequest {
+
     private String nome;
     private String cognome;
     private String telefono;
     private String email;
     private String password;
+
 }

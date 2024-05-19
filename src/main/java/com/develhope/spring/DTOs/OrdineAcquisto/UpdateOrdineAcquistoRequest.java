@@ -16,6 +16,7 @@ public class UpdateOrdineAcquistoRequest {
     private OffsetDateTime dataOrdine;
     private OffsetDateTime dataConsegna;
     private BigDecimal anticipo;
+    private BigDecimal costoTotale;
     private Boolean flagPagato;
     private StatoOrdineAcquisto statoOrdineAcquisto;
     private Long acquirenteId;

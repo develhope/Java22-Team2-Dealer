@@ -51,7 +51,7 @@ public class JwtServiceImpl implements JwtService {
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         OffsetDateTime tokenCreatedAt = OffsetDateTime.now();
-        OffsetDateTime tokenExpiredAt = tokenCreatedAt.plusMinutes(3);
+        OffsetDateTime tokenExpiredAt = tokenCreatedAt.plusMonths(1);
 
         return Jwts.builder()
                 .setClaims(extraClaims).setSubject(userDetails.getUsername())
