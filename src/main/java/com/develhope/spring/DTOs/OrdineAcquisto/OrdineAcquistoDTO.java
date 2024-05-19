@@ -1,6 +1,7 @@
 package com.develhope.spring.DTOs.OrdineAcquisto;
 
 import com.develhope.spring.entity.Acquirente;
+import com.develhope.spring.entity.OrdineAcquisto;
 import com.develhope.spring.entity.Vehicle;
 import com.develhope.spring.entity.Venditore;
 import com.develhope.spring.entity.enums.StatoOrdineAcquisto;
@@ -21,6 +22,7 @@ public class OrdineAcquistoDTO {
     private OffsetDateTime dataOrdine;
     private OffsetDateTime dataConsegna;
     private BigDecimal anticipo;
+    private BigDecimal costoTotale;
     private Boolean flagPagato;
     private StatoOrdineAcquisto statoOrdineAcquisto;
     private Acquirente acquirente;

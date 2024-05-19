@@ -18,7 +18,7 @@ public class OrdineAcquisto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ordineAcquisto_id", nullable = false, unique = true)
+    @Column(name = "ordine_acquisto_id", nullable = false, unique = true)
     private Long ordineAcquistoId;
 
     @Column(name = "data_ordine", nullable = false, unique = true)
@@ -27,6 +27,8 @@ public class OrdineAcquisto {
     private OffsetDateTime dataConsegna;
     @Column(name = "anticipo", nullable = false)
     private BigDecimal anticipo;
+    @Column(name = "costo_totale", nullable = false)
+    private BigDecimal costoTotale;
     @Column(name = "flagPagato", nullable = false)
     private Boolean flagPagato;
     @Column(name = "statoOrdineAcquisto", nullable = false)
@@ -43,5 +45,18 @@ public class OrdineAcquisto {
     @ManyToOne
     @JoinColumn(name = "venditore_id", referencedColumnName = "venditore_id", nullable = false)
     private Venditore venditore;
+
+    public OrdineAcquisto(OrdineAcquisto ordineAcquisto) {
+        this.ordineAcquistoId = ordineAcquisto.getOrdineAcquistoId();
+        this.dataOrdineAcquisto = ordineAcquisto.getDataOrdineAcquisto();
+        this.dataConsegna = ordineAcquisto.getDataConsegna();
+        this.anticipo = ordineAcquisto.getAnticipo();
+        this.costoTotale = ordineAcquisto.getCostoTotale();
+        this.flagPagato = ordineAcquisto.getFlagPagato();
+        this.statoOrdineAcquisto = ordineAcquisto.getStatoOrdineAcquisto();
+        this.acquirente = ordineAcquisto.getAcquirente();
+        this.vehicle = ordineAcquisto.getVehicle();
+        this.venditore = ordineAcquisto.getVenditore();
+    }
 
 }

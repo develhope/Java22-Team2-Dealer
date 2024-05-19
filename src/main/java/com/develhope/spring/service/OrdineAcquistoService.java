@@ -4,17 +4,17 @@ import com.develhope.spring.DTOs.OrdineAcquisto.CreateOrdineAcquistoRequest;
 import com.develhope.spring.DTOs.OrdineAcquisto.OrdineAcquistoDTO;
 import com.develhope.spring.DTOs.OrdineAcquisto.UpdateOrdineAcquistoRequest;
 import com.develhope.spring.Models.OrdineAcquistoModel;
-import com.develhope.spring.entity.Acquirente;
-import com.develhope.spring.entity.OrdineAcquisto;
-import com.develhope.spring.entity.Vehicle;
-import com.develhope.spring.entity.Venditore;
+import com.develhope.spring.entity.*;
 import com.develhope.spring.entity.enums.TipoOrdine;
 import com.develhope.spring.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrdineAcquistoService {
@@ -31,32 +31,49 @@ public class OrdineAcquistoService {
     @Autowired
     private OrdineAcquistoRepository ordineAcquistoRepository;
 
-    public OrdineAcquistoDTO createOrdineAcquisto(Long id, CreateOrdineAcquistoRequest createOrdineAcquistoRequest) {
-        OffsetDateTime dateTime = createOrdineAcquistoRequest.getDataOrdine() != null ? createOrdineAcquistoRequest.getDataOrdine() : OffsetDateTime.now();
-        OffsetDateTime dateTime2 = dateTime.plusDays(21);
+    // Creare un ordineAcquisto per un utente a partire da un veicolo ordinabile / acquistabile
+    public OrdineAcquisto createOrdineAcquisto(Long acquirenteId, Long vehicleId, OrdineAcquisto ordineAcquisto) {
+        Acquirente acquirente = acquirenteRepository.findById(acquirenteId).orElseThrow(() -> new ResourceNotFoundException("Acquirente non trovato"));
+        Vehicle vehicle = vehicleRepository.findById(vehicleId).orElseThrow(() -> new ResourceNotFoundException("Veicolo non trovato"));
+        Venditore venditore = venditoreRepository.findById(ordineAcquisto.getVenditore().getVenditoreId()).orElseThrow(() -> new ResourceNotFoundException("Venditore non trovato"));
 
-        Acquirente acquirente = acquirenteRepository.findById(createOrdineAcquistoRequest.getAcquirenteId()).orElse(null);
-        Vehicle vehicle = vehicleRepository.findById(createOrdineAcquistoRequest.getVehicleId()).orElse(null);
-        Venditore venditore = venditoreRepository.findById(createOrdineAcquistoRequest.getVenditoreId()).orElse(null);
-
-        if (acquirente == null || vehicle == null || venditore == null ) {
-            throw new IllegalArgumentException("Acquirente, Vehicle o Venditore non trovato");
-        } else if (vehicle.getTipoOrdine() == TipoOrdine.NON_DISPONIBILE) {
+        if (vehicle.getTipoOrdine() == TipoOrdine.NON_DISPONIBILE) {
             throw new IllegalArgumentException("Veicolo non acquistabile");
         }
 
-        OrdineAcquistoModel ordineAcquistoModel = new OrdineAcquistoModel(dateTime, dateTime2, createOrdineAcquistoRequest.getAnticipo(), createOrdineAcquistoRequest.getFlagPagato(), createOrdineAcquistoRequest.getStatoOrdineAcquisto(), acquirente, vehicle, venditore);
-        OrdineAcquistoModel ordineAcquistoModel1 = OrdineAcquistoModel.entityToModel(ordineAcquistoRepository.save(OrdineAcquistoModel.modelToEntity(ordineAcquistoModel)));
-        return OrdineAcquistoModel.modelToDto(ordineAcquistoModel1);
+        ordineAcquisto.setAcquirente(acquirente);
+        ordineAcquisto.setVehicle(vehicle);
+        ordineAcquisto.setVenditore(venditore);
+
+        ordineAcquisto = ordineAcquistoRepository.save(ordineAcquisto);
+        return ordineAcquisto;
     }
 
-    public OrdineAcquistoDTO createOrdineForAcquirente(Long acquirenteId, CreateOrdineAcquistoRequest createOrdineAcquistoRequest) {
-        OffsetDateTime dateTime = createOrdineAcquistoRequest.getDataOrdine() != null ? createOrdineAcquistoRequest.getDataOrdine() : OffsetDateTime.now();
-        OffsetDateTime dateTime2 = dateTime.plusDays(21);
+    // Cancellare un ordineAcquisto per un utente
+    public void deleteOrdineAcquisto(Long acquirenteId, Long ordineAcquistoId) {
+        OrdineAcquisto ordineAcquisto = ordineAcquistoRepository.findByOrdineAcquistoIdAndAcquirenteId(ordineAcquistoId, acquirenteId)
+                .orElseThrow(() -> new ResourceNotFoundException("OrdineAcquisto non trovato"));
+
+        ordineAcquistoRepository.delete(ordineAcquisto);
+    }
+
+    // Modificare un ordineAcquisto per un utente
+    public OrdineAcquisto updateOrdineAcquisto(Long acquirenteId, Long ordineAcquistoId, OrdineAcquisto ordineAcquisto) {
+        OrdineAcquisto updateOrdineAcquisto = ordineAcquistoRepository.findByOrdineAcquistoIdAndAcquirenteId(ordineAcquistoId, acquirenteId)
+                .orElseThrow(() -> new ResourceNotFoundException("OrdineAcquisto non trovato"));
+
+        updateOrdineAcquisto.setDataOrdineAcquisto(ordineAcquisto.getDataOrdineAcquisto());
+        updateOrdineAcquisto.setDataConsegna(ordineAcquisto.getDataConsegna());
+        updateOrdineAcquisto.setAnticipo(ordineAcquisto.getAnticipo());
+        updateOrdineAcquisto.setCostoTotale(ordineAcquisto.getCostoTotale());
+        updateOrdineAcquisto.setFlagPagato(ordineAcquisto.getFlagPagato());
+        updateOrdineAcquisto.setStatoOrdineAcquisto(ordineAcquisto.getStatoOrdineAcquisto());
+        updateOrdineAcquisto.setVehicle(ordineAcquisto.getVehicle());
+        updateOrdineAcquisto.setVenditore(ordineAcquisto.getVenditore());
 
         Acquirente acquirente = acquirenteRepository.findById(acquirenteId).orElse(null);
-        Vehicle vehicle = vehicleRepository.findById(createOrdineAcquistoRequest.getVehicleId()).orElse(null);
-        Venditore venditore = venditoreRepository.findById(createOrdineAcquistoRequest.getVenditoreId()).orElse(null);
+        Vehicle vehicle = vehicleRepository.findById(ordineAcquisto.getVehicle().getVehicleId()).orElse(null);
+        Venditore venditore = venditoreRepository.findById(ordineAcquisto.getVenditore().getVenditoreId()).orElse(null);
 
         if (acquirente == null || vehicle == null || venditore == null) {
             throw new IllegalArgumentException("Acquirente, Vehicle o Venditore non trovato");
@@ -64,103 +81,17 @@ public class OrdineAcquistoService {
             throw new IllegalArgumentException("Veicolo non acquistabile");
         }
 
-        OrdineAcquistoModel ordineAcquistoModel = new OrdineAcquistoModel(dateTime, dateTime2, createOrdineAcquistoRequest.getAnticipo(), createOrdineAcquistoRequest.getFlagPagato(), createOrdineAcquistoRequest.getStatoOrdineAcquisto(), acquirente, vehicle, venditore);
-        OrdineAcquistoModel ordineAcquistoModel1 = OrdineAcquistoModel.entityToModel(ordineAcquistoRepository.save(OrdineAcquistoModel.modelToEntity(ordineAcquistoModel)));
-        return OrdineAcquistoModel.modelToDto(ordineAcquistoModel1);
+        updateOrdineAcquisto = ordineAcquistoRepository.save(updateOrdineAcquisto);
+        return new OrdineAcquisto(updateOrdineAcquisto);
     }
 
-    public Optional<OrdineAcquisto> deleteOrdineForAcquirente(Long acquirenteId, Long ordineId) {
-        Optional<OrdineAcquisto> optionalOrdine = ordineAcquistoRepository.findById(ordineId);
-        if (optionalOrdine.isPresent()) {
-            OrdineAcquisto ordineAcquisto = optionalOrdine.get();
-            if (ordineAcquisto.getAcquirente().getId().equals(acquirenteId)) {
-                ordineAcquistoRepository.deleteById(ordineId);
-                return optionalOrdine;
-            } else {
-                throw new IllegalArgumentException("L'ordine non appartiene all'acquirente specificato");
-            }
-        } else {
-            return Optional.empty();
-        }
+    // Metodo per ottenere gli ordini di acquisto di un determinato acquirente
+    public List<OrdineAcquisto> getOrdiniAcquistiByAcquirente(Long acquirenteId) {
+        Acquirente acquirente = acquirenteRepository.findById(acquirenteId)
+                .orElseThrow(() -> new ResourceNotFoundException("Acquirente non trovato: " + acquirenteId));
+
+        List<OrdineAcquisto> ordiniAcquisto = ordineAcquistoRepository.findByAcquirenteId(acquirenteId);
+        return ordiniAcquisto.stream().map(OrdineAcquisto::new).collect(Collectors.toList());
     }
 
-    public Optional<OrdineAcquisto> updateOrdineForAcquirente(Long acquirenteId, Long ordineId, UpdateOrdineAcquistoRequest updateOrdineAcquistoRequest) {
-        Optional<OrdineAcquisto> optionalOrdine = ordineAcquistoRepository.findById(ordineId);
-        if (optionalOrdine.isPresent()) {
-            OrdineAcquisto ordineAcquisto = optionalOrdine.get();
-            if (ordineAcquisto.getAcquirente().getId().equals(acquirenteId)) {
-
-                ordineAcquisto.setDataOrdineAcquisto(updateOrdineAcquistoRequest.getDataOrdine() != null ? updateOrdineAcquistoRequest.getDataOrdine() : ordineAcquisto.getDataOrdineAcquisto());
-                ordineAcquisto.setDataConsegna(updateOrdineAcquistoRequest.getDataConsegna() != null ? updateOrdineAcquistoRequest.getDataConsegna() : ordineAcquisto.getDataConsegna());
-                ordineAcquisto.setAnticipo(updateOrdineAcquistoRequest.getAnticipo() != null ? updateOrdineAcquistoRequest.getAnticipo() : ordineAcquisto.getAnticipo());
-                ordineAcquisto.setFlagPagato(updateOrdineAcquistoRequest.getFlagPagato() != null ? updateOrdineAcquistoRequest.getFlagPagato() : ordineAcquisto.getFlagPagato());
-                ordineAcquisto.setStatoOrdineAcquisto(updateOrdineAcquistoRequest.getStatoOrdineAcquisto() != null ? updateOrdineAcquistoRequest.getStatoOrdineAcquisto() : ordineAcquisto.getStatoOrdineAcquisto());
-
-                ordineAcquistoRepository.save(ordineAcquisto);
-
-                return optionalOrdine;
-            } else {
-                throw new IllegalArgumentException("L'ordine non appartiene all'acquirente specificato");
-            }
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    public OrdineAcquistoDTO createAcquistoForAcquirente(Long acquirenteId, CreateOrdineAcquistoRequest createOrdineAcquistoRequest) {
-        OffsetDateTime dateTime = createOrdineAcquistoRequest.getDataOrdine() != null ? createOrdineAcquistoRequest.getDataOrdine() : OffsetDateTime.now();
-        OffsetDateTime dateTime2 = dateTime.plusDays(21);
-
-        Acquirente acquirente = acquirenteRepository.findById(acquirenteId).orElse(null);
-        Vehicle vehicle = vehicleRepository.findById(createOrdineAcquistoRequest.getVehicleId()).orElse(null);
-        Venditore venditore = venditoreRepository.findById(createOrdineAcquistoRequest.getVenditoreId()).orElse(null);
-
-        if (acquirente == null || vehicle == null || venditore == null) {
-            throw new IllegalArgumentException("Acquirente, Vehicle o Venditore non trovato");
-        } else if (vehicle.getTipoOrdine() == TipoOrdine.NON_DISPONIBILE) {
-            throw new IllegalArgumentException("Veicolo non acquistabile");
-        }
-
-        OrdineAcquistoModel ordineAcquistoModel = new OrdineAcquistoModel(dateTime, dateTime2, createOrdineAcquistoRequest.getAnticipo(), createOrdineAcquistoRequest.getFlagPagato(), createOrdineAcquistoRequest.getStatoOrdineAcquisto(), acquirente, vehicle, venditore);
-        OrdineAcquistoModel ordineAcquistoModel1 = OrdineAcquistoModel.entityToModel(ordineAcquistoRepository.save(OrdineAcquistoModel.modelToEntity(ordineAcquistoModel)));
-        return OrdineAcquistoModel.modelToDto(ordineAcquistoModel1);
-    }
-
-    public Optional<OrdineAcquisto> deleteAcquistoForAcquirente(Long acquirenteId, Long ordineId) {
-        Optional<OrdineAcquisto> optionalAcquisto = ordineAcquistoRepository.findById(ordineId);
-        if (optionalAcquisto.isPresent()) {
-            OrdineAcquisto ordineAcquisto = optionalAcquisto.get();
-            if (ordineAcquisto.getAcquirente().getId().equals(acquirenteId)) {
-                ordineAcquistoRepository.deleteById(ordineId);
-                return optionalAcquisto;
-            } else {
-                throw new IllegalArgumentException("L'acquisto non appartiene all'acquirente specificato");
-            }
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    public Optional<OrdineAcquisto> updateAcquistoForAcquirente(Long acquirenteId, Long ordineId, UpdateOrdineAcquistoRequest updateOrdineAcquistoRequest) {
-        Optional<OrdineAcquisto> optionalAcquisto = ordineAcquistoRepository.findById(ordineId);
-        if (optionalAcquisto.isPresent()) {
-            OrdineAcquisto ordineAcquisto = optionalAcquisto.get();
-            if (ordineAcquisto.getAcquirente().getId().equals(acquirenteId)) {
-
-                ordineAcquisto.setDataOrdineAcquisto(updateOrdineAcquistoRequest.getDataOrdine() != null ? updateOrdineAcquistoRequest.getDataOrdine() : ordineAcquisto.getDataOrdineAcquisto());
-                ordineAcquisto.setDataConsegna(updateOrdineAcquistoRequest.getDataConsegna() != null ? updateOrdineAcquistoRequest.getDataConsegna() : ordineAcquisto.getDataConsegna());
-                ordineAcquisto.setAnticipo(updateOrdineAcquistoRequest.getAnticipo() != null ? updateOrdineAcquistoRequest.getAnticipo() : ordineAcquisto.getAnticipo());
-                ordineAcquisto.setFlagPagato(updateOrdineAcquistoRequest.getFlagPagato() != null ? updateOrdineAcquistoRequest.getFlagPagato() : ordineAcquisto.getFlagPagato());
-                ordineAcquisto.setStatoOrdineAcquisto(updateOrdineAcquistoRequest.getStatoOrdineAcquisto() != null ? updateOrdineAcquistoRequest.getStatoOrdineAcquisto() : ordineAcquisto.getStatoOrdineAcquisto());
-
-                ordineAcquistoRepository.save(ordineAcquisto);
-
-                return optionalAcquisto;
-            } else {
-                throw new IllegalArgumentException("L'acquisto non appartiene all'acquirente specificato");
-            }
-        } else {
-            return Optional.empty();
-        }
-    }
 }

@@ -1,6 +1,18 @@
 server:
   port: 5050
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: alpha
+    configUrl: /v3/api-docs/swagger-config
+    url: /v3/api-docs
+    urls:
+      - url: /v3/api-docs
+        name: Dealer API
+
 ---
 
 environment: production

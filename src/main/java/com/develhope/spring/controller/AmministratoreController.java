@@ -1,6 +1,5 @@
 package com.develhope.spring.controller;
 
-import com.develhope.spring.DTOs.Acquirente.CreateAcquirenteRequest;
 import com.develhope.spring.DTOs.Acquirente.UpdateAcquirenteRequest;
 import com.develhope.spring.DTOs.Noleggio.CreateNoleggioRequest;
 import com.develhope.spring.DTOs.Noleggio.NoleggioDTO;
@@ -11,8 +10,9 @@ import com.develhope.spring.DTOs.OrdineAcquisto.UpdateOrdineAcquistoRequest;
 import com.develhope.spring.DTOs.Vehicle.CreateVehicleRequest;
 import com.develhope.spring.DTOs.Vehicle.UpdateVehicleRequest;
 import com.develhope.spring.DTOs.Vehicle.VehicleDTO;
-import com.develhope.spring.DTOs.Venditore.CreateVenditoreRequest;
 import com.develhope.spring.DTOs.Venditore.UpdateVenditoreRequest;
+import com.develhope.spring.Features.User.Entity.Role;
+import com.develhope.spring.Features.User.Entity.User;
 import com.develhope.spring.entity.*;
 import com.develhope.spring.entity.enums.VehicleCondition;
 import com.develhope.spring.service.*;
@@ -22,7 +22,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,12 +63,16 @@ public class AmministratoreController {
             @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
     })
     @PostMapping("/addVehicle")
-    public ResponseEntity<?> createVehicle(@Validated @RequestBody CreateVehicleRequest createVehicleRequest) {
-        VehicleDTO result = vehicleService.createVehicle(createVehicleRequest);
-        if (result == null) {
-            return ResponseEntity.status(400).body("something goes wrong");
+    public ResponseEntity<?> createVehicle(@Validated @RequestBody CreateVehicleRequest createVehicleRequest, @AuthenticationPrincipal User user) {
+        if (user.getRole() == Role.AMMINISTRATORE) {
+            VehicleDTO result = vehicleService.createVehicle(createVehicleRequest);
+            if (result == null) {
+                return ResponseEntity.status(400).body("something goes wrong");
+            } else {
+                return ResponseEntity.ok().body(result);
+            }
         } else {
-            return ResponseEntity.ok().body(result);
+            return ResponseEntity.status(403).body("Unauthorized");
         }
     }
 
@@ -154,8 +161,8 @@ public class AmministratoreController {
             @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
     })
     @PostMapping("/acquirente/{acquirenteId}/createOrdine")
-    public ResponseEntity<?> createOrdineForAcquirente(@PathVariable Long acquirenteId, @Validated @RequestBody CreateOrdineAcquistoRequest createOrdineAcquistoRequest) {
-        OrdineAcquistoDTO result = ordineAcquistoService.createOrdineForAcquirente(acquirenteId, createOrdineAcquistoRequest);
+    public ResponseEntity<?> createOrdineForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long vehicleId, @Validated @RequestBody OrdineAcquisto ordineAcquisto) {
+        OrdineAcquisto result = ordineAcquistoService.createOrdineAcquisto(acquirenteId, vehicleId, ordineAcquisto);
         if (result == null) {
             return ResponseEntity.status(400).body("Impossibile creare l'ordine per l'acquirente con ID: " + acquirenteId);
         } else {
@@ -173,12 +180,14 @@ public class AmministratoreController {
             @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
     })
     @DeleteMapping("/acquirente/{acquirenteId}/deleteOrdine/{id}")
-    public ResponseEntity<?> deleteOrdineForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long id) {
-        Optional<OrdineAcquisto> optionalOrdine = ordineAcquistoService.deleteOrdineForAcquirente(acquirenteId, id);
-        if (optionalOrdine.isPresent()) {
-            return ResponseEntity.ok("Ordine eliminato con successo per l'acquirente con ID: " + acquirenteId);
-        } else {
-            return ResponseEntity.status(404).body("Ordine non trovato per l'acquirente con ID: " + acquirenteId);
+    public ResponseEntity<?> deleteOrdineForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long ordineAcquistoId) {
+        try {
+            ordineAcquistoService.deleteOrdineAcquisto(acquirenteId, ordineAcquistoId);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Ordine cancellato con successo: " + ordineAcquistoId);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ordine non trovato per cancellazione: " + ordineAcquistoId);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante la cancellazione dell'ordine: " + e.getMessage());
         }
     }
 
@@ -192,9 +201,9 @@ public class AmministratoreController {
             @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
     })
     @PatchMapping("/acquirente/{acquirenteId}/updateOrdine/{id}")
-    public ResponseEntity<?> updateOrdineForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long id, @RequestBody UpdateOrdineAcquistoRequest updateOrdineAcquistoRequest) {
-        Optional<OrdineAcquisto> optionalOrdine = ordineAcquistoService.updateOrdineForAcquirente(acquirenteId, id, updateOrdineAcquistoRequest);
-        if (optionalOrdine.isPresent()) {
+    public ResponseEntity<?> updateOrdineForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long id, @RequestBody OrdineAcquisto ordineAcquisto) {
+        OrdineAcquisto optionalOrdine = ordineAcquistoService.updateOrdineAcquisto(acquirenteId, id, ordineAcquisto);
+        if (optionalOrdine.getOrdineAcquistoId().describeConstable().isPresent()) {
             return ResponseEntity.ok("OrdineAcquisto aggiornato con successo per l'acquirente con ID: " + acquirenteId);
         } else {
             return ResponseEntity.status(404).body("OrdineAcquisto non trovato per l'acquirente con ID: " + acquirenteId);
@@ -259,63 +268,6 @@ public class AmministratoreController {
             return ResponseEntity.ok("Noleggio aggiornato con successo per l'acquirente con ID: " + acquirenteId);
         } else {
             return ResponseEntity.status(404).body("Noleggio non trovato per l'acquirente con ID: " + acquirenteId);
-        }
-    }
-
-    //rotta per la creazione di un acquisto per un acquirente NO
-    @Operation(summary = "sell a vehicle",
-            description = "This endpoint allows an administrator to sell a vehicle to a customer.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-    })
-    @PostMapping("/acquirente/{acquirenteId}/createAcquisto")
-    public ResponseEntity<?> createAcquistoForAcquirente(@PathVariable Long acquirenteId, @Validated @RequestBody CreateOrdineAcquistoRequest createOrdineAcquistoRequest) {
-        OrdineAcquistoDTO result = ordineAcquistoService.createAcquistoForAcquirente(acquirenteId, createOrdineAcquistoRequest);
-        if (result == null) {
-            return ResponseEntity.status(400).body("Impossibile creare l'acquisto per l'acquirente con ID: " + acquirenteId);
-        } else {
-            return ResponseEntity.ok().body(result);
-        }
-    }
-
-    //rotta per l'eliminazione di un acquisto per un acquirente OK
-    @Operation(summary = "delete a sale",
-            description = "This endpoint allows an administrator to delete a sale for a customer.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoService.class))}),
-            @ApiResponse(responseCode = "404", description = "\"Acquisto non trovato per l'acquirente con ID: \" + acquirenteId")
-    })
-    @DeleteMapping("/acquirente/{acquirenteId}/deleteAcquisto/{id}")
-    public ResponseEntity<?> deleteAcquistoForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long id) {
-        Optional<OrdineAcquisto> optionalAcquisto = ordineAcquistoService.deleteAcquistoForAcquirente(acquirenteId, id);
-        if (optionalAcquisto.isPresent()) {
-            return ResponseEntity.ok("Acquisto eliminato con successo per l'acquirente con ID: " + acquirenteId);
-        } else {
-            return ResponseEntity.status(404).body("Acquisto non trovato per l'acquirente con ID: " + acquirenteId);
-        }
-    }
-
-    //rotta per l'update di un acquisto per un acquirente OK
-    @Operation(summary = "update a sale",
-            description = "This endpoint allows an administrator to update a sale for a customer.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquistoService.class))}),
-            @ApiResponse(responseCode = "404", description = "\"Acquisto non trovato per l'acquirente con ID: \" + acquirenteId")
-    })
-    @PatchMapping("/acquirente/{acquirenteId}/updateAcquisto/{id}")
-    public ResponseEntity<?> updateAcquistoForAcquirente(@PathVariable Long acquirenteId, @PathVariable Long id, @RequestBody UpdateOrdineAcquistoRequest updateOrdineAcquistoRequest) {
-        Optional<OrdineAcquisto> optionalAcquisto = ordineAcquistoService.updateAcquistoForAcquirente(acquirenteId, id, updateOrdineAcquistoRequest);
-        if (optionalAcquisto.isPresent()) {
-            return ResponseEntity.ok("Acquisto aggiornato con successo per l'acquirente con ID: " + acquirenteId);
-        } else {
-            return ResponseEntity.status(404).body("Acquisto non trovato per l'acquirente con ID: " + acquirenteId);
         }
     }
 
