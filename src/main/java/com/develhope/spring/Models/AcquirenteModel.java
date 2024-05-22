@@ -1,10 +1,9 @@
 package com.develhope.spring.Models;
 
 import com.develhope.spring.DTOs.Acquirente.AcquirenteDTO;
+import com.develhope.spring.Features.User.Entity.User;
 import com.develhope.spring.entity.Acquirente;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +19,8 @@ public class AcquirenteModel {
     private String telefono;
     private String email;
     private String password;
+
+
 
     public AcquirenteModel(Long acquirenteId, String nome, String cognome, String telefono, String email, String password) {
         this.acquirenteId = acquirenteId;
@@ -44,7 +45,7 @@ public class AcquirenteModel {
     }
 
     public static Acquirente modelToEntity(AcquirenteModel acquirenteModel) {
-        return new Acquirente(acquirenteModel.getAcquirenteId(), acquirenteModel.getNome(), acquirenteModel.getCognome(), acquirenteModel.getTelefono(), acquirenteModel.getEmail(), acquirenteModel.getPassword());
+        return new Acquirente(acquirenteModel.getAcquirenteId(), acquirenteModel.getCognome(), acquirenteModel.getTelefono(), acquirenteModel.getEmail(), acquirenteModel.getPassword(), acquirenteModel.getNome());
     }
 
     public static AcquirenteModel entityToModel(Acquirente acquirente) {

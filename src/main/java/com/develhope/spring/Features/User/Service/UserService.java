@@ -1,5 +1,6 @@
 package com.develhope.spring.Features.User.Service;
 
+import com.develhope.spring.Features.User.Entity.Role;
 import com.develhope.spring.Features.User.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,4 @@ public class UserService {
             }
         };
     }
-
 }

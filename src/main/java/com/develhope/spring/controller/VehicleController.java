@@ -137,23 +137,13 @@ public class VehicleController {
     })
     @GetMapping("/tipoVeicolo/{tipoVeicolo}")
     public List<Vehicle> getByTipoVeicolo(@PathVariable String tipoVeicolo) {
-        TipoVeicolo tipo = null;
-        switch (tipoVeicolo.toUpperCase()) {
-            case "SCOOTER":
-                tipo = TipoVeicolo.SCOOTER;
-                break;
-            case "FURGONE":
-                tipo = TipoVeicolo.FURGONE;
-                break;
-            case "AUTO":
-                tipo = TipoVeicolo.AUTO;
-                break;
-            case "MOTO":
-                tipo = TipoVeicolo.MOTO;
-                break;
-            default:
-                throw new IllegalArgumentException("Tipo veicolo non valido: " + tipoVeicolo);
-        }
+        TipoVeicolo tipo = switch (tipoVeicolo.toUpperCase()) {
+            case "SCOOTER" -> TipoVeicolo.SCOOTER;
+            case "FURGONE" -> TipoVeicolo.FURGONE;
+            case "AUTO" -> TipoVeicolo.AUTO;
+            case "MOTO" -> TipoVeicolo.MOTO;
+            default -> throw new IllegalArgumentException("Tipo veicolo non valido: " + tipoVeicolo);
+        };
         return vehicleService.searchByTipoVeicolo(tipo);
     }
 
@@ -233,7 +223,7 @@ public class VehicleController {
     }
 
     // ricerca veicolo sulla base degli accessori
-    @Operation(summary = "Get a vehicle by optional",
+    @Operation(summary = "Get a vehicle by accessories",
             description = "This endpoint allows to find a vehicle by providing the necessary root's path variable.")
     @ApiResponses(value = {
             @ApiResponse(
