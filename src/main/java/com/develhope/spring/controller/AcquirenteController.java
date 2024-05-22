@@ -6,6 +6,8 @@ import com.develhope.spring.DTOs.Noleggio.CreateNoleggioRequest;
 import com.develhope.spring.DTOs.Noleggio.NoleggioDTO;
 import com.develhope.spring.DTOs.OrdineAcquisto.CreateOrdineAcquistoRequest;
 import com.develhope.spring.DTOs.OrdineAcquisto.OrdineAcquistoDTO;
+import com.develhope.spring.Features.User.Entity.User;
+import com.develhope.spring.Features.User.Service.UserService;
 import com.develhope.spring.Models.NoleggioModel;
 import com.develhope.spring.entity.Acquirente;
 import com.develhope.spring.entity.Noleggio;
@@ -22,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,26 +44,10 @@ public class AcquirenteController {
     private NoleggioService noleggioService;
 
     @Autowired
-    private OrdineAcquistoService ordineAcquistoService;
+    private UserService userService;
 
-    //Route create Customer
-    @Operation(summary = "Create a new Customer",
-            description = "This endpoint allows to create a new Customer by providing the necessary information in the request body.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Successfully created Customer",
-                    content = {@Content(mediaType = "application/jason", schema = @Schema(implementation = AcquirenteDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-    })
-    @PostMapping("/add")
-    public ResponseEntity<?> createAcquirente(@Validated @RequestBody CreateAcquirenteRequest createAcquirenteRequest) {
-        AcquirenteDTO result = acquirenteService.createAcquirente(createAcquirenteRequest);
-        if (result == null) {
-            return ResponseEntity.status(400).body("Invalid input or missing required fields");
-        } else {
-            return ResponseEntity.ok().body(result);
-        }
-    }
+    @Autowired
+    private OrdineAcquistoService ordineAcquistoService;
 
     // Route delete customer
     @Operation(summary = "Delete a Customer")
@@ -70,12 +58,39 @@ public class AcquirenteController {
             @ApiResponse(responseCode = "400", description = "Customer not found")
     })
     @DeleteMapping("/remove/{id}")
-    public ResponseEntity<String> deleteAcquirenteById(@PathVariable Long id) {
-        Optional<Acquirente> optionalAcquirente = acquirenteService.deleteById(id);
-        if (optionalAcquirente.isPresent()) {
-            return ResponseEntity.ok("Customer deleted.");
+    public ResponseEntity<?> deleteAcquirente(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        try {
+            Optional<User> deletedAcquirente = acquirenteService.deleteById(id, user);
+            if (deletedAcquirente.isPresent()) {
+                return ResponseEntity.ok("User information deleted successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with id " + id + " not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
-        return ResponseEntity.badRequest().body("Customer not found");
+    }
+
+    //Modify customers
+    @Operation(summary = "Modify Customers by ID")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200", description = "Successfully modified Customer by id",
+                    content = {@Content(mediaType = "application/jason", schema = @Schema(implementation = AcquirenteDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Customer not found")
+    })
+    @PutMapping("/set/{id}")
+    public ResponseEntity<?> updateAcquirente(@PathVariable Long id, @RequestBody User userMod, @AuthenticationPrincipal User callingUser) {
+        try {
+            User updatedAcquirente = acquirenteService.updateAcquirente(id, userMod, callingUser);
+            if (updatedAcquirente != null) {
+                return ResponseEntity.ok(updatedAcquirente);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with id " + id + " not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
     }
 
     //Route search all customers
@@ -89,23 +104,6 @@ public class AcquirenteController {
     @GetMapping("/getAll")
     public List<Acquirente> findAllAcquirenti() {
         return acquirenteService.getAllAcquirenti();
-    }
-
-    //Modify customers
-    @Operation(summary = "Modify Customers by ID")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Successfully modified Customer by id",
-                    content = {@Content(mediaType = "application/jason", schema = @Schema(implementation = AcquirenteDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "Customer not found")
-    })
-    @PutMapping("/set/{id}")
-    public ResponseEntity<String> setAcquirenteById(@PathVariable Long id, @RequestBody Acquirente acquirenteMod) {
-        Acquirente acquirente = acquirenteService.updateAcquirente(id, acquirenteMod);
-        if (acquirente != null) {
-            return ResponseEntity.ok("Customer modified");
-        }
-        return ResponseEntity.badRequest().body("Customer not found.");
     }
 
     // Route search customers by ID

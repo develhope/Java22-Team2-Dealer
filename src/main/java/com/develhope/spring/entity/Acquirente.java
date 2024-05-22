@@ -1,5 +1,6 @@
 package com.develhope.spring.entity;
 
+import com.develhope.spring.Features.User.Entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,5 +26,6 @@ public class Acquirente {
     private String email;
     @Column(name = "password", nullable = false)
     private String password;
+
 
 }

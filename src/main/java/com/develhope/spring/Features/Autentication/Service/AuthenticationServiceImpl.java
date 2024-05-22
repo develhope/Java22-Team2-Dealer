@@ -36,6 +36,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     public JwtAuthenticationResponse signup(SignUpRequest request) {
+        // Verifica se l'email è già esistente
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email già esistente");
+        }
+
+        // Verifica se il numero di telefono è già esistente
+        if (userRepository.existsByTelefono(request.getTelefono())) {
+            throw new RuntimeException("Numero di telefono già esistente");
+        }
         User user = User.builder()
                 .nome(request.getNome())
                 .cognome(request.getCognome())
@@ -43,7 +52,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .telefono(request.getTelefono())
                 .role(Role.convertStringToRole(String.valueOf(request.getRole()))).build();
-
         userRepository.save(user);
         String jwt = jwtService.generateToken(user);
         RefreshToken refreshToken = jwtService.generateRefreshToken(user);

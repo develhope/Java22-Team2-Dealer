@@ -1,6 +1,8 @@
 package com.develhope.spring.Features.User.Entity;
 
+import com.develhope.spring.entity.Acquirente;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +26,9 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
+    @OneToOne(mappedBy = "user")
+    private Acquirente acquirente;
+
     @Column(nullable = false, name = "nome")
     private String nome;
     @Column(nullable = false, name = "cognome")
@@ -36,6 +41,7 @@ public class User implements UserDetails {
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name = "role")
     private Role role;
 
     @Override

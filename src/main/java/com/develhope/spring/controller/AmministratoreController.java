@@ -291,42 +291,6 @@ public class AmministratoreController {
         return vehicleService.getVehicleCondition(id);
     }
 
-    // rotta cancellazione acquirente
-    @Operation(summary = "delete a customer",
-            description = "This endpoint allows an administrator to delete a customer.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AcquirenteService.class))}),
-            @ApiResponse(responseCode = "415", description = "Acquirente non trovato.")
-    })
-    @DeleteMapping("/removeAcquirente/{id}")
-    public ResponseEntity<String> deleteAcquirenteById(@PathVariable Long id) {
-        Optional<Acquirente> optionalAcquirente = acquirenteService.deleteById(id);
-        if (optionalAcquirente.isPresent()) {
-            return ResponseEntity.ok("Acquirente eliminato.");
-        }
-        return ResponseEntity.badRequest().body("Acquirente non trovato.");
-    }
-
-    // rotta per la modifica di un acquirente OK
-    @Operation(summary = "update a customer",
-            description = "This endpoint allows an administrator to update a customer's data.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AcquirenteService.class))}),
-            @ApiResponse(responseCode = "404", description = "Acquirente non trovato")
-    })
-    @PatchMapping("/updateAcquirente/{id}")
-    public ResponseEntity<?> updateAcquirente(@PathVariable Long id, @RequestBody UpdateAcquirenteRequest updateAcquirenteRequest) {
-        Acquirente acquirente = acquirenteService.updateAcquirente(id, updateAcquirenteRequest);
-        if (acquirente != null) {
-            return ResponseEntity.ok("Acquirente aggiornato con successo");
-        } else {
-            return ResponseEntity.status(404).body("Acquirente non trovato");
-        }
-    }
 
     // rotta cancellazione venditore OK
     @Operation(summary = "delete a seller",
