@@ -1,7 +1,7 @@
 package com.develhope.spring.Features.Autentication.Repository;
 
 import com.develhope.spring.Features.Autentication.Entity.RefreshToken;
-import com.develhope.spring.Features.User.Entity.User;
+import com.develhope.spring.Features.Entity.User.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

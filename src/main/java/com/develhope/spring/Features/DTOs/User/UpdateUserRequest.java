@@ -1,16 +1,14 @@
-package com.develhope.spring.Features.Autentication.DTO.Request;
+package com.develhope.spring.Features.DTOs.User;
 
 import com.develhope.spring.Features.Entity.User.Role;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class SignUpRequest {
+@AllArgsConstructor
+public class UpdateUserRequest {
 
     private String nome;
     private String cognome;

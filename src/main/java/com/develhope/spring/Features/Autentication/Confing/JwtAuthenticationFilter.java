@@ -1,7 +1,7 @@
 package com.develhope.spring.Features.Autentication.Confing;
 
 import com.develhope.spring.Features.Autentication.Service.JwtService;
-import com.develhope.spring.Features.User.Service.UserService;
+import com.develhope.spring.Features.Service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

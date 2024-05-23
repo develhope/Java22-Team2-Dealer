@@ -1,6 +1,6 @@
 package com.develhope.spring.Features.Autentication.Confing;
 
-import com.develhope.spring.Features.User.Service.UserService;
+import com.develhope.spring.Features.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
