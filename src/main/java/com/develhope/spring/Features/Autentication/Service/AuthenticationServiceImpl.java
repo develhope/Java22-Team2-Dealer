@@ -1,15 +1,14 @@
 package com.develhope.spring.Features.Autentication.Service;
 
-
 import com.develhope.spring.Features.Autentication.DTO.Request.RefreshTokenRequest;
 import com.develhope.spring.Features.Autentication.DTO.Request.SignInRequest;
 import com.develhope.spring.Features.Autentication.DTO.Request.SignUpRequest;
 import com.develhope.spring.Features.Autentication.DTO.Response.JwtAuthenticationResponse;
 import com.develhope.spring.Features.Autentication.Entity.RefreshToken;
 import com.develhope.spring.Features.Autentication.Repository.RefreshTokenRepository;
-import com.develhope.spring.Features.User.Entity.Role;
-import com.develhope.spring.Features.User.Entity.User;
-import com.develhope.spring.Features.User.Repository.UserRepository;
+import com.develhope.spring.Features.Entity.User.Role;
+import com.develhope.spring.Features.Entity.User.User;
+import com.develhope.spring.Features.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,7 +1,7 @@
 package com.develhope.spring.Features.Autentication.Service;
 
 import com.develhope.spring.Features.Autentication.Entity.RefreshToken;
-import com.develhope.spring.Features.User.Entity.User;
+import com.develhope.spring.Features.Entity.User.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface JwtService {

@@ -1,6 +1,6 @@
 package com.develhope.spring.Features.Autentication.Entity;
 
-import com.develhope.spring.Features.User.Entity.User;
+import com.develhope.spring.Features.Entity.User.User;
 import jakarta.persistence.*;
 import lombok.*;
 

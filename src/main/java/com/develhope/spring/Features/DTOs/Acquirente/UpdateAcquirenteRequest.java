@@ -1,23 +1,18 @@
-package com.develhope.spring.Features.Autentication.DTO.Request;
+package com.develhope.spring.Features.DTOs.Acquirente;
 
-import com.develhope.spring.Features.Entity.User.Role;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignUpRequest {
+public class UpdateAcquirenteRequest {
 
     private String nome;
     private String cognome;
     private String telefono;
     private String email;
     private String password;
-
-    private Role role;
 
 }
