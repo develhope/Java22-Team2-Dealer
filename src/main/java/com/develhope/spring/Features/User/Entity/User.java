@@ -26,9 +26,6 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @OneToOne(mappedBy = "user")
-    private Acquirente acquirente;
-
     @Column(nullable = false, name = "nome")
     private String nome;
     @Column(nullable = false, name = "cognome")
