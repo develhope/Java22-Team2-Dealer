@@ -1,5 +1,9 @@
 package com.develhope.spring.service;
 
+import com.develhope.spring.DTOs.OrdineAcquisto.CreateOrdineAcquistoRequest;
+import com.develhope.spring.DTOs.OrdineAcquisto.OrdineAcquistoDTO;
+import com.develhope.spring.DTOs.OrdineAcquisto.UpdateOrdineAcquistoRequest;
+import com.develhope.spring.Models.OrdineAcquistoModel;
 import com.develhope.spring.entity.*;
 import com.develhope.spring.entity.enums.TipoOrdine;
 import com.develhope.spring.repository.*;
@@ -7,10 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,19 +94,4 @@ public class OrdineAcquistoService {
         return ordiniAcquisto.stream().map(OrdineAcquisto::new).collect(Collectors.toList());
     }
 
-//    public BigInteger getNumeroOrdiniForDataByVenditore(Long venditoreId, OffsetDateTime dataPerRecuperareOrdini) {
-//        Venditore venditore = venditoreRepository.findById(venditoreId)
-//                .orElseThrow(() -> new ResourceNotFoundException("Venditore non trovato: " + venditoreId));
-//
-//        return BigInteger.valueOf(ordineAcquistoRepository.findByVenditoreId(venditoreId).stream().filter(o ->
-//                o.getDataOrdineAcquisto().isBefore(dataPerRecuperareOrdini)).toList().size());
-//    }
-//
-//    public BigDecimal getCostoOrdiniForDataByVenditore(Long venditoreId, OffsetDateTime dataPerRecuperareOrdini) {
-//        Venditore venditore = venditoreRepository.findById(venditoreId)
-//                .orElseThrow(() -> new ResourceNotFoundException("Venditore non trovato: " + venditoreId));
-//
-//        return ordineAcquistoRepository.findByVenditoreId(venditoreId).stream().filter(o ->
-//                o.getDataOrdineAcquisto().isBefore(dataPerRecuperareOrdini)).toList().stream().map(OrdineAcquisto::getCostoTotale).reduce(BigDecimal.ZERO, BigDecimal::add);
-//    }
 }

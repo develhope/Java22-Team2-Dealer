@@ -7,7 +7,6 @@ import com.develhope.spring.DTOs.Venditore.VenditoreDTO;
 import com.develhope.spring.entity.Noleggio;
 import com.develhope.spring.entity.Venditore;
 import com.develhope.spring.service.NoleggioService;
-import com.develhope.spring.service.OrdineAcquistoService;
 import com.develhope.spring.service.VenditoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +29,6 @@ public class VenditoreController {
 
     @Autowired
     private NoleggioService noleggioService;
-
-    @Autowired
-    private OrdineAcquistoService ordineAcquistoService;
 
     // Route create seller
     @Operation(summary = "Create a new Seller",
@@ -168,31 +162,4 @@ public class VenditoreController {
         }
         return ResponseEntity.badRequest().body("Rental not found.");
     }
-
-    // TODO da testare
-//
-//    @Operation(summary = "Get order total number for data")
-//    @ApiResponses(value = {
-//            @ApiResponse(
-//                    responseCode = "200", description = "Successfully got total orders for data by id seller",
-//                    content = {@Content(mediaType = "application/jason", schema = @Schema(implementation = VenditoreDTO.class))}),
-//            @ApiResponse(responseCode = "400", description = "Seller not found")
-//    })
-//    @GetMapping("/totalOrdersForData/{venditoreId}")
-//    public ResponseEntity<String> getNumeroOrdiniForDataByVenditore (@PathVariable Long venditoreId, @RequestParam OffsetDateTime dataPerRecuperareOrdini){
-//        return ResponseEntity.ok("ordini effettuati: " + ordineAcquistoService.getNumeroOrdiniForDataByVenditore(venditoreId, dataPerRecuperareOrdini));
-//    }
-//
-//    // TODO da testare
-//    @Operation(summary = "Get total price for data")
-//    @ApiResponses(value = {
-//            @ApiResponse(
-//                    responseCode = "200", description = "Successfully got total price for data by id seller",
-//                    content = {@Content(mediaType = "application/jason", schema = @Schema(implementation = VenditoreDTO.class))}),
-//            @ApiResponse(responseCode = "400", description = "seller not found")
-//    })
-//    @GetMapping("/totalPriceForData/{venditoreId}")
-//    public ResponseEntity<String> getCostoOrdiniForDataByVenditore (@PathVariable Long venditoreId, @RequestParam OffsetDateTime dataPerRecuperareOrdini){
-//        return ResponseEntity.ok("Totale costo ordini effettuati: " + ordineAcquistoService.getCostoOrdiniForDataByVenditore(venditoreId, dataPerRecuperareOrdini));
-//    }
 }
