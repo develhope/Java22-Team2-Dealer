@@ -1,5 +1,16 @@
 package com.develhope.spring.Features.Service;
 
+import com.develhope.spring.Features.Entity.Acquirente.Acquirente;
+import com.develhope.spring.Features.Entity.OrdineAcquisto.OrdineAcquisto;
+import com.develhope.spring.Features.Entity.OrdineAcquisto.TipoOrdineAcquisto;
+import com.develhope.spring.Features.Entity.Vehicle.Vehicle;
+import com.develhope.spring.Features.Entity.Venditore.Venditore;
+import com.develhope.spring.Features.Repository.AcquirenteRepository;
+import com.develhope.spring.Features.Repository.OrdineAcquistoRepository;
+import com.develhope.spring.Features.Repository.VehicleRepository;
+import com.develhope.spring.Features.Repository.VenditoreRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,14 +27,14 @@ public class OrdineAcquistoService {
 //
 //    @Autowired
 //    private OrdineAcquistoRepository ordineAcquistoRepository;
-//
+
 //    // Creare un ordineAcquisto per un utente a partire da un veicolo ordinabile / acquistabile
 //    public OrdineAcquisto createOrdineAcquisto(Long acquirenteId, Long vehicleId, OrdineAcquisto ordineAcquisto) {
 //        Acquirente acquirente = acquirenteRepository.findById(acquirenteId).orElseThrow(() -> new ResourceNotFoundException("Acquirente non trovato"));
 //        Vehicle vehicle = vehicleRepository.findById(vehicleId).orElseThrow(() -> new ResourceNotFoundException("Veicolo non trovato"));
 //        Venditore venditore = venditoreRepository.findById(ordineAcquisto.getVenditore().getVenditoreId()).orElseThrow(() -> new ResourceNotFoundException("Venditore non trovato"));
 //
-//        if (vehicle.getTipoOrdine() == TipoOrdine.NON_DISPONIBILE) {
+//        if (vehicle.getTipoOrdineAcquisto() == TipoOrdineAcquisto.NON_DISPONIBILE) {
 //            throw new IllegalArgumentException("Veicolo non acquistabile");
 //        }
 //

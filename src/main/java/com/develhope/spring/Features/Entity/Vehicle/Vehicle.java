@@ -48,6 +48,6 @@ public class Vehicle {
     @Column(name = "vehicleCondition", nullable = false)
     private VehicleCondition vehicleCondition;
     @Column(name = "tipoOrdine", nullable = false)
-    private TipoOrdineAcquisto tipoOrdine;
+    private TipoOrdineAcquisto tipoOrdineAcquisto;
 
 }

@@ -2,6 +2,8 @@ package com.develhope.spring.Features.Controller;
 
 import com.develhope.spring.Features.DTOs.Vehicle.CreateVehicleRequest;
 import com.develhope.spring.Features.DTOs.Vehicle.VehicleDTO;
+import com.develhope.spring.Features.Entity.User.Role;
+import com.develhope.spring.Features.Entity.User.User;
 import com.develhope.spring.Features.Entity.Vehicle.Vehicle;
 import com.develhope.spring.Features.Entity.Vehicle.Allestimento;
 import com.develhope.spring.Features.Entity.OrdineAcquisto.TipoOrdineAcquisto;
@@ -17,8 +19,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -40,303 +44,151 @@ public class VehicleController {
             @ApiResponse(responseCode = "400", description = "something goes wrong")
     })
     @PostMapping("/add")
-    public ResponseEntity<?> createVehicle(@Validated @RequestBody CreateVehicleRequest createVehicleRequest) {
-        VehicleDTO result = vehicleService.createVehicle(createVehicleRequest);
-        if (result == null) {
-            return ResponseEntity.status(400).body("something goes wrong");
+    public ResponseEntity<?> createVehicle(@Validated @RequestBody CreateVehicleRequest createVehicleRequest, @AuthenticationPrincipal User user) {
+        if (user.getRole() == Role.AMMINISTRATORE) {
+            VehicleDTO result = vehicleService.createVehicle(createVehicleRequest);
+            if (result == null) {
+                return ResponseEntity.status(400).body("something goes wrong");
+            } else {
+                return ResponseEntity.ok().body(result);
+            }
         } else {
-            return ResponseEntity.ok().body(result);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Only admins can create vehicles");
         }
     }
 
-    //rotta cancellazione veicolo da id OK
-    @Operation(summary = "Delete a new Customer",
+    //rotta update veicolo
+    @Operation(summary = "update a vehicle",
+            description = "This endpoint allows an administrator to update a vehicle.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200", description = "Ok",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleService.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
+    })
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateVehicle(@PathVariable Long id, @AuthenticationPrincipal User user, @Validated @RequestBody Vehicle vehicleMod) {
+        return vehicleService.updateVehicle(id, user, vehicleMod);
+    }
+
+    //rotta cancellazione veicolo da id
+    @Operation(summary = "Delete vehicles by id",
             description = "This endpoint allows to delete a vehicle by providing the necessary id in the root's path variable.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200", description = "Successfully deleted a vehicle",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
-            @ApiResponse(responseCode = "40a", description = "not found")
+            @ApiResponse(responseCode = "400", description = "not found")
     })
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteVehicle(@PathVariable Long id) {
-        return vehicleService.deleteVehicle(id);
+    public ResponseEntity<?> deleteVehicle(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        return vehicleService.deleteVehicle(id, user);
     }
 
-    //rotta ricerca veicoli da marca OK
-    @Operation(summary = "Get a vehicle by brand",
-            description = "This endpoint allows to find a vehicle by providing the necessary root's path variable.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "something goes wrong")
-    })
-    @GetMapping("/getbymarca/{marca}")
-    public ResponseEntity<?> getByMarca(@PathVariable String marca) {
-        List<Vehicle> vehicles = vehicleService.searchByMarca(marca);
-        if (vehicles.isEmpty()) {
-            return ResponseEntity.status(400).body("something goes wrong");
-        } else {
-            return ResponseEntity.ok().body(vehicles);
-        }
-    }
-    // rotta ricerca veicolo da ID
-    @Operation(summary = "Get a vehicle by id",
-            description = "This endpoint allows to find a vehicle by providing the necessary root's path variable.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "something goes wrong")
-    })
-    @GetMapping("/getById/{id}")
-    public Optional<Vehicle> findById(@PathVariable Long id) {
-        return vehicleService.findById(id);
-    }
-
-    @GetMapping("/modello/{modello}")
-    public ResponseEntity<?> getByModello(@PathVariable String modello) {
-        List<Vehicle> vehicles = vehicleService.searchByModello(modello);
-        if (vehicles.isEmpty()) {
-            return ResponseEntity.status(400).body("something goes wrong");
-        } else {
-            return ResponseEntity.ok().body(vehicles);
-        }
-    }
-// rotta ricerca veicoli per cilindrata
-    @Operation(summary = "Get a vehicle by displacement",
-            description = "This endpoint allows to find a vehicle by providing the necessary root's path variable.")
+    //rotta per modifica condizione veicolo OK
+    @Operation(summary = "change vehicle condition",
+            description = "This endpoint allows an administrator to change a vehicle's conditions.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200", description = "Ok",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleService.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
     })
-    @GetMapping("/cilindrata/{cilindrata}")
-    public ResponseEntity<?> getByCilindrataInRange(@PathVariable int cilindrata) {
-        if (cilindrata >= 50 && cilindrata <= 3000) {
-            List<Vehicle> vehicles = vehicleService.searchByCilindrata(cilindrata);
-            if (vehicles.isEmpty()) {
-                return new ResponseEntity<>("Nessun veicolo trovato con la cilindrata specificata", HttpStatus.NOT_FOUND);
-            }
-            return new ResponseEntity<>(vehicles, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Cilindrata deve essere tra 50 e 3000", HttpStatus.BAD_REQUEST);
-        }
+    @PutMapping("/changeVehicleCondition/{id}")
+    public ResponseEntity<?> changeVehicleCondition(@PathVariable Long id, @RequestParam VehicleCondition newCondition, @AuthenticationPrincipal User user) {
+        return vehicleService.changeVehicleCondition(id, newCondition, user);
     }
-// ricerca veicolo sulla base del tipo
-    @Operation(summary = "Get a vehicle by type",
-            description = "This endpoint allows to find a vehicle by providing the necessary root's path variable.")
+
+    //ricerca veicoli in base alla caratteristiche
+    @Operation(summary = "Search vehicles by caract")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200", description = "Ok",
+                    responseCode = "200", description = "Successfully found vehicle",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleService.class))}),
-            @ApiResponse(responseCode = "400", description = "Tipo veicolo non valido: \" + tipoVeicolo")
+            @ApiResponse(responseCode = "403", description = "Only customers can perform searches")
     })
-    @GetMapping("/tipoVeicolo/{tipoVeicolo}")
-    public List<Vehicle> getByTipoVeicolo(@PathVariable String tipoVeicolo) {
-        TipoVeicolo tipo = switch (tipoVeicolo.toUpperCase()) {
-            case "SCOOTER" -> TipoVeicolo.SCOOTER;
-            case "FURGONE" -> TipoVeicolo.FURGONE;
-            case "AUTO" -> TipoVeicolo.AUTO;
-            case "MOTO" -> TipoVeicolo.MOTO;
-            default -> throw new IllegalArgumentException("Tipo veicolo non valido: " + tipoVeicolo);
-        };
-        return vehicleService.searchByTipoVeicolo(tipo);
-    }
-
-    // ricerca veicolo per colore
-    @Operation(summary = "Get a vehicle by colour",
-            description = "This endpoint allows to find a vehicle by providing the necessary root's path variable.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleService.class))}),
-            @ApiResponse(responseCode = "400", description = "something goes wrong")
-    })
-    @GetMapping("/colore/{colore}")
-    public ResponseEntity<?> getByColore(@PathVariable String colore) {
-        List<Vehicle> vehicles = vehicleService.searchByColore(colore);
-        if (vehicles.isEmpty()) {
-            return ResponseEntity.status(400).body("something goes wrong");
+    @GetMapping("/searchCaract")
+    public ResponseEntity<?> searchVehicles(@RequestParam(required = false) String marca,
+                                            @RequestParam(required = false) String modello,
+                                            @RequestParam(required = false) TipoVeicolo tipoVeicolo,
+                                            @RequestParam(required = false) Integer cilindrata,
+                                            @RequestParam(required = false) String colore,
+                                            @RequestParam(required = false) Integer potenza,
+                                            @RequestParam(required = false) String tipoDiCambio,
+                                            @RequestParam(required = false) Integer annoImmatricolazione,
+                                            @RequestParam(required = false) String alimentazione,
+                                            @RequestParam(required = false) BigDecimal prezzo,
+                                            @RequestParam(required = false) Allestimento allestimento,
+                                            @RequestParam(required = false) String accessori,
+                                            @RequestParam(required = false) VehicleCondition vehicleCondition,
+                                            @RequestParam(required = false) TipoOrdineAcquisto tipoOrdineAcquisto,
+                                            @AuthenticationPrincipal User user) {
+        if (user.getRole() == Role.ACQUIRENTE) {
+            // Esegui la ricerca solo se l'utente è un acquirente
+            List<Vehicle> result = vehicleService.searchVehicles(marca, modello, tipoVeicolo, cilindrata, colore, potenza, tipoDiCambio, annoImmatricolazione, alimentazione, prezzo, allestimento, accessori, vehicleCondition, tipoOrdineAcquisto);
+            return ResponseEntity.ok().body(result);
         } else {
-            return ResponseEntity.ok().body(vehicles);
-        }
-    }
-// ricerca veicolo per potenza
-    @Operation(summary = "Get a vehicle by horsepower",
-            description = "This endpoint allows to find a vehicle by providing the necessary root's path variable.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleService.class))}),
-            @ApiResponse(responseCode = "40a", description = "not found")
-    })
-    @GetMapping("/potenza/{potenza}")
-    public ResponseEntity<List<Vehicle>> getByPotenza(@PathVariable int potenza) {
-        List<Vehicle> vehicles = vehicleService.searchByPotenza(potenza);
-        if (vehicles.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(vehicles);
+            // Se l'utente non è un acquirente, restituisci un errore di autorizzazione
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Only customers can perform searches");
         }
     }
 
-    // ricerca veicolo per tipologia di cambio
-    @Operation(summary = "Get a vehicle by shifter method",
-            description = "This endpoint allows to find a vehicle by providing the necessary root's path variable.")
+    //permette di cercare i veicoli per la condizione e il tipo di ordine
+    @Operation(summary = "Search vehicles by condition and order type")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleService.class))}),
-            @ApiResponse(responseCode = "400", description = "something goes wrong")
-    })
-    @GetMapping("/cambio/{cambio}")
-    public ResponseEntity<?> getByCambio(@PathVariable String cambio) {
-        List<Vehicle> vehicles = vehicleService.searchByTipoDiCambio(cambio);
-        if (vehicles.isEmpty()) {
-            return ResponseEntity.status(400).body("something goes wrong");
-        } else {
-            return ResponseEntity.ok().body(vehicles);
-        }
-    }
-
-    // ricerca veicolo in base alla tipologia di alimentazione
-    @Operation(summary = "Get a vehicle by fuel type",
-            description = "This endpoint allows to find a vehicle by providing the necessary root's path variable.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
+                    responseCode = "200", description = "Successfully found vehicle",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "something goes wrong")
+            @ApiResponse(responseCode = "400", description = "not found")
     })
-    @GetMapping("/alimentazione/{alimentazione}")
-    public ResponseEntity<?> getByAlimentazione(@PathVariable String alimentazione) {
-        List<Vehicle> vehicles = vehicleService.searchByAlimentazione(alimentazione);
-        if (vehicles.isEmpty()) {
-            return ResponseEntity.status(400).body("something goes wrong");
-        } else {
-            return ResponseEntity.ok().body(vehicles);
+    @GetMapping("/search")
+    public ResponseEntity<?> searchVehicles(@RequestParam(required = false) String type, @RequestParam(required = false) String value, @AuthenticationPrincipal User user) {
+        if (user.getRole() != Role.AMMINISTRATORE) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only administrators can access this resource");
+        }
+        if (type == null || value == null) {
+            return ResponseEntity.badRequest().body("Type and value parameters are required");
+        }
+        switch (type.toUpperCase()) {
+            case "TIPOORDINE":
+                TipoOrdineAcquisto tipoOrdine = switch (value.toUpperCase()) {
+                    case "ACQUISTABILE" -> TipoOrdineAcquisto.ACQUISTABILE;
+                    case "ORDINABILE" -> TipoOrdineAcquisto.ORDINABILE;
+                    default -> TipoOrdineAcquisto.NON_DISPONIBILE;
+                };
+                return ResponseEntity.ok().body(vehicleService.searchByTipoOrdine(tipoOrdine));
+
+            case "VEHICLECONDITION":
+                VehicleCondition condition = switch (value.toUpperCase()) {
+                    case "NUOVO" -> VehicleCondition.NUOVO;
+                    case "USATO" -> VehicleCondition.USATO;
+                    default -> throw new IllegalArgumentException("Invalid vehicle condition type: " + value);
+                };
+                return ResponseEntity.ok().body(vehicleService.searchByVehicleCondition(condition));
+
+            default:
+                return ResponseEntity.badRequest().body("Invalid search type: " + type);
         }
     }
 
-    // ricerca veicolo sulla base degli accessori
-    @Operation(summary = "Get a vehicle by accessories",
-            description = "This endpoint allows to find a vehicle by providing the necessary root's path variable.")
+    //Rotta che permette di fare ricerche per tipo veicolo
+    @Operation(summary = "Search vehicles by type")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200", description = "Ok",
+                    responseCode = "200", description = "Successfully found vehicle",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "something goes wrong")
+            @ApiResponse(responseCode = "400", description = "Vehicle not valid")
     })
-    @GetMapping("/accessori/{accessori}")
-    public ResponseEntity<?> getByAccessori(@PathVariable String accessori) {
-        List<Vehicle> vehicles = vehicleService.searchByAccessori(accessori);
-        if (vehicles.isEmpty()) {
-            return ResponseEntity.status(400).body("something goes wrong");
-        } else {
-            return ResponseEntity.ok().body(vehicles);
+    @GetMapping("/searchByTipoVeicolo")
+    public ResponseEntity<?> searchByTipoVeicolo(@RequestParam String vehicleType, @AuthenticationPrincipal User user) {
+        if (user.getRole() != Role.VENDITORE && user.getRole() != Role.ACQUIRENTE) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only customers and sellers can access this resource");
         }
-    }
-
-    // ricerca veicolo per prezzo
-    @Operation(summary = "Get a vehicle by price",
-            description = "This endpoint allows to find a vehicle by providing the necessary root's path variable.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
-            @ApiResponse(responseCode = "404", description = "not found")
-    })
-    @GetMapping("/prezzo/{prezzo}")
-    public ResponseEntity<List<Vehicle>> getByPrezzo(@PathVariable BigDecimal prezzo) {
-        List<Vehicle> vehicles = vehicleService.searchByPrezzo(prezzo);
-        if (vehicles.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(vehicles);
+        TipoVeicolo tipoVeicolo = TipoVeicolo.convertStringToVehicleType(vehicleType);
+        if (tipoVeicolo == TipoVeicolo.UNDEFINED) {
+            return ResponseEntity.badRequest().body("Vehicle not valid");
         }
+        List<Vehicle> vehicles = vehicleService.searchByTipoVeicolo(tipoVeicolo);
+        return ResponseEntity.ok().body(vehicles);
     }
-
-    // ricerca veicolo per anno immatricolazione
-    @Operation(summary = "Get a vehicle by matriculation",
-            description = "This endpoint allows to find a vehicle by providing the necessary root's path variable.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
-            @ApiResponse(responseCode = "404", description = "not found")
-    })
-    @GetMapping("/annoImmatricolazione/{annoImmatricolazione}")
-    public ResponseEntity<?> getByAnnoImmatricolazione(@PathVariable("annoImmatricolazione") int annoImmatricolazione) {
-        if (annoImmatricolazione < 1900 || annoImmatricolazione > 2024) {
-            return ResponseEntity.badRequest().body("Inserire una data compresa tra 1900 e 2024");
-        }
-        List<Vehicle> vehicles = vehicleService.searchByAnnoImmatricolazione(annoImmatricolazione);
-        if (vehicles.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(vehicles);
-        }
-    }
-
-    // ricerca veicolo sulla base dell allestimento
-    @Operation(summary = "Get a vehicle by setup",
-            description = "This endpoint allows to find a vehicle by providing the necessary root's path variable.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "\"Tipo di allestimento non valido: \" + allestimento")
-    })
-    @GetMapping("/allestimento/{allestimento}")
-    public List<Vehicle> getByAllestimento (@PathVariable String allestimento){
-        Allestimento tipo = switch (allestimento.toUpperCase()) {
-            case "BASE" -> Allestimento.BASE;
-            case "SPORT" -> Allestimento.SPORT;
-            case "BUSINESS" -> Allestimento.BUSINESS;
-            default -> throw new IllegalArgumentException("Tipo di allestimento non valido: " + allestimento);
-        };
-        return vehicleService.searchByAllestimento(tipo);
-    }
-
-// ricerca veicolo sulla base del tipo di ordine disponibile
-    @Operation(summary = "Get a vehicle by order type available",
-            description = "This endpoint allows to find a vehicle by providing the necessary root's path variable.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-    })
-    @GetMapping("/tipoOrdine/{tipoOrdine}")
-    public List<Vehicle> getByTipoOrdine (@PathVariable String tipoOrdine){
-        TipoOrdineAcquisto tipo = switch (tipoOrdine.toUpperCase()) {
-            case "ACQUISTABILE" -> TipoOrdineAcquisto.ACQUISTABILE;
-            case "ORDINABILE" -> TipoOrdineAcquisto.ORDINABILE;
-            default -> TipoOrdineAcquisto.NON_DISPONIBILE;
-        };
-        return vehicleService.searchByTipoOrdine(tipo);
-    }
-
-//  ricerca veicoli in base alla condizione
-    @Operation(summary = "Get a vehicle by condition",
-            description = "This endpoint allows to find a vehicle by providing the necessary root's path variable.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Ok",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "\"Tipo di condizione non valida: \" + vehicleCondition")
-    })
-    @GetMapping("/vehicleCondition/{vehicleCondition}")
-    public List<Vehicle> getByVehicleCondition (@PathVariable String vehicleCondition){
-        VehicleCondition tipo = switch (vehicleCondition.toUpperCase()) {
-            case "NUOVO" -> VehicleCondition.NUOVO;
-            case "USATO" -> VehicleCondition.USATO;
-            default -> throw new IllegalArgumentException("Tipo di condizione non valida: " + vehicleCondition);
-        };
-        return vehicleService.searchByVehicleCondition(tipo);
-    }
-
 }
