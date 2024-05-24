@@ -7,8 +7,9 @@ public enum TipoOrdineAcquisto {
 
     public static TipoOrdineAcquisto convertStringOrderType(String orderType) {
         return switch (orderType.toLowerCase()) {
-            case "deleted" -> TipoOrdineAcquisto.ORDINABILE;
-            case "suspended" -> TipoOrdineAcquisto.ACQUISTABILE;
+            case "orderable" -> TipoOrdineAcquisto.ORDINABILE;
+            case "purchasable" +
+                         "purchasable" -> TipoOrdineAcquisto.ACQUISTABILE;
             default -> NON_DISPONIBILE;
         };
     }

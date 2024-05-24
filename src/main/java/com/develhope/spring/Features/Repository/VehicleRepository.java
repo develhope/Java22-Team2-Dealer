@@ -54,7 +54,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     @Query("SELECT v FROM Vehicle v WHERE v.vehicleCondition = :vehicleCondition")
     List<Vehicle> searchByVehicleCondition(@Param("vehicleCondition") VehicleCondition vehicleCondition);
 
-    @Query("SELECT v FROM Vehicle v WHERE v.tipoOrdine = :tipoOrdine")
-    List<Vehicle> searchByTipoOrdine(@Param("tipoOrdine") TipoOrdineAcquisto tipoOrdine);
+    @Query("SELECT v FROM Vehicle v WHERE v.tipoOrdineAcquisto = :tipoOrdineAcquisto")
+    List<Vehicle> searchByTipoOrdine(@Param("tipoOrdineAcquisto") TipoOrdineAcquisto tipoOrdineAcquisto);
 
 }

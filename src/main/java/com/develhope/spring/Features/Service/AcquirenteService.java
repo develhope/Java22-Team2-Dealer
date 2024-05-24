@@ -1,5 +1,7 @@
 package com.develhope.spring.Features.Service;
 
+import com.develhope.spring.Features.Autentication.Entity.RefreshToken;
+import com.develhope.spring.Features.Autentication.Repository.RefreshTokenRepository;
 import com.develhope.spring.Features.DTOs.Acquirente.AcquirenteDTO;
 import com.develhope.spring.Features.DTOs.Acquirente.CreateAcquirenteRequest;
 import com.develhope.spring.Features.DTOs.Acquirente.UpdateAcquirenteRequest;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AcquirenteService {
@@ -38,20 +41,35 @@ public class AcquirenteService {
     }
 
     //delete customer
-    @SneakyThrows
     public Optional<User> deleteById(Long id, User user) {
-        if (user.getRole() == Role.ACQUIRENTE) {
-            if (!Objects.equals(user.getUserId(), id)) {
-                throw new Exception("Customers can only delete their own information");
-            }
-        } else if (user.getRole() != Role.AMMINISTRATORE) {
-            throw new Exception("Only customers and administrators can delete user information");
+        if (user == null || id == null) {
+            throw new IllegalArgumentException("User and ID must not be null");
         }
-        Optional<User> optionalAcquirente = userRepository.findById(id);
-        if (optionalAcquirente.isPresent()) {
-            userRepository.deleteById(id);
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isEmpty()) {
+            throw new IllegalArgumentException("User with id " + id + " not found");
         }
-        return optionalAcquirente;
+        User userToDelete = optionalUser.get();
+        if (user.getRole() == Role.ACQUIRENTE && Objects.equals(user.getUserId(), id)) {
+            clearUserData(userToDelete);
+            userRepository.save(userToDelete);
+            return optionalUser;
+        } else if (user.getRole() == Role.AMMINISTRATORE) {
+            clearUserData(userToDelete);
+            userRepository.save(userToDelete);
+            return optionalUser;
+        } else {
+            throw new IllegalArgumentException("Only customer can delete their own information or admin can delete any user's information");
+        }
+    }
+
+    private void clearUserData(User user) {
+        user.setNome("");
+        user.setCognome("");
+        user.setEmail("deleted_" + user.getUserId());
+        user.setTelefono("deleted_" + user.getUserId());
+        user.setPassword("");
+        user.setRole(Role.NON_DEFINITO);
     }
 
     @SneakyThrows

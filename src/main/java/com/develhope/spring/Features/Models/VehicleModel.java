@@ -77,7 +77,7 @@ public class VehicleModel {
     }
 
     public static VehicleModel entityToModel(Vehicle vehicle) {
-        return new VehicleModel(vehicle.getVehicleId(), vehicle.getMarca(), vehicle.getTipoVeicolo(), vehicle.getModello(), vehicle.getCilindrata(), vehicle.getColore(), vehicle.getPotenza(), vehicle.getTipoDiCambio(), vehicle.getAnnoImmatricolazione(), vehicle.getAlimentazione(), vehicle.getPrezzo(),vehicle.getAllestimento(), vehicle.getAccessori(), vehicle.getVehicleCondition(), vehicle.getTipoOrdine());
+        return new VehicleModel(vehicle.getVehicleId(), vehicle.getMarca(), vehicle.getTipoVeicolo(), vehicle.getModello(), vehicle.getCilindrata(), vehicle.getColore(), vehicle.getPotenza(), vehicle.getTipoDiCambio(), vehicle.getAnnoImmatricolazione(), vehicle.getAlimentazione(), vehicle.getPrezzo(),vehicle.getAllestimento(), vehicle.getAccessori(), vehicle.getVehicleCondition(), vehicle.getTipoOrdineAcquisto());
     }
 
     public static VehicleModel dtoToModel(VehicleDTO vehicleDTO) {
