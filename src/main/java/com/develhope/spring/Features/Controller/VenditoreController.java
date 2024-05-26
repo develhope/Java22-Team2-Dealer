@@ -55,7 +55,7 @@ public class VenditoreController {
             @ApiResponse(responseCode = "400", description = "Seller not found")
     })
     @PutMapping("/set/{id}")
-    public ResponseEntity<String> setVenditoreById(@PathVariable Long id, @RequestBody Venditore venditoreMod) {
+    public ResponseEntity<String> updateVenditoreById(@PathVariable Long id, @RequestBody Venditore venditoreMod) {
         Venditore venditore = venditoreService.updateVenditore(id, venditoreMod);
         if (venditore != null) {
             return ResponseEntity.ok("Seller modified.");

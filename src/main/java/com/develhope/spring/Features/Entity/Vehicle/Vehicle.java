@@ -21,7 +21,7 @@ public class Vehicle {
     @Column(name = "marca", nullable = false)
     private String marca;
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipoVeicolo", nullable = false)
+    @Column(name = "tipo_veicolo", nullable = false)
     private TipoVeicolo tipoVeicolo;
     @Column(name = "modello", nullable = false)
     private String modello;
@@ -45,9 +45,9 @@ public class Vehicle {
     @Column(name = "accessori", nullable = false)
     private String accessori;
     @Enumerated(EnumType.STRING)
-    @Column(name = "vehicleCondition", nullable = false)
+    @Column(name = "vehicle_condition", nullable = false)
     private VehicleCondition vehicleCondition;
-    @Column(name = "tipoOrdine", nullable = false)
-    private TipoOrdineAcquisto tipoOrdine;
+    @Column(name = "tipo_ordine_acquisto", nullable = false)
+    private TipoOrdineAcquisto tipoOrdineAcquisto;
 
 }

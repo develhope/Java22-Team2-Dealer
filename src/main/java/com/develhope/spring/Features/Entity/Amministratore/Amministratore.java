@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-@Table
+@Table(name = "amministratore")
 public class Amministratore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_amministratore", nullable = false)
+    @Column(name = "amministratore_id", nullable = false)
     private Long amministratoreId;
 
     @Column(name = "nome", nullable = false)

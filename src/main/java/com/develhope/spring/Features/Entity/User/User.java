@@ -1,10 +1,7 @@
 package com.develhope.spring.Features.Entity.User;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,11 +10,11 @@ import java.util.Collection;
 import java.util.List;
 
 @Builder
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "user")
+@Getter
+@Setter
+@NoArgsConstructor
 public class User implements UserDetails {
 
     @Id
@@ -38,6 +35,25 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "role")
     private Role role;
+
+    public User(Long userId, String nome, String cognome, String telefono, String email, String password, Role role) {
+        this.userId = userId;
+        this.nome = nome;
+        this.cognome = cognome;
+        this.telefono = telefono;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+    public User(String nome, String cognome, String telefono, String email, String password, Role role) {
+        this.nome = nome;
+        this.cognome = cognome;
+        this.telefono = telefono;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -67,6 +83,19 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", nome='" + nome + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                '}';
     }
 
 }
