@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class OdineAcquistoLink {
+public class OrdineAcquistoLink {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long linkOrdineAcquistoId;
+    private Long linkId;
 
     @OneToOne
     @JoinColumn(name = "acquirente_id")
@@ -29,7 +29,7 @@ public class OdineAcquistoLink {
     @JoinColumn(name = "venditore_id")
     private User venditore;
 
-    public OdineAcquistoLink(User acquirente, OrdineAcquisto ordineAcquisto, User venditore) {
+    public OrdineAcquistoLink(User acquirente, OrdineAcquisto ordineAcquisto, User venditore) {
         this.acquirente = acquirente;
         this.ordineAcquisto = ordineAcquisto;
         this.venditore = venditore;

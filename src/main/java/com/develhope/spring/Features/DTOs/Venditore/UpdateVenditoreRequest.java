@@ -14,4 +14,5 @@ public class UpdateVenditoreRequest {
     private String telefono;
     private String email;
     private String password;
+
 }

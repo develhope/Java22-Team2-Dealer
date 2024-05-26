@@ -1,6 +1,5 @@
 package com.develhope.spring.Features.Entity.Noleggio;
 
-import com.develhope.spring.Features.Entity.Noleggio.Noleggio;
 import com.develhope.spring.Features.Entity.User.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,7 +15,7 @@ public class NoleggioLink {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long linkId;
+    private Long linkId;
 
     @ManyToOne
     @JoinColumn(name = "acquirente_id", nullable = false)

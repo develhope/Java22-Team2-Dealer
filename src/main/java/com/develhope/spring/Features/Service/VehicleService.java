@@ -166,7 +166,7 @@ public class VehicleService {
     }
 
     public List<Vehicle> searchByTipoOrdine(TipoOrdineAcquisto tipoOrdineAcquisto) {
-        return vehicleRepository.searchByTipoOrdine(tipoOrdineAcquisto);
+        return vehicleRepository.searchByTipoOrdineAcquisto(tipoOrdineAcquisto);
     }
 
     public List<Vehicle> searchByTipoVeicolo(TipoVeicolo tipoVeicolo) {
