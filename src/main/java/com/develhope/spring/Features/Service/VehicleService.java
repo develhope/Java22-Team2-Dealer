@@ -156,7 +156,7 @@ public class VehicleService {
             return vehicleRepository.searchByVehicleCondition(vehicleCondition);
 
         } else if (tipoOrdineAcquisto!= null) {
-            return vehicleRepository.searchByTipoOrdine(tipoOrdineAcquisto);
+            return vehicleRepository.searchByTipoOrdineAcquisto(tipoOrdineAcquisto);
         }
         return vehicleRepository.findAll();
     }
