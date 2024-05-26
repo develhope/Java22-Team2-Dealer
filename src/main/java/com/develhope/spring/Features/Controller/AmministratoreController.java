@@ -1,5 +1,16 @@
 package com.develhope.spring.Features.Controller;
 
+import com.develhope.spring.Features.DTOs.OrdineAcquisto.OrdineAcquistoDTO;
+import com.develhope.spring.Features.Entity.OrdineAcquisto.OrdineAcquisto;
+import com.develhope.spring.Features.Service.OrdineAcquistoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,105 +31,7 @@ public class AmministratoreController {
 //
 //    @Autowired
 //    private VenditoreService venditoreService;
-//
-//    //rotta creazione veicolo OK
-//    @Operation(summary = "Add a vehicle",
-//            description = "This endpoint allows an administrator to create a new vehicle.")
-//    @ApiResponses(value = {
-//            @ApiResponse(
-//                    responseCode = "200", description = "Ok",
-//                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
-//            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-//    })
-//    @PostMapping("/addVehicle")
-//    public ResponseEntity<?> createVehicle(@Validated @RequestBody CreateVehicleRequest createVehicleRequest, @AuthenticationPrincipal User user) {
-//        if (user.getRole() == Role.AMMINISTRATORE) {
-//            VehicleDTO result = vehicleService.createVehicle(createVehicleRequest);
-//            if (result == null) {
-//                return ResponseEntity.status(400).body("something goes wrong");
-//            } else {
-//                return ResponseEntity.ok().body(result);
-//            }
-//        } else {
-//            return ResponseEntity.status(403).body("Unauthorized");
-//        }
-//    }
-//
-//    //rotta update veicolo OK
-//    @Operation(summary = "update a vehicle",
-//            description = "This endpoint allows an administrator to update a vehicle.")
-//    @ApiResponses(value = {
-//            @ApiResponse(
-//                    responseCode = "200", description = "Ok",
-//                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleService.class))}),
-//            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-//    })
-//    @PatchMapping("/updateVehicle/{id}")
-//    public ResponseEntity<?> updateVehicle(@PathVariable Long id, @Validated @RequestBody UpdateVehicleRequest updateVehicleRequest) {
-//        Optional<Vehicle> optionalVehicle = vehicleService.findById(id);
-//        if (optionalVehicle.isPresent()) {
-//            Vehicle vehicle = optionalVehicle.get();
-//            vehicle.setMarca(updateVehicleRequest.getMarca());
-//            vehicle.setTipoVeicolo(updateVehicleRequest.getTipoVeicolo());
-//            vehicle.setModello(updateVehicleRequest.getModello());
-//            vehicle.setCilindrata(updateVehicleRequest.getCilindrata());
-//            vehicle.setColore(updateVehicleRequest.getColore());
-//            vehicle.setPotenza(updateVehicleRequest.getPotenza());
-//            vehicle.setTipoDiCambio(updateVehicleRequest.getTipoDiCambio());
-//            vehicle.setAnnoImmatricolazione(updateVehicleRequest.getAnnoImmatricolazione());
-//            vehicle.setAlimentazione(updateVehicleRequest.getAlimentazione());
-//            vehicle.setPrezzo(updateVehicleRequest.getPrezzo());
-//            vehicle.setAllestimento(updateVehicleRequest.getAllestimento());
-//            vehicle.setAccessori(updateVehicleRequest.getAccessori());
-//            vehicle.setVehicleCondition(updateVehicleRequest.getVehicleCondition());
-//            vehicle.setTipoOrdine(updateVehicleRequest.getTipoOrdine());
-//
-//            vehicleService.addVeicolo(vehicle);
-//
-//            return ResponseEntity.ok("Veicolo aggiornato con successo");
-//        } else {
-//            return ResponseEntity.status(404).body("Veicolo non trovato");
-//        }
-//    }
-//
-//    //rotta cancellazione veicolo da id OK
-//    @Operation(summary = "delete a vehicle",
-//            description = "This endpoint allows an administrator to delete a vehicle.")
-//    @ApiResponses(value = {
-//            @ApiResponse(
-//                    responseCode = "200", description = "Ok",
-//                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleController.class))}),
-//            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-//    })
-//    @DeleteMapping("/deleteVehicle/{id}")
-//    public ResponseEntity<?> deleteVehicle(@PathVariable Long id) {
-//        return vehicleService.deleteVehicle(id);
-//    }
-//
-//    //rotta per modifica condizione veicolo OK
-//    @Operation(summary = "change vehicle condition",
-//            description = "This endpoint allows an administrator to change a vehicle's conditions.")
-//    @ApiResponses(value = {
-//            @ApiResponse(
-//                    responseCode = "200", description = "Ok",
-//                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleService.class))}),
-//            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
-//    })
-//    @PutMapping("/changeVehicleCondition/{id}")
-//    public ResponseEntity<?> changeVehicleCondition(@PathVariable Long id, @RequestParam VehicleCondition newCondition) {
-//        Optional<Vehicle> optionalVehicle = vehicleService.findById(id);
-//        if (optionalVehicle.isPresent()) {
-//            Vehicle vehicle = optionalVehicle.get();
-//            vehicle.setVehicleCondition(newCondition);
-//
-//            vehicleService.addVeicolo(vehicle);
-//
-//            return ResponseEntity.ok("Stato del veicolo cambiato con successo");
-//        } else {
-//            return ResponseEntity.status(404).body("Veicolo non trovato");
-//        }
-//    }
-//
+
 //    //rotta per la creazione di un ordine per un acquirente OK
 //    @Operation(summary = "create an order",
 //            description = "This endpoint allows an administrator to create an order for a customer.")

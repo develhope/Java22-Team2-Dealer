@@ -74,7 +74,6 @@ public class JwtServiceImpl implements JwtService {
                 .token(UUID.randomUUID().toString())
                 .expiryDate(refreshTokenExpiredAt)
                 .build();
-
         return refreshTokenRepository.save(refreshToken);
     }
 
