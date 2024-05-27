@@ -17,6 +17,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,6 +28,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,14 +46,14 @@ public class VehicleController {
             @ApiResponse(
                     responseCode = "200", description = "Successfully created Vehicle",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "something goes wrong")
+            @ApiResponse(responseCode = "400", description = "Invalid data format")
     })
     @PostMapping("/add")
     public ResponseEntity<?> createVehicle(@Validated @RequestBody CreateVehicleRequest createVehicleRequest, @AuthenticationPrincipal User user) {
         if (user.getRole() == Role.AMMINISTRATORE) {
             VehicleDTO result = vehicleService.createVehicle(createVehicleRequest);
             if (result == null) {
-                return ResponseEntity.status(400).body("something goes wrong");
+                return ResponseEntity.status(400).body("Invalid data format");
             } else {
                 return ResponseEntity.ok().body(result);
             }
@@ -90,7 +95,7 @@ public class VehicleController {
             description = "This endpoint allows an administrator to change a vehicle's conditions.")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200", description = "Ok",
+                    responseCode = "200", description = "Successfully modified a vehicle",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleService.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields")
     })
@@ -139,7 +144,7 @@ public class VehicleController {
             @ApiResponse(
                     responseCode = "200", description = "Successfully found vehicle",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "not found")
+            @ApiResponse(responseCode = "400", description = "Type and value parameters are required")
     })
     @GetMapping("/search")
     public ResponseEntity<?> searchVehicles(@RequestParam(required = false) String type, @RequestParam(required = false) String value, @AuthenticationPrincipal User user) {
@@ -191,4 +196,72 @@ public class VehicleController {
         List<Vehicle> vehicles = vehicleService.searchByTipoVeicolo(tipoVeicolo);
         return ResponseEntity.ok().body(vehicles);
     }
+
+    //veicolo più venduto in un determinato periodo
+    @Operation(summary = "Get most sold vehicle in a given period")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200", description = "Successfully retrieved the most sold vehicle",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
+            @ApiResponse(responseCode = "403", description = "Only admin can access this resource"),
+            @ApiResponse(responseCode = "404", description = "No vehicles sold in the given period")
+    })
+    @GetMapping("/mostSold")
+    public ResponseEntity<?> getMostSoldVehicleInPeriod(@AuthenticationPrincipal User user, @RequestParam String startDate, @RequestParam String endDate) {
+        if (user.getRole() != Role.AMMINISTRATORE) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only admin can access this resource");
+        }
+        OffsetDateTime start = OffsetDateTime.parse(startDate);
+        OffsetDateTime end = OffsetDateTime.parse(endDate);
+        List<Object[]> results = vehicleService.getMostSoldVehicleInPeriod(start, end);
+        if (results.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No vehicles sold in the given period");
+        }
+        return ResponseEntity.ok(results.getFirst());
+    }
+
+    //veicolo più ordinato
+    @Operation(summary = "Get most ordered vehicle")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200", description = "Successfully retrieved the most ordered vehicle",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
+            @ApiResponse(responseCode = "403", description = "Only admin can access this resource"),
+            @ApiResponse(responseCode = "404", description = "No vehicles ordered")
+    })
+    @GetMapping("/mostOrdered")
+    public ResponseEntity<?> getMostOrderedVehicle(@AuthenticationPrincipal User user) {
+        if (user.getRole() != Role.AMMINISTRATORE) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only admin can access this resource");
+        }
+        Object[] results = vehicleService.getMostOrderedVehicle();
+        if (results == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No vehicles ordered");
+        }
+        return ResponseEntity.ok(results);
+    }
+
+    //veicolo piè venduto in una certa data
+    @Operation(summary = "Get highest priced vehicle sold until a given date")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200", description = "Successfully retrieved the highest priced vehicle sold",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
+            @ApiResponse(responseCode = "403", description = "Only admin can access this resource"),
+            @ApiResponse(responseCode = "404", description = "No vehicles sold until the given date")
+    })
+    @GetMapping("/highestPricedSoldUntil")
+    public ResponseEntity<?> getHighestPricedVehicleSoldUntil(@RequestParam String date, @AuthenticationPrincipal User user) {
+        if (user.getRole() != Role.AMMINISTRATORE) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only admin can access this resource");
+        }
+
+        OffsetDateTime dateTime = OffsetDateTime.parse(date);
+        Vehicle vehicle = vehicleService.getHighestPricedVehicleSoldUntil(dateTime);
+        if (vehicle == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No vehicles sold until the given date");
+        }
+        return ResponseEntity.ok(vehicle);
+    }
 }
+

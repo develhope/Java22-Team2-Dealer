@@ -33,13 +33,6 @@ public class AcquirenteService {
     @Autowired
     private OrdineAcquistoRepository ordineAcquistoRepository;
 
-    // create acquirente
-    public AcquirenteDTO createAcquirente(CreateAcquirenteRequest acquirenteRequest) {
-        AcquirenteModel acquirenteModel = new AcquirenteModel(acquirenteRequest.getNome(), acquirenteRequest.getCognome(), acquirenteRequest.getTelefono(), acquirenteRequest.getEmail(), acquirenteRequest.getPassword());
-        AcquirenteModel acquirenteModel1 = AcquirenteModel.entityToModel(acquirenteRepository.save(AcquirenteModel.modelToEntity(acquirenteModel)));
-        return AcquirenteModel.modelToDto(acquirenteModel1);
-    }
-
     //delete customer
     public Optional<User> deleteById(Long id, User user) {
         if (user == null || id == null) {
@@ -64,11 +57,11 @@ public class AcquirenteService {
     }
 
     private void clearUserData(User user) {
-        user.setNome("");
-        user.setCognome("");
+        user.setNome("deleted_" + user.getUserId());
+        user.setCognome("deleted_" + user.getUserId());
         user.setEmail("deleted_" + user.getUserId());
         user.setTelefono("deleted_" + user.getUserId());
-        user.setPassword("");
+        user.setPassword("deleted_" + user.getUserId());
         user.setRole(Role.NON_DEFINITO);
     }
 

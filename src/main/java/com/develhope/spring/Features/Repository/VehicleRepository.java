@@ -5,12 +5,14 @@ import com.develhope.spring.Features.Entity.Vehicle.Allestimento;
 import com.develhope.spring.Features.Entity.OrdineAcquisto.TipoOrdineAcquisto;
 import com.develhope.spring.Features.Entity.Vehicle.TipoVeicolo;
 import com.develhope.spring.Features.Entity.Vehicle.VehicleCondition;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Repository
@@ -57,4 +59,26 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     @Query("SELECT v FROM Vehicle v WHERE v.tipoOrdineAcquisto = :tipoOrdineAcquisto")
     List<Vehicle> searchByTipoOrdineAcquisto(@Param("tipoOrdineAcquisto") TipoOrdineAcquisto tipoOrdineAcquisto);
 
+    @Query("SELECT v.marca, v.modello, COUNT(o) as sales " +
+            "FROM OrdineAcquisto o " +
+            "JOIN o.vehicle v " +
+            "WHERE o.dataOrdineAcquisto BETWEEN :startDate AND :endDate " +
+            "GROUP BY v.marca, v.modello " +
+            "ORDER BY sales DESC")
+    List<Object[]> findMostSoldVehicleInPeriod(@Param("startDate") OffsetDateTime startDate, @Param("endDate") OffsetDateTime endDate, Pageable pageable);
+
+
+    @Query("SELECT v.marca, v.modello, COUNT(v) AS total FROM OrdineAcquisto o " +
+            "JOIN o.vehicle v " +
+            "GROUP BY v.marca, v.modello " +
+            "ORDER BY total DESC")
+    List<Object[]> findMostOrderedVehicle(Pageable pageable);
+
+    @Query("SELECT v FROM OrdineAcquisto o " +
+            "JOIN o.vehicle v " +
+            "WHERE o.dataOrdineAcquisto <= :date " +
+            "ORDER BY o.costoTotale DESC")
+    List<Vehicle> findHighestPricedVehicleSoldUntil(@Param("date") OffsetDateTime date, Pageable pageable);
 }
+
+

@@ -5,6 +5,7 @@ import com.develhope.spring.Features.DTOs.Noleggio.NoleggioDTO;
 import com.develhope.spring.Features.DTOs.Venditore.CreateVenditoreRequest;
 import com.develhope.spring.Features.DTOs.Venditore.VenditoreDTO;
 import com.develhope.spring.Features.Entity.Noleggio.Noleggio;
+import com.develhope.spring.Features.Entity.User.User;
 import com.develhope.spring.Features.Entity.Venditore.Venditore;
 import com.develhope.spring.Features.Service.NoleggioService;
 import com.develhope.spring.Features.Service.VenditoreService;
@@ -14,7 +15,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -39,12 +42,17 @@ public class VenditoreController {
             @ApiResponse(responseCode = "400", description = "Seller not found.")
     })
     @DeleteMapping("/remove/{id}")
-    public ResponseEntity<String> deleteVenditoreById(@PathVariable Long id) {
-        Optional<Venditore> optionalVenditore = venditoreService.deleteById(id);
-        if (optionalVenditore.isPresent()) {
-            return ResponseEntity.ok("Seller deleted.");
+    public ResponseEntity<?> deleteAcquirente(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        try {
+            Optional<User> deletedAcquirente = venditoreService.deleteById(id, user);
+            if (deletedAcquirente.isPresent()) {
+                return ResponseEntity.ok("User information deleted successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with id " + id + " not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
-        return ResponseEntity.badRequest().body("Seller not found.");
     }
 
     @Operation(summary = "Modify Seller by ID")

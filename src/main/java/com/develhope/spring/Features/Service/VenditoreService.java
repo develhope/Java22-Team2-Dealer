@@ -3,12 +3,16 @@ package com.develhope.spring.Features.Service;
 import com.develhope.spring.Features.DTOs.Venditore.CreateVenditoreRequest;
 import com.develhope.spring.Features.DTOs.Venditore.UpdateVenditoreRequest;
 import com.develhope.spring.Features.DTOs.Venditore.VenditoreDTO;
+import com.develhope.spring.Features.Entity.User.Role;
+import com.develhope.spring.Features.Entity.User.User;
 import com.develhope.spring.Features.Models.VenditoreModel;
 import com.develhope.spring.Features.Entity.Venditore.Venditore;
+import com.develhope.spring.Features.Repository.UserRepository;
 import com.develhope.spring.Features.Repository.VenditoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -17,12 +21,8 @@ public class VenditoreService {
     @Autowired
     private VenditoreRepository venditoreRepository;
 
-    // Create
-    public VenditoreDTO createVenditore(CreateVenditoreRequest createVenditoreRequest) {
-        VenditoreModel venditoreModel = new VenditoreModel(createVenditoreRequest.getNome(), createVenditoreRequest.getCognome(), createVenditoreRequest.getTelefono(), createVenditoreRequest.getEmail(), createVenditoreRequest.getPassword());
-        VenditoreModel venditoreModel1 =  VenditoreModel.entityToModel(venditoreRepository.save(VenditoreModel.modelToEntity(venditoreModel)));
-        return VenditoreModel.modelToDto(venditoreModel1);
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     // Read
     public List<Venditore> getAllVenditori() {
@@ -49,12 +49,35 @@ public class VenditoreService {
     }
 
     //rotta delete by id venditore
-    public Optional<Venditore> deleteById(Long id) {
-        Optional<Venditore> optionalVenditore = venditoreRepository.findById(id);
-        if (optionalVenditore.isPresent()) {
-            venditoreRepository.deleteById(id);
+    public Optional<User> deleteById(Long id, User user) {
+        if (user == null || id == null) {
+            throw new IllegalArgumentException("User and ID must not be null");
         }
-        return optionalVenditore;
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isEmpty()) {
+            throw new IllegalArgumentException("User with id " + id + " not found");
+        }
+        User userToDelete = optionalUser.get();
+        if (user.getRole() == Role.VENDITORE && Objects.equals(user.getUserId(), id)) {
+            clearUserData(userToDelete);
+            userRepository.save(userToDelete);
+            return optionalUser;
+        } else if (user.getRole() == Role.AMMINISTRATORE) {
+            clearUserData(userToDelete);
+            userRepository.save(userToDelete);
+            return optionalUser;
+        } else {
+            throw new IllegalArgumentException("Only seller can delete their own information or admin can delete any user's information");
+        }
+    }
+
+    private void clearUserData(User user) {
+        user.setNome("deleted_" + user.getUserId());
+        user.setCognome("deleted_" + user.getUserId());
+        user.setEmail("deleted_" + user.getUserId());
+        user.setTelefono("deleted_" + user.getUserId());
+        user.setPassword("deleted_" + user.getUserId());
+        user.setRole(Role.NON_DEFINITO);
     }
 
     public Venditore register(CreateVenditoreRequest venditoreRequest) {
