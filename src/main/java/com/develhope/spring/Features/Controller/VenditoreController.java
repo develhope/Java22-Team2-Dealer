@@ -5,7 +5,6 @@ import com.develhope.spring.Features.DTOs.Noleggio.NoleggioDTO;
 import com.develhope.spring.Features.DTOs.Venditore.CreateVenditoreRequest;
 import com.develhope.spring.Features.DTOs.Venditore.VenditoreDTO;
 import com.develhope.spring.Features.Entity.Noleggio.Noleggio;
-import com.develhope.spring.Features.Entity.User.Role;
 import com.develhope.spring.Features.Entity.User.User;
 import com.develhope.spring.Features.Entity.Venditore.Venditore;
 import com.develhope.spring.Features.Service.NoleggioService;
@@ -17,7 +16,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -51,8 +49,8 @@ public class VenditoreController {
     @DeleteMapping("/remove/{id}")
     public ResponseEntity<?> deleteAcquirente(@PathVariable Long id, @AuthenticationPrincipal User user) {
         try {
-            Optional<User> deletedVenditore = venditoreService.deleteById(id, user);
-            if (deletedVenditore.isPresent()) {
+            Optional<User> deletedAcquirente = venditoreService.deleteById(id, user);
+            if (deletedAcquirente.isPresent()) {
                 return ResponseEntity.ok("User information deleted successfully");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with id " + id + " not found");

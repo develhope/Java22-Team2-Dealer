@@ -18,12 +18,12 @@ public class OrdineAcquisto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ordine_acquisto_id", nullable = false, unique = true)
+    @Column(name = "ordine_acquisto_id", nullable = false)
     private Long ordineAcquistoId;
 
-    @Column(name = "data_ordine", nullable = false, unique = true)
+    @Column(name = "data_ordine", nullable = false)
     private OffsetDateTime dataOrdineAcquisto;
-    @Column(name = "data_consegna", nullable = false, unique = true)
+    @Column(name = "data_consegna", nullable = false)
     private OffsetDateTime dataConsegna;
     @Column(name = "anticipo", nullable = false)
     private BigDecimal anticipo;

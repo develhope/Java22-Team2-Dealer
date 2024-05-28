@@ -11,15 +11,15 @@ import com.develhope.spring.Features.Entity.OrdineAcquisto.TipoOrdineAcquisto;
 import com.develhope.spring.Features.Entity.Vehicle.TipoVeicolo;
 import com.develhope.spring.Features.Entity.Vehicle.VehicleCondition;
 import com.develhope.spring.Features.Repository.VehicleRepository;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -171,5 +171,22 @@ public class VehicleService {
 
     public List<Vehicle> searchByTipoVeicolo(TipoVeicolo tipoVeicolo) {
         return vehicleRepository.searchByTipoVeicolo(tipoVeicolo);
+    }
+
+    public List<Object[]> getMostSoldVehicleInPeriod(OffsetDateTime startDate, OffsetDateTime endDate) {
+        Pageable pageable = PageRequest.of(0, 1);
+        return vehicleRepository.findMostSoldVehicleInPeriod(startDate, endDate, pageable);
+    }
+
+    public Object[] getMostOrderedVehicle() {
+        Pageable pageable = PageRequest.of(0, 1);
+        List<Object[]> results = vehicleRepository.findMostOrderedVehicle(pageable);
+        return results.stream().findFirst().orElse(null);
+    }
+
+    public Vehicle getHighestPricedVehicleSoldUntil(OffsetDateTime date) {
+        Pageable pageable = PageRequest.of(0, 1);
+        List<Vehicle> results = vehicleRepository.findHighestPricedVehicleSoldUntil(date, pageable);
+        return results.stream().findFirst().orElse(null);
     }
 }

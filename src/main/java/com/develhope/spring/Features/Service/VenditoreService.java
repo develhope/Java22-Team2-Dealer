@@ -29,12 +29,8 @@ public class VenditoreService {
     @Autowired
     private VenditoreRepository venditoreRepository;
 
-    // Create
-    public VenditoreDTO createVenditore(CreateVenditoreRequest createVenditoreRequest) {
-        VenditoreModel venditoreModel = new VenditoreModel(createVenditoreRequest.getNome(), createVenditoreRequest.getCognome(), createVenditoreRequest.getTelefono(), createVenditoreRequest.getEmail(), createVenditoreRequest.getPassword());
-        VenditoreModel venditoreModel1 =  VenditoreModel.entityToModel(venditoreRepository.save(VenditoreModel.modelToEntity(venditoreModel)));
-        return VenditoreModel.modelToDto(venditoreModel1);
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     // Read
     public List<Venditore> getAllVenditori() {
@@ -64,15 +60,16 @@ public class VenditoreService {
             userRepository.save(userToDelete);
             return optionalUser;
         } else {
-            throw new IllegalArgumentException("Only customer can delete their own information or admin can delete any user's information");
+            throw new IllegalArgumentException("Only seller can delete their own information or admin can delete any user's information");
         }
     }
+
     private void clearUserData(User user) {
-        user.setNome("");
-        user.setCognome("");
+        user.setNome("deleted_" + user.getUserId());
+        user.setCognome("deleted_" + user.getUserId());
         user.setEmail("deleted_" + user.getUserId());
         user.setTelefono("deleted_" + user.getUserId());
-        user.setPassword("");
+        user.setPassword("deleted_" + user.getUserId());
         user.setRole(Role.NON_DEFINITO);
     }
 
