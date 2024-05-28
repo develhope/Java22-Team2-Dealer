@@ -11,8 +11,9 @@ import java.util.Optional;
 @Repository
 public interface NoleggioLinkRepository extends JpaRepository<NoleggioLink, Long> {
 
-    Optional<NoleggioLink> findByNoleggio(Noleggio noleggio); // Metodo per trovare il link dato un noleggio
+    Optional<NoleggioLink> findByNoleggio(Noleggio noleggio);
     List<NoleggioLink> findByAcquirenteUserId(Long acquirenteId);
-//    List<NoleggioLink> findByNoleggio_Vehicle_VehicleId(Long veicoloId);    // Usa vehicleId invece di Vehicle
+//    List<NoleggioLink> findByNoleggio_Vehicle_VehicleId(Long veicoloId);
     List<NoleggioLink> findByVenditoreUserId(Long venditoreId);
+
 }
