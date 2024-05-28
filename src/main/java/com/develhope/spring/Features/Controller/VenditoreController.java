@@ -8,6 +8,7 @@ import com.develhope.spring.Features.Entity.Noleggio.Noleggio;
 import com.develhope.spring.Features.Entity.User.User;
 import com.develhope.spring.Features.Entity.Venditore.Venditore;
 import com.develhope.spring.Features.Service.NoleggioService;
+import com.develhope.spring.Features.Service.UserService;
 import com.develhope.spring.Features.Service.VenditoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,6 +34,9 @@ public class VenditoreController {
     @Autowired
     private NoleggioService noleggioService;
 
+    @Autowired
+    private UserService userService;
+
     // Route delete seller
     @Operation(summary = "Delete Seller")
     @ApiResponses(value = {
@@ -41,6 +45,7 @@ public class VenditoreController {
                     content = {@Content(mediaType = "application/jason", schema = @Schema(implementation = VenditoreDTO.class))}),
             @ApiResponse(responseCode = "400", description = "Seller not found.")
     })
+
     @DeleteMapping("/remove/{id}")
     public ResponseEntity<?> deleteAcquirente(@PathVariable Long id, @AuthenticationPrincipal User user) {
         try {
@@ -63,12 +68,17 @@ public class VenditoreController {
             @ApiResponse(responseCode = "400", description = "Seller not found")
     })
     @PutMapping("/set/{id}")
-    public ResponseEntity<String> updateVenditoreById(@PathVariable Long id, @RequestBody Venditore venditoreMod) {
-        Venditore venditore = venditoreService.updateVenditore(id, venditoreMod);
-        if (venditore != null) {
-            return ResponseEntity.ok("Seller modified.");
+    public ResponseEntity<?> updateVenditore(@PathVariable Long id, @RequestBody User userMod, @AuthenticationPrincipal User callingUser) {
+        try {
+            User updatedVenditore = venditoreService.updateVenditore(id, userMod, callingUser);
+            if (updatedVenditore != null) {
+                return ResponseEntity.ok(updatedVenditore);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with id " + id + " not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
-        return ResponseEntity.badRequest().body("Seller not found.");
     }
 
 //    // Route search sellers by ID

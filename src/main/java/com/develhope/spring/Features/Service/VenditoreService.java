@@ -9,14 +9,22 @@ import com.develhope.spring.Features.Models.VenditoreModel;
 import com.develhope.spring.Features.Entity.Venditore.Venditore;
 import com.develhope.spring.Features.Repository.UserRepository;
 import com.develhope.spring.Features.Repository.VenditoreRepository;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.math.BigInteger;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class VenditoreService {
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private VenditoreRepository venditoreRepository;
@@ -31,21 +39,6 @@ public class VenditoreService {
 
     public Optional<Venditore> getVenditoreById(Long id) {
         return venditoreRepository.findById(id);
-    }
-
-    // TODO possibile doppione
-    public Venditore updateVenditore(Long id, Venditore venditoreMod) {
-        Venditore venditore = venditoreRepository.findById(id).orElse(null);
-        if(venditore != null) {
-            venditore.setNome(venditoreMod.getNome());
-            venditore.setCognome(venditoreMod.getCognome());
-            venditore.setTelefono(venditoreMod.getTelefono());
-            venditore.setEmail(venditoreMod.getEmail());
-            venditore.setPassword(venditoreMod.getPassword());
-            venditoreRepository.save(venditore);
-            return venditore;
-        }
-        return null;
     }
 
     //rotta delete by id venditore
@@ -89,17 +82,24 @@ public class VenditoreService {
         return venditoreRepository.save(venditore);
     }
 
-    public Venditore updateVenditore(Long id, UpdateVenditoreRequest updateVenditoreRequest) {
-        Venditore venditore = venditoreRepository.findById(id).orElse(null);
-        if(venditore != null) {
-            venditore.setNome(updateVenditoreRequest.getNome());
-            venditore.setCognome(updateVenditoreRequest.getCognome());
-            venditore.setTelefono(updateVenditoreRequest.getTelefono());
-            venditore.setEmail(updateVenditoreRequest.getEmail());
-            venditore.setPassword(updateVenditoreRequest.getPassword());
-            return venditoreRepository.save(venditore);
+    @SneakyThrows
+    public User updateVenditore(Long id, User userMod, User callingUser) {
+        User venditore = userRepository.findById(id).orElse(null);
+        if (venditore == null) {
+            return null;
         }
-        return null;
+        // Check if the calling user is an venditore and is updating their own information
+        if ((callingUser.getRole().equals(Role.VENDITORE) && venditore.getRole().equals(Role.VENDITORE) && Objects.equals(venditore.getUserId(), callingUser.getUserId()))
+                || callingUser.getRole().equals(Role.AMMINISTRATORE)) {
+            venditore.setNome(userMod.getNome());
+            venditore.setCognome(userMod.getCognome());
+            venditore.setTelefono(userMod.getTelefono());
+            venditore.setEmail(userMod.getEmail());
+            venditore.setPassword(userMod.getPassword());
+            userRepository.save(venditore);
+            return venditore;
+        } else {
+            throw new Exception("I venditori e gli amministratori possono modificare le informazioni");
+        }
     }
-
 }
