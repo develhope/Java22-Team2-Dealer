@@ -39,5 +39,4 @@ public class NoleggioLink {
         this.noleggio = noleggio;
         this.venditore = venditore;
     }
-
 }
