@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateVehicleRequest {
+
     private String marca;
     private TipoVeicolo tipoVeicolo;
     private String modello;

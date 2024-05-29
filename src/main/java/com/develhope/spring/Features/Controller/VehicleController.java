@@ -104,7 +104,7 @@ public class VehicleController {
         return vehicleService.changeVehicleCondition(id, newCondition, user);
     }
 
-    //ricerca veicoli in base alla caratteristiche
+    //ricerca veicoli in base alle caratteristiche
     @Operation(summary = "Search vehicles by caract")
     @ApiResponses(value = {
             @ApiResponse(
@@ -255,7 +255,6 @@ public class VehicleController {
         if (user.getRole() != Role.AMMINISTRATORE) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only admin can access this resource");
         }
-
         OffsetDateTime dateTime = OffsetDateTime.parse(date);
         Vehicle vehicle = vehicleService.getHighestPricedVehicleSoldUntil(dateTime);
         if (vehicle == null) {
@@ -263,5 +262,6 @@ public class VehicleController {
         }
         return ResponseEntity.ok(vehicle);
     }
+
 }
 

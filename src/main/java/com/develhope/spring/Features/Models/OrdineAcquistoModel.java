@@ -59,6 +59,6 @@ public class OrdineAcquistoModel {
     }
 
     public static OrdineAcquistoModel dtoToModel(OrdineAcquistoDTO ordineAcquistoDTO) {
-        return new OrdineAcquistoModel(ordineAcquistoDTO.getOrdineAcquistoId(), ordineAcquistoDTO.getDataOrdine(), ordineAcquistoDTO.getDataConsegna(), ordineAcquistoDTO.getAnticipo(), ordineAcquistoDTO.getCostoTotale(), ordineAcquistoDTO.getFlagPagato(), ordineAcquistoDTO.getStatoOrdineAcquisto(), ordineAcquistoDTO.getVehicle());
+        return new OrdineAcquistoModel(ordineAcquistoDTO.getOrdineAcquistoId(), ordineAcquistoDTO.getDataOrdineAcquisto(), ordineAcquistoDTO.getDataConsegna(), ordineAcquistoDTO.getAnticipo(), ordineAcquistoDTO.getCostoTotale(), ordineAcquistoDTO.getFlagPagato(), ordineAcquistoDTO.getStatoOrdineAcquisto(), ordineAcquistoDTO.getVehicle());
     }
 }

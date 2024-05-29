@@ -17,7 +17,6 @@ public class UpdateNoleggioRequest {
     private BigDecimal costoGiornaliero;
     private BigDecimal costoTotale;
     private Boolean flagPagato;
-    private Long acquirenteId;
     private Long vehicleId;
-    private Long venditoreId;
+
 }
