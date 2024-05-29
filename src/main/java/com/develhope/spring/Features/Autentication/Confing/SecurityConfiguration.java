@@ -35,26 +35,6 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/acquirente/**").hasAnyAuthority(Role.ACQUIRENTE.name(), Role.AMMINISTRATORE.name())
-                        .requestMatchers(HttpMethod.POST, "/acquirente/**").hasAnyAuthority(Role.ACQUIRENTE.name(), Role.AMMINISTRATORE.name())
-                        .requestMatchers(HttpMethod.PUT, "/acquirente/**").hasAnyAuthority(Role.ACQUIRENTE.name(), Role.AMMINISTRATORE.name())
-                        .requestMatchers(HttpMethod.DELETE, "/acquirente/**").hasAnyAuthority(Role.ACQUIRENTE.name(), Role.AMMINISTRATORE.name())
-
-                        .requestMatchers(HttpMethod.GET, "/venditore/**").hasAnyAuthority(Role.VENDITORE.name(), Role.AMMINISTRATORE.name())
-                        .requestMatchers(HttpMethod.POST, "/venditore/**").hasAnyAuthority(Role.VENDITORE.name(), Role.AMMINISTRATORE.name())
-                        .requestMatchers(HttpMethod.PUT, "/venditore/**").hasAnyAuthority(Role.VENDITORE.name(), Role.AMMINISTRATORE.name())
-                        .requestMatchers(HttpMethod.DELETE, "/venditore/**").hasAnyAuthority(Role.VENDITORE.name(), Role.AMMINISTRATORE.name())
-
-                        .requestMatchers(HttpMethod.GET, "/veicolo/**").hasAnyAuthority(Role.VENDITORE.name(), Role.AMMINISTRATORE.name())
-                        .requestMatchers(HttpMethod.POST, "/veicolo/**").hasAnyAuthority(Role.VENDITORE.name(), Role.AMMINISTRATORE.name())
-                        .requestMatchers(HttpMethod.PUT, "/veicolo/**").hasAnyAuthority(Role.VENDITORE.name(), Role.AMMINISTRATORE.name())
-                        .requestMatchers(HttpMethod.DELETE, "/veicolo/**").hasAnyAuthority(Role.VENDITORE.name(), Role.AMMINISTRATORE.name())
-
-                        .requestMatchers(HttpMethod.GET, "/noleggio/**").hasAnyAuthority(Role.ACQUIRENTE.name(), Role.VENDITORE.name())
-                        .requestMatchers(HttpMethod.POST, "/noleggio/**").hasAnyAuthority(Role.ACQUIRENTE.name(), Role.VENDITORE.name())
-                        .requestMatchers(HttpMethod.PUT, "/noleggio/**").hasAnyAuthority(Role.ACQUIRENTE.name(), Role.VENDITORE.name())
-                        .requestMatchers(HttpMethod.DELETE, "/noleggio/**").hasAnyAuthority(Role.ACQUIRENTE.name(), Role.VENDITORE.name())
-                        .requestMatchers(HttpMethod.PATCH, "/noleggio/**").hasAnyAuthority(Role.VENDITORE.name())
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

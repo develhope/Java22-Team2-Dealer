@@ -67,7 +67,6 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
             "ORDER BY sales DESC")
     List<Object[]> findMostSoldVehicleInPeriod(@Param("startDate") OffsetDateTime startDate, @Param("endDate") OffsetDateTime endDate, Pageable pageable);
 
-
     @Query("SELECT v.marca, v.modello, COUNT(v) AS total FROM OrdineAcquisto o " +
             "JOIN o.vehicle v " +
             "GROUP BY v.marca, v.modello " +

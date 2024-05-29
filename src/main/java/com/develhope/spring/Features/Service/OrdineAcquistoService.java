@@ -1,5 +1,6 @@
 package com.develhope.spring.Features.Service;
 
+import com.develhope.spring.Features.DTOs.OrdineAcquisto.UpdateOrdineAcquistoRequest;
 import com.develhope.spring.Features.Entity.OrdineAcquisto.OrdineAcquisto;
 import com.develhope.spring.Features.Entity.OrdineAcquisto.StatoOrdineAcquisto;
 import com.develhope.spring.Features.Entity.OrdineAcquisto.TipoOrdineAcquisto;
@@ -45,16 +46,21 @@ public class OrdineAcquistoService {
         ordineAcquistoRepository.delete(ordineAcquisto);
     }
 
-    public OrdineAcquisto updateOrdineAcquisto(Long ordineAcquistoId, OrdineAcquisto ordineAcquisto) throws ResourceNotFoundException {
+    public OrdineAcquisto updateOrdineAcquisto(Long ordineAcquistoId, UpdateOrdineAcquistoRequest request) throws ResourceNotFoundException {
         OrdineAcquisto existingOrdineAcquisto = ordineAcquistoRepository.findById(ordineAcquistoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ordine non trovato con id: " + ordineAcquistoId));
 
-        existingOrdineAcquisto.setDataOrdineAcquisto(ordineAcquisto.getDataOrdineAcquisto());
-        existingOrdineAcquisto.setAnticipo(ordineAcquisto.getAnticipo());
-        existingOrdineAcquisto.setCostoTotale(ordineAcquisto.getCostoTotale());
-        existingOrdineAcquisto.setFlagPagato(ordineAcquisto.getFlagPagato());
-        existingOrdineAcquisto.setStatoOrdineAcquisto(ordineAcquisto.getStatoOrdineAcquisto());
-        existingOrdineAcquisto.setVehicle(ordineAcquisto.getVehicle());
+        Vehicle vehicle = new Vehicle();
+        if (request.getVehicleId() != null) {
+            vehicle = vehicleRepository.findById(request.getVehicleId()).orElseThrow(() -> new ResourceNotFoundException("Vehicle non trovato con id: " + request.getVehicleId()));
+        }
+
+        existingOrdineAcquisto.setDataOrdineAcquisto(request.getDataOrdineAcquisto() == null ? existingOrdineAcquisto.getDataOrdineAcquisto() : request.getDataOrdineAcquisto());
+        existingOrdineAcquisto.setAnticipo(request.getStatoOrdineAcquisto() == null ? existingOrdineAcquisto.getAnticipo() : request.getAnticipo());
+        existingOrdineAcquisto.setCostoTotale(request.getCostoTotale() == null ? existingOrdineAcquisto.getCostoTotale() : request.getCostoTotale());
+        existingOrdineAcquisto.setFlagPagato(request.getFlagPagato() == null ? existingOrdineAcquisto.getFlagPagato() : request.getFlagPagato());
+        existingOrdineAcquisto.setStatoOrdineAcquisto(request.getStatoOrdineAcquisto() == null ? existingOrdineAcquisto.getStatoOrdineAcquisto() : request.getStatoOrdineAcquisto());
+        existingOrdineAcquisto.setVehicle(request.getVehicleId() == null ? existingOrdineAcquisto.getVehicle() : vehicle);
 
         return ordineAcquistoRepository.save(existingOrdineAcquisto);
     }

@@ -16,7 +16,7 @@ public class OrdineAcquistoDTO {
 
     private Long ordineAcquistoId;
 
-    private OffsetDateTime dataOrdine;
+    private OffsetDateTime dataOrdineAcquisto;
     private OffsetDateTime dataConsegna;
     private BigDecimal anticipo;
     private BigDecimal costoTotale;

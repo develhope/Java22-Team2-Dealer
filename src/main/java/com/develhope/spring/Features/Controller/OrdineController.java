@@ -1,5 +1,6 @@
 package com.develhope.spring.Features.Controller;
 
+import com.develhope.spring.Features.DTOs.OrdineAcquisto.UpdateOrdineAcquistoRequest;
 import com.develhope.spring.Features.Entity.OrdineAcquisto.OrdineAcquisto;
 import com.develhope.spring.Features.Entity.OrdineAcquisto.OrdineAcquistoLink;
 import com.develhope.spring.Features.Entity.OrdineAcquisto.StatoOrdineAcquisto;
@@ -98,11 +99,11 @@ public class OrdineController {
             @ApiResponse(responseCode = "404", description = "Order not found due to update"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @PutMapping("/update/{ordineAcquistoId}/acquirente/{acquirenteId}")
-    public ResponseEntity<?> updateOrdine(@PathVariable Long ordineAcquistoId, @PathVariable Long acquirenteId, @RequestBody OrdineAcquisto ordineAcquisto, @AuthenticationPrincipal User user) {
+    @PutMapping("/update/{ordineAcquistoId}")
+    public ResponseEntity<?> updateOrdine(@PathVariable Long ordineAcquistoId, @RequestBody UpdateOrdineAcquistoRequest request, @AuthenticationPrincipal User user) {
         if (user.getRole() == Role.AMMINISTRATORE || user.getRole() == Role.VENDITORE) {
             try {
-                OrdineAcquisto updatedOrdineAcquisto = ordineAcquistoService.updateOrdineAcquisto(ordineAcquistoId, ordineAcquisto);
+                OrdineAcquisto updatedOrdineAcquisto = ordineAcquistoService.updateOrdineAcquisto(ordineAcquistoId, request);
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(updatedOrdineAcquisto);
             } catch (ResourceNotFoundException e) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ordine non trovato per aggiornamento: " + ordineAcquistoId);

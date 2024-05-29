@@ -29,9 +29,6 @@ public class VenditoreService {
     @Autowired
     private VenditoreRepository venditoreRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
     // Read
     public List<Venditore> getAllVenditori() {
         return venditoreRepository.findAll();
