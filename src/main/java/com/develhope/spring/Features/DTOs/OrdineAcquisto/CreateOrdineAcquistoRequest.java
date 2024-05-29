@@ -20,6 +20,6 @@ public class CreateOrdineAcquistoRequest {
     private BigDecimal costoTotale;
     private Boolean flagPagato;
     private StatoOrdineAcquisto statoOrdineAcquisto;
-    private Vehicle vehicle;
+    private Long vehicleId;
 
 }

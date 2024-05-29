@@ -9,16 +9,14 @@ import com.develhope.spring.Features.Entity.Noleggio.NoleggioLink;
 import com.develhope.spring.Features.Entity.User.Role;
 import com.develhope.spring.Features.Entity.User.User;
 import com.develhope.spring.Features.Models.NoleggioModel;
-import com.develhope.spring.Features.Service.AcquirenteService;
-import com.develhope.spring.Features.Service.NoleggioService;
-import com.develhope.spring.Features.Service.OrdineAcquistoService;
-import com.develhope.spring.Features.Service.UserService;
+import com.develhope.spring.Features.Service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,201 +34,118 @@ import java.util.stream.Collectors;
 public class NoleggioController {
 
     @Autowired
-    private AcquirenteService acquirenteService;
+    private NoleggioService noleggioService;
 
     @Autowired
-    private NoleggioService noleggioService;
+    private NoleggioLinkService noleggioLinkService;
 
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private OrdineAcquistoService ordineAcquistoService;
-
-    // ACQUIRENTE
-
-    // Route for creating a rental by customer ID
-    @Operation(summary = "Create a rental for a customer")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully created the rental"),
-            @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields"),
-            @ApiResponse(responseCode = "403", description = "Unauthorized to create rental for this customer")
-    })
-    @PostMapping("/{acquirenteId}/noleggi/add")
-    public ResponseEntity<?> addNoleggio(@PathVariable Long acquirenteId,
-                                         @Validated @RequestBody CreateNoleggioRequest createNoleggioRequest,
-                                         @AuthenticationPrincipal User callingUser) {
-        try {
-            if (callingUser.getRole() != Role.ACQUIRENTE || callingUser.getRole() != Role.AMMINISTRATORE && !callingUser.getUserId().equals(acquirenteId)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized to create rental for this customer");
-            }
-
-            NoleggioDTO nuovoNoleggio = noleggioService.createNoleggio(createNoleggioRequest, acquirenteId); // Chiama createNoleggio, non createNoleggioForAcquirente
-            return ResponseEntity.ok(nuovoNoleggio);
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
-
-
-    // Route delete rental
-    @Operation(summary = "Delete rental")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully deleted the rental"),
-            @ApiResponse(responseCode = "404", description = "Rental not found or unauthorized access"),
-            @ApiResponse(responseCode = "403", description = "Unauthorized to delete this rental")
-    })
-    @DeleteMapping("/{acquirenteId}/noleggi/remove/{noleggioLinkId}")
-    public ResponseEntity<String> deleteNoleggioByAcquirenteId(@PathVariable Long acquirenteId,
-                                                               @PathVariable Long noleggioLinkId,
-                                                               @AuthenticationPrincipal User callingUser) {
-
-        try {
-            Optional<NoleggioLink> noleggioLinkOptional = noleggioService.findById(noleggioLinkId);
-            if (noleggioLinkOptional.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-
-            NoleggioLink noleggioLink = noleggioLinkOptional.get();
-            Noleggio noleggio = noleggioLink.getNoleggio();
-
-            if (!noleggioLink.getAcquirente().getUserId().equals(callingUser.getUserId()) &&
-                    callingUser.getRole() != Role.AMMINISTRATORE) {
-                throw new AccessDeniedException("Non autorizzato a eliminare questo noleggio");
-            }
-
-            noleggioService.deleteNoleggio(noleggio.getNoleggioId());
-            return ResponseEntity.ok("Rental deleted.");
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        } catch (org.springframework.security.access.AccessDeniedException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
-    // Route search rentals by customer ID
-    @Operation(summary = "Search rentals by Customer ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully got rentals by customer ID"),
-            @ApiResponse(responseCode = "404", description = "No rentals found for the customer"),
-            @ApiResponse(responseCode = "403", description = "Unauthorized access to rentals")
-    })
-    @GetMapping("/{acquirenteId}/noleggi")
-    public ResponseEntity<?> getNoleggi(@PathVariable Long acquirenteId, @AuthenticationPrincipal User callingUser) {
-        try {
-            if (callingUser.getRole() != Role.AMMINISTRATORE && !callingUser.getUserId().equals(acquirenteId)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized access to rentals");
-            }
-
-            List<NoleggioLink> noleggiLink = noleggioService.findByAcquirente(acquirenteId);
-            if (noleggiLink.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-
-            List<NoleggioDTO> noleggiDto = noleggiLink.stream()
-                    .map(NoleggioLink::getNoleggio)
-                    .map(NoleggioModel::entityToModel)
-                    .map(NoleggioModel::modelToDto)
-                    .collect(Collectors.toList());
-
-            return ResponseEntity.ok(noleggiDto);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
-    // VENDITORE
-
-    // Crea noleggio
     @Operation(summary = "Create a rental",
-            description = "This endpoint allows a seller or admin to create a new Rental by providing the necessary information in the request body."
-    )
+            description = "This endpoint allows an administrator or a buyer to create a new rental.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully created the rental"),
+            @ApiResponse(responseCode = "201", description = "Created",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = NoleggioDTO.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields"),
-            @ApiResponse(responseCode = "403", description = "Unauthorized to create the rental")
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Vehicle not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @PostMapping("/noleggi/add/{acquirenteId}")
-    public ResponseEntity<?> createNoleggio(@RequestBody CreateNoleggioRequest createNoleggioRequest,
-                                            @PathVariable Long acquirenteId,
-                                            @AuthenticationPrincipal UserDetails userDetails) {
-        try {
-            boolean isVenditoreOrAdmin = userDetails.getAuthorities().stream()
-                    .anyMatch(auth -> auth.getAuthority().equals(Role.VENDITORE.name()) ||
-                            auth.getAuthority().equals(Role.AMMINISTRATORE.name()));
-
-            if (!isVenditoreOrAdmin) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized to create the rental");
+    @PostMapping("/create/acquirente/{acquirenteId}")
+    public ResponseEntity<?> createNoleggio(@PathVariable Long acquirenteId, @RequestBody CreateNoleggioRequest createNoleggioRequest, @AuthenticationPrincipal User user) {
+        if (user.getRole() == Role.AMMINISTRATORE || user.getRole() == Role.ACQUIRENTE) {
+            try {
+                Noleggio createdNoleggio = noleggioService.createNoleggio(acquirenteId, createNoleggioRequest, user);
+                User acquirente = userService.getUserById(acquirenteId);
+                if (acquirente == null) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Acquirente non trovato con ID: " + acquirenteId);
+                }
+                NoleggioLink noleggioLink = new NoleggioLink(createdNoleggio, acquirente, user);
+                noleggioLinkService.createNoleggioLink(noleggioLink);
+                return ResponseEntity.status(HttpStatus.CREATED).body(createdNoleggio);
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante la creazione del noleggio: " + e.getMessage());
             }
-
-            NoleggioDTO result = noleggioService.createNoleggio(createNoleggioRequest, acquirenteId);
-            return ResponseEntity.ok().body(result);
-
-        } catch (IllegalArgumentException | org.springframework.security.access.AccessDeniedException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
         }
     }
 
-
-    // Route delete rental
-    @Operation(summary = "Delete rental")
+    @Operation(summary = "Delete a rental",
+            description = "This endpoint allows an administrator to delete an existing rental.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully deleted the rental"),
+            @ApiResponse(responseCode = "202", description = "Accepted", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "Rental not found"),
-            @ApiResponse(responseCode = "403", description = "Unauthorized to delete this rental")
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @DeleteMapping("/deleteNoleggio/{noleggioLinkId}")
-    public ResponseEntity<String> deleteNoleggioById(@PathVariable Long noleggioLinkId,
-                                                     @AuthenticationPrincipal org.apache.catalina.User callingUser) {
-        try {
-            Optional<NoleggioLink> noleggioLinkOptional = noleggioService.findById(noleggioLinkId);
-            if (noleggioLinkOptional.isEmpty()) {
-                return ResponseEntity.notFound().build();
+    @DeleteMapping("/delete/{noleggioId}/acquirente/{acquirenteId}")
+    public ResponseEntity<?> deleteNoleggio(@PathVariable Long noleggioId, @PathVariable Long acquirenteId, @AuthenticationPrincipal User user) {
+        if (user.getRole() == Role.AMMINISTRATORE || user.getRole() == Role. VENDITORE || user.getRole() == Role.ACQUIRENTE) {
+            try {
+                noleggioLinkService.deleteNoleggioLink(acquirenteId, noleggioId);
+                noleggioService.deleteNoleggio(noleggioId);
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body("Noleggio cancellato con successo: " + noleggioId);
+            }  catch (ResourceNotFoundException e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Noleggio non trovato per cancellazione: " + noleggioId);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante la cancellazione del noleggio: " + e.getMessage());
             }
-
-            NoleggioLink noleggioLink = noleggioLinkOptional.get();
-            noleggioService.deleteNoleggio(noleggioLinkId);
-            return ResponseEntity.ok("Noleggio eliminato.");
-
-        } catch (IllegalArgumentException e) { // NoleggioLink non trovato
-            return ResponseEntity.notFound().build();
-        } catch (org.springframework.security.access.AccessDeniedException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        } catch (Exception e) { // Cattura altre eccezioni non previste
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
         }
     }
 
-
-    // Modifica noleggio
-    @Operation(summary = "Modify rental by ID")
+    @Operation(summary = "Update a rental",
+            description = "This endpoint allows an administrator to update an existing rental.")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "Successfully modified rental by id",
-                    content = {@Content(mediaType = "application/jason", schema = @Schema(implementation = VenditoreDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "Rental not found or unauthorized access"),
-            @ApiResponse(responseCode = "403", description = "Unauthorized to modify this rental")
+            @ApiResponse(responseCode = "202", description = "Accepted", content = @Content(schema = @Schema(implementation = Noleggio.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Rental not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @PatchMapping("/setNoleggio/{id}")
-    public ResponseEntity<String> setNoleggioById (@PathVariable Long id, @RequestBody UpdateNoleggioRequest updateNoleggioRequest, @AuthenticationPrincipal org.apache.catalina.User callingUser){
-        try{
-            Noleggio noleggio = noleggioService.updateNoleggio(id, updateNoleggioRequest);
-            if (noleggio != null) {
-                return ResponseEntity.ok("Rental modified");
+    @PutMapping("/update/{noleggioId}")
+    public ResponseEntity<?> updateNoleggio(@PathVariable Long noleggioId, @RequestBody UpdateNoleggioRequest updateNoleggioRequest, @AuthenticationPrincipal User user) {
+        if (user.getRole() == Role.AMMINISTRATORE || user.getRole() == Role. VENDITORE) {
+            try {
+                Noleggio updatedNoleggio = noleggioService.updateNoleggio(noleggioId, updateNoleggioRequest);
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(updatedNoleggio);
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Noleggio non trovato: " + noleggioId);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante l'aggiornamento del noleggio: " + e.getMessage());
             }
-            return ResponseEntity.badRequest().body("Rental not found.");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
         }
-        catch(Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+
+    @Operation(summary = "Get rentals by buyer",
+            description = "This endpoint allows a buyer to get their rentals.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok", content = @Content(schema = @Schema(implementation = NoleggioLink.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "No rentals found for the buyer"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/getAll/{acquirenteId}")
+    public ResponseEntity<?> getAllNoleggi(@PathVariable Long acquirenteId, @AuthenticationPrincipal User user) {
+        if (user.getRole() == Role.ACQUIRENTE) {
+            try {
+                List<Noleggio> noleggi = noleggioLinkService.findNoleggiByAcquirente(acquirenteId);
+                if (noleggi.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nessun noleggio trovato per l'acquirente: " + acquirenteId);
+                } else {
+                    return ResponseEntity.ok(noleggi);
+                }
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante il recupero dei noleggi: " + e.getMessage());
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
         }
     }
 

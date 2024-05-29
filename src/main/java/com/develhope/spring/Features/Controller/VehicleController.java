@@ -104,7 +104,7 @@ public class VehicleController {
         return vehicleService.changeVehicleCondition(id, newCondition, user);
     }
 
-    //ricerca veicoli in base alla caratteristiche
+    //ricerca veicoli in base alle caratteristiche
     @Operation(summary = "Search vehicles by caract")
     @ApiResponses(value = {
             @ApiResponse(

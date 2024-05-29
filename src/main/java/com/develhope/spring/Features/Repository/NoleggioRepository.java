@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NoleggioRepository extends JpaRepository<Noleggio, Long> {
 
-
 }

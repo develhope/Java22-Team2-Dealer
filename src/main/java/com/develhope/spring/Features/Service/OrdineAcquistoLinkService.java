@@ -24,7 +24,7 @@ public class OrdineAcquistoLinkService {
 
     public void deleteOrdineAcquistoLink(Long acquirenteId, Long ordineAcquistoId) throws ResourceNotFoundException {
         OrdineAcquistoLink ordineAcquistoLink = ordineAcquistoLinkRepository.findByAcquirenteUserIdAndOrdineAcquistoOrdineAcquistoId(acquirenteId, ordineAcquistoId)
-                .orElseThrow(() -> new ResourceNotFoundException("Link ordine non trovato con acquirente id: " + acquirenteId + " e ordine id: " + ordineAcquistoId));
+                .orElseThrow(() -> new ResourceNotFoundException("Ordine non trovato con acquirente id: " + acquirenteId + " e ordine id: " + ordineAcquistoId));
 
         ordineAcquistoLinkRepository.delete(ordineAcquistoLink);
     }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table
+@Table(name = "noleggio_link")
 @NoArgsConstructor
 @AllArgsConstructor
 public class NoleggioLink {
@@ -18,25 +18,20 @@ public class NoleggioLink {
     private Long linkId;
 
     @ManyToOne
-    @JoinColumn(name = "acquirente_id", nullable = false)
+    @JoinColumn(name = "acquirente_id")
     private User acquirente;
 
     @OneToOne
-    @JoinColumn(name = "noleggio_id", nullable = false)
+    @JoinColumn(name = "noleggio_id")
     private Noleggio noleggio;
 
     @ManyToOne
     @JoinColumn(name = "venditore_id")
     private User venditore;
 
-    public NoleggioLink(User acquirente, Noleggio noleggio) {
-        this.acquirente = acquirente;
+    public NoleggioLink(Noleggio noleggio, User acquirente, User venditore) {
         this.noleggio = noleggio;
-    }
-
-    public NoleggioLink(User acquirente, Noleggio noleggio, User venditore) {
         this.acquirente = acquirente;
-        this.noleggio = noleggio;
         this.venditore = venditore;
     }
 }
