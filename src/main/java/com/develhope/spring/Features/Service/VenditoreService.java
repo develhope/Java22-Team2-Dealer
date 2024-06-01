@@ -1,22 +1,13 @@
 package com.develhope.spring.Features.Service;
 
-import com.develhope.spring.Features.DTOs.Venditore.CreateVenditoreRequest;
-import com.develhope.spring.Features.DTOs.Venditore.UpdateVenditoreRequest;
-import com.develhope.spring.Features.DTOs.Venditore.VenditoreDTO;
 import com.develhope.spring.Features.Entity.User.Role;
 import com.develhope.spring.Features.Entity.User.User;
-import com.develhope.spring.Features.Models.VenditoreModel;
-import com.develhope.spring.Features.Entity.Venditore.Venditore;
 import com.develhope.spring.Features.Repository.UserRepository;
 import com.develhope.spring.Features.Repository.VenditoreRepository;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
-import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -28,15 +19,6 @@ public class VenditoreService {
 
     @Autowired
     private VenditoreRepository venditoreRepository;
-
-    // Read
-    public List<Venditore> getAllVenditori() {
-        return venditoreRepository.findAll();
-    }
-
-    public Optional<Venditore> getVenditoreById(Long id) {
-        return venditoreRepository.findById(id);
-    }
 
     //rotta delete by id venditore
     public Optional<User> deleteById(Long id, User user) {
@@ -70,22 +52,12 @@ public class VenditoreService {
         user.setRole(Role.NON_DEFINITO);
     }
 
-    public Venditore register(CreateVenditoreRequest venditoreRequest) {
-        Venditore venditore = new Venditore();
-        venditore.setNome(venditoreRequest.getNome());
-        venditore.setCognome(venditoreRequest.getCognome());
-        venditore.setEmail(venditoreRequest.getEmail());
-        venditore.setPassword(venditoreRequest.getPassword());  // dovresti criptare la password
-        return venditoreRepository.save(venditore);
-    }
-
     @SneakyThrows
     public User updateVenditore(Long id, User userMod, User callingUser) {
         User venditore = userRepository.findById(id).orElse(null);
         if (venditore == null) {
             return null;
         }
-        // Check if the calling user is an venditore and is updating their own information
         if ((callingUser.getRole().equals(Role.VENDITORE) && venditore.getRole().equals(Role.VENDITORE) && Objects.equals(venditore.getUserId(), callingUser.getUserId()))
                 || callingUser.getRole().equals(Role.AMMINISTRATORE)) {
             venditore.setNome(userMod.getNome());

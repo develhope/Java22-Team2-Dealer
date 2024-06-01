@@ -31,9 +31,8 @@ public class VehicleModel {
     private VehicleCondition vehicleCondition;
     private TipoOrdineAcquisto tipoOrdineAcquisto;
 
-
-    public VehicleModel(String marca, TipoVeicolo tipoVeicolo, String modello, int cilindrata, String colore, int potenza, String tipoDiCambio, int annoImmatricolazione, String alimentazione, BigDecimal prezzo,Allestimento allestimento, String accessori, VehicleCondition vehicleCondition, TipoOrdineAcquisto tipoOrdineAcquisto) {
-
+    public VehicleModel(Long veicoloId, String marca, TipoVeicolo tipoVeicolo, String modello, int cilindrata, String colore, int potenza, String tipoDiCambio, int annoImmatricolazione, String alimentazione, BigDecimal prezzo, Allestimento allestimento, String accessori, VehicleCondition vehicleCondition, TipoOrdineAcquisto tipoOrdineAcquisto) {
+        this.veicoloId = veicoloId;
         this.marca = marca;
         this.tipoVeicolo = tipoVeicolo;
         this.modello = modello;
@@ -50,8 +49,7 @@ public class VehicleModel {
         this.tipoOrdineAcquisto = tipoOrdineAcquisto;
     }
 
-    public VehicleModel(Long veicoloId, String marca, TipoVeicolo tipoVeicolo, String modello, int cilindrata, String colore, int potenza, String tipoDiCambio, int annoImmatricolazione, String alimentazione, BigDecimal prezzo, Allestimento allestimento, String accessori, VehicleCondition vehicleCondition, TipoOrdineAcquisto tipoOrdineAcquisto) {
-        this.veicoloId = veicoloId;
+    public VehicleModel(String marca, TipoVeicolo tipoVeicolo, String modello, int cilindrata, String colore, int potenza, String tipoDiCambio, int annoImmatricolazione, String alimentazione, BigDecimal prezzo,Allestimento allestimento, String accessori, VehicleCondition vehicleCondition, TipoOrdineAcquisto tipoOrdineAcquisto) {
         this.marca = marca;
         this.tipoVeicolo = tipoVeicolo;
         this.modello = modello;
