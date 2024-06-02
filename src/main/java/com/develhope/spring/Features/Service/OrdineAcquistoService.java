@@ -6,7 +6,6 @@ import com.develhope.spring.Features.Entity.OrdineAcquisto.StatoOrdineAcquisto;
 import com.develhope.spring.Features.Entity.OrdineAcquisto.TipoOrdineAcquisto;
 import com.develhope.spring.Features.Entity.Vehicle.Vehicle;
 import com.develhope.spring.Features.Repository.OrdineAcquistoRepository;
-import com.develhope.spring.Features.Repository.UserRepository;
 import com.develhope.spring.Features.Repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -21,17 +20,14 @@ public class OrdineAcquistoService {
     private OrdineAcquistoRepository ordineAcquistoRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private VehicleRepository vehicleRepository;
 
     public OrdineAcquisto createOrdineAcquisto(Long vehicleId, OrdineAcquisto ordineAcquisto) throws ResourceNotFoundException {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Veicolo non trovato con id: " + vehicleId));
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: " + vehicleId));
 
         if (vehicle.getTipoOrdineAcquisto() == TipoOrdineAcquisto.NON_DISPONIBILE) {
-            throw new IllegalArgumentException("Veicolo non disponibile: " + vehicleId);
+            throw new IllegalArgumentException("Vehicle not available: " + vehicleId);
         }
 
         ordineAcquisto.setVehicle(vehicle);
@@ -41,18 +37,18 @@ public class OrdineAcquistoService {
 
     public void deleteOrdineAcquisto(Long ordineAcquistoId) throws ResourceNotFoundException {
         OrdineAcquisto ordineAcquisto = ordineAcquistoRepository.findById(ordineAcquistoId)
-                .orElseThrow(() -> new ResourceNotFoundException("Ordine non trovato con id: " + ordineAcquistoId));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + ordineAcquistoId));
 
         ordineAcquistoRepository.delete(ordineAcquisto);
     }
 
     public OrdineAcquisto updateOrdineAcquisto(Long ordineAcquistoId, UpdateOrdineAcquistoRequest request) throws ResourceNotFoundException {
         OrdineAcquisto existingOrdineAcquisto = ordineAcquistoRepository.findById(ordineAcquistoId)
-                .orElseThrow(() -> new ResourceNotFoundException("Ordine non trovato con id: " + ordineAcquistoId));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + ordineAcquistoId));
 
         Vehicle vehicle = new Vehicle();
         if (request.getVehicleId() != null) {
-            vehicle = vehicleRepository.findById(request.getVehicleId()).orElseThrow(() -> new ResourceNotFoundException("Vehicle non trovato con id: " + request.getVehicleId()));
+            vehicle = vehicleRepository.findById(request.getVehicleId()).orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: " + request.getVehicleId()));
         }
 
         existingOrdineAcquisto.setDataOrdineAcquisto(request.getDataOrdineAcquisto() == null ? existingOrdineAcquisto.getDataOrdineAcquisto() : request.getDataOrdineAcquisto());
@@ -67,13 +63,13 @@ public class OrdineAcquistoService {
 
     public StatoOrdineAcquisto getStatoOrdineAcquisto(Long ordineAcquistoId) throws ResourceNotFoundException {
         OrdineAcquisto ordineAcquisto = ordineAcquistoRepository.findById(ordineAcquistoId)
-                .orElseThrow(() -> new ResourceNotFoundException("Ordine non trovato con id: " + ordineAcquistoId));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + ordineAcquistoId));
         return ordineAcquisto.getStatoOrdineAcquisto();
     }
 
     public void updateStatoOrdineAcquisto(Long ordineAcquistoId, StatoOrdineAcquisto nuovoStato) throws ResourceNotFoundException {
         OrdineAcquisto ordineAcquisto = ordineAcquistoRepository.findById(ordineAcquistoId)
-                .orElseThrow(() -> new ResourceNotFoundException("Ordine non trovato con id: " + ordineAcquistoId));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + ordineAcquistoId));
         ordineAcquisto.setStatoOrdineAcquisto(nuovoStato);
         ordineAcquistoRepository.save(ordineAcquisto);
     }
@@ -81,5 +77,4 @@ public class OrdineAcquistoService {
     public List<OrdineAcquisto> getOrdiniAcquistiByStato(StatoOrdineAcquisto stato) {
         return ordineAcquistoRepository.findByStatoOrdineAcquisto(stato);
     }
-
 }

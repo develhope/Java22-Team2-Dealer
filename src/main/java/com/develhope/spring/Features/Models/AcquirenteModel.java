@@ -27,7 +27,6 @@ public class AcquirenteModel {
     }
 
     public AcquirenteModel(String nome, String cognome, String telefono, String email, String password) {
-
         this.nome = nome;
         this.cognome = cognome;
         this.telefono = telefono;
@@ -51,4 +50,3 @@ public class AcquirenteModel {
         return new AcquirenteModel(acquirenteDTO.getAcquirenteId(), acquirenteDTO.getNome(), acquirenteDTO.getCognome(), acquirenteDTO.getTelefono(), acquirenteDTO.getEmail(), acquirenteDTO.getPassword());
     }
 }
-

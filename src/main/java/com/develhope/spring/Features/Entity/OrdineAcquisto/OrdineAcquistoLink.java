@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Table
+@Table(name = "ordine_acquisto_link")
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,5 +34,4 @@ public class OrdineAcquistoLink {
         this.ordineAcquisto = ordineAcquisto;
         this.venditore = venditore;
     }
-
 }

@@ -25,7 +25,6 @@ public class AmministratoreModel {
     }
 
     public AmministratoreModel(String nome, String cognome, String email, String password) {
-
         this.nome = nome;
         this.cognome = cognome;
         this.email = email;

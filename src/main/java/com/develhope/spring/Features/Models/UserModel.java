@@ -54,5 +54,4 @@ public class UserModel {
     public static UserModel dtoToModel(UserDTO userDTO) {
         return new UserModel(userDTO.getUserId(), userDTO.getNome(), userDTO.getCognome(), userDTO.getTelefono(), userDTO.getEmail(), userDTO.getPassword(), userDTO.getRole());
     }
-
 }

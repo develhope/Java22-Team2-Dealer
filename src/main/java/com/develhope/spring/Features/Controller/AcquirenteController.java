@@ -2,10 +2,7 @@ package com.develhope.spring.Features.Controller;
 
 import com.develhope.spring.Features.DTOs.Acquirente.AcquirenteDTO;
 import com.develhope.spring.Features.Entity.User.User;
-import com.develhope.spring.Features.Service.UserService;
 import com.develhope.spring.Features.Service.AcquirenteService;
-import com.develhope.spring.Features.Service.NoleggioService;
-import com.develhope.spring.Features.Service.OrdineAcquistoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,44 +23,35 @@ public class AcquirenteController {
     @Autowired
     private AcquirenteService acquirenteService;
 
-    @Autowired
-    private NoleggioService noleggioService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private OrdineAcquistoService ordineAcquistoService;
-
-    // Route delete customer
-    @Operation(summary = "Delete a Customer")
+    @Operation(summary = "Delete a Buyer")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200", description = "Successfully deleted Customer",
+                    responseCode = "200", description = "Successfully deleted Buyer",
                     content = {@Content(mediaType = "application/jason", schema = @Schema(implementation = AcquirenteDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "Customer not found")
+            @ApiResponse(responseCode = "400", description = "Buyer not found"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     @DeleteMapping("/remove/{id}")
     public ResponseEntity<?> deleteAcquirente(@PathVariable Long id, @AuthenticationPrincipal User user) {
         try {
             Optional<User> deletedAcquirente = acquirenteService.deleteById(id, user);
             if (deletedAcquirente.isPresent()) {
-                return ResponseEntity.ok("User information deleted successfully");
+                return ResponseEntity.ok("Buyer information deleted successfully");
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with id " + id + " not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Buyer with id " + id + " not found");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
 
-    //Modify customers
-    @Operation(summary = "Modify Customers by ID")
+    @Operation(summary = "Modify a Buyer by ID")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200", description = "Successfully modified Customer by id",
+                    responseCode = "200", description = "Successfully modified Buyer by id",
                     content = {@Content(mediaType = "application/jason", schema = @Schema(implementation = AcquirenteDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "Customer not found")
+            @ApiResponse(responseCode = "400", description = "Buyer not found"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     @PutMapping("/set/{id}")
     public ResponseEntity<?> updateAcquirente(@PathVariable Long id, @RequestBody User userMod, @AuthenticationPrincipal User callingUser) {
@@ -72,11 +60,10 @@ public class AcquirenteController {
             if (updatedAcquirente != null) {
                 return ResponseEntity.ok(updatedAcquirente);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with id " + id + " not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Buyer with id " + id + " not found");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
-    
 }

@@ -2,12 +2,12 @@ package com.develhope.spring.Features.Controller;
 
 import com.develhope.spring.Features.DTOs.Vehicle.CreateVehicleRequest;
 import com.develhope.spring.Features.DTOs.Vehicle.VehicleDTO;
+import com.develhope.spring.Features.Entity.OrdineAcquisto.TipoOrdineAcquisto;
 import com.develhope.spring.Features.Entity.User.Role;
 import com.develhope.spring.Features.Entity.User.User;
-import com.develhope.spring.Features.Entity.Vehicle.Vehicle;
 import com.develhope.spring.Features.Entity.Vehicle.Allestimento;
-import com.develhope.spring.Features.Entity.OrdineAcquisto.TipoOrdineAcquisto;
 import com.develhope.spring.Features.Entity.Vehicle.TipoVeicolo;
+import com.develhope.spring.Features.Entity.Vehicle.Vehicle;
 import com.develhope.spring.Features.Entity.Vehicle.VehicleCondition;
 import com.develhope.spring.Features.Service.VehicleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,12 +15,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,9 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/veicolo")
@@ -40,9 +33,8 @@ public class VehicleController {
     @Autowired
     private VehicleService vehicleService;
 
-    //rotta creazione veicolo OK
     @Operation(summary = "Create a new Vehicle",
-            description = "This endpoint allows to create a new Vehicle by providing the necessary information in the request body.")
+            description = "This endpoint allows an administrator to create a new Vehicle by providing the necessary information in the request body.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200", description = "Successfully created Vehicle",
@@ -64,14 +56,12 @@ public class VehicleController {
         }
     }
 
-    //rotta cancellazione veicolo da id
     @Operation(summary = "Delete vehicles by id",
-            description = "This endpoint allows to delete a vehicle by providing the necessary id in the root's path variable.")
+            description = "This endpoint allows an administrator to delete a vehicle by providing the necessary id in the root's path variable.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200", description = "Successfully deleted a vehicle",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
-            @ApiResponse(responseCode = "400", description = "not found"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     @DeleteMapping("/delete/{id}")
@@ -83,7 +73,6 @@ public class VehicleController {
         }
     }
 
-    //rotta update veicolo
     @Operation(summary = "update a vehicle",
             description = "This endpoint allows an administrator to update a vehicle.")
     @ApiResponses(value = {
@@ -102,7 +91,6 @@ public class VehicleController {
         }
     }
 
-    //rotta per modifica condizione veicolo OK
     @Operation(summary = "change vehicle condition",
             description = "This endpoint allows an administrator to change a vehicle's conditions.")
     @ApiResponses(value = {
@@ -121,13 +109,11 @@ public class VehicleController {
         }
     }
 
-    //ricerca veicoli in base alle caratteristiche
     @Operation(summary = "Search vehicles by caract")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200", description = "Successfully found vehicle",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleService.class))}),
-            @ApiResponse(responseCode = "403", description = "Only customers can perform searches"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     @GetMapping("/searchCaract")
@@ -154,7 +140,6 @@ public class VehicleController {
         }
     }
 
-    //permette di cercare i veicoli per la condizione e il tipo di ordine
     @Operation(summary = "Search vehicles by condition and order type")
     @ApiResponses(value = {
             @ApiResponse(
@@ -193,7 +178,6 @@ public class VehicleController {
         }
     }
 
-    //Rotta che permette di fare ricerche per tipo veicolo
     @Operation(summary = "Search vehicles by type")
     @ApiResponses(value = {
             @ApiResponse(
@@ -216,14 +200,12 @@ public class VehicleController {
         }
     }
 
-    //veicolo più venduto in un determinato periodo
     @Operation(summary = "Get most sold vehicle in a given period")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200", description = "Successfully retrieved the most sold vehicle",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Only admin can access this resource"),
             @ApiResponse(responseCode = "404", description = "No vehicles sold in the given period")
     })
     @GetMapping("/mostSold")
@@ -241,14 +223,12 @@ public class VehicleController {
         }
     }
 
-    //veicolo più ordinato
     @Operation(summary = "Get most ordered vehicle")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200", description = "Successfully retrieved the most ordered vehicle",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Only admin can access this resource"),
             @ApiResponse(responseCode = "404", description = "No vehicles ordered")
     })
     @GetMapping("/mostOrdered")
@@ -264,14 +244,12 @@ public class VehicleController {
         }
     }
 
-    //veicolo più venduto in una certa data
     @Operation(summary = "Get highest priced vehicle sold until a given date")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200", description = "Successfully retrieved the highest priced vehicle sold",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = VehicleDTO.class))}),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Only admin can access this resource"),
             @ApiResponse(responseCode = "404", description = "No vehicles sold until the given date")
     })
     @GetMapping("/highestPricedSoldUntil")
@@ -288,4 +266,3 @@ public class VehicleController {
         }
     }
 }
-

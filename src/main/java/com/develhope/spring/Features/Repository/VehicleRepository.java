@@ -78,6 +78,5 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
             "WHERE o.dataOrdineAcquisto <= :date " +
             "ORDER BY o.costoTotale DESC")
     List<Vehicle> findHighestPricedVehicleSoldUntil(@Param("date") OffsetDateTime date, Pageable pageable);
+
 }
-
-

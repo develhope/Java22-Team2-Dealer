@@ -16,4 +16,3 @@ public class AcquirenteDTO {
     private String password;
 
 }
-

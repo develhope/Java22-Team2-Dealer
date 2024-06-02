@@ -96,7 +96,7 @@ public class VehicleService {
                 return ResponseEntity.ok().body("Vehicle successfully updated");
             }
         } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only admin can modify vehicles");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
 
@@ -109,7 +109,7 @@ public class VehicleService {
                 return ResponseEntity.status(404).body("Vehicle not found");
             }
         } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only admin can delete vehicles");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
 
@@ -125,11 +125,7 @@ public class VehicleService {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vehicle not found");
             }
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only admin can modify condition");
-    }
-
-    public Optional<Vehicle> findById(Long id) {
-        return vehicleRepository.findById(id);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
     }
 
     public List<Vehicle> searchVehicles(String marca, String modello, TipoVeicolo tipoVeicolo, Integer cilindrata, String colore, Integer potenza, String tipoDiCambio, Integer annoImmatricolazione, String alimentazione, BigDecimal prezzo, Allestimento allestimento, String accessori, VehicleCondition vehicleCondition, TipoOrdineAcquisto tipoOrdineAcquisto) {
@@ -153,16 +149,12 @@ public class VehicleService {
             return vehicleRepository.searchByAlimentazione(alimentazione);
         } else if (prezzo != null) {
             return vehicleRepository.searchByPrezzo(prezzo);
-
         } else if (allestimento!= null) {
             return vehicleRepository.searchByAllestimento(allestimento);
-
         } else if (accessori!= null) {
             return vehicleRepository.searchByAccessori(accessori);
-
         } else if (vehicleCondition!= null) {
             return vehicleRepository.searchByVehicleCondition(vehicleCondition);
-
         } else if (tipoOrdineAcquisto!= null) {
             return vehicleRepository.searchByTipoOrdineAcquisto(tipoOrdineAcquisto);
         }

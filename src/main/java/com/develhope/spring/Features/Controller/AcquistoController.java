@@ -36,7 +36,7 @@ public class AcquistoController {
     private UserService userService;
 
     @Operation(summary = "Create a purchase",
-            description = "This endpoint allows an administrator or an acquirente to create a new order.")
+            description = "This endpoint allows an administrator or a buyer to create a new purchase.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquisto.class))}),
@@ -56,19 +56,19 @@ public class AcquistoController {
                 ordineAcquistoLinkService.createOrdineAcquistoLink(ordineAcquistoLink);
                 return ResponseEntity.status(HttpStatus.CREATED).body(createdOrdineAcquisto);
             } catch (ResourceNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Veicolo non trovato: " + vehicleId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vehicle not found: " + vehicleId);
             } catch (IllegalArgumentException e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Veicolo non acquistabile: " + vehicleId);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Vehicle not purchasable: " + vehicleId);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante la creazione dell'acquisto dal veicolo: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating purchase from vehicle: " + e.getMessage());
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
 
     @Operation(summary = "Delete a purchase",
-            description = "This endpoint allows an administrator to delete an existing order.")
+            description = "This endpoint allows an administrator to delete an existing purchase.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Accepted", content = @Content),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
@@ -81,19 +81,19 @@ public class AcquistoController {
             try {
                 ordineAcquistoLinkService.deleteOrdineAcquistoLink(acquirenteId, ordineAcquistoId);
                 ordineAcquistoService.deleteOrdineAcquisto(ordineAcquistoId);
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body("Acquisto cancellato con successo: " + ordineAcquistoId);
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body("Purchase successfully cancelled: " + ordineAcquistoId);
             } catch (ResourceNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Acquisto non trovato per cancellazione: " + ordineAcquistoId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Purchase not found due to cancellation: " + ordineAcquistoId);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante la cancellazione dell'acquisto: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error canceling purchase: " + e.getMessage());
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
 
     @Operation(summary = "Update a purchase",
-            description = "This endpoint allows an administrator to update an existing order.")
+            description = "This endpoint allows an administrator to update an existing purchase.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Accepted", content = @Content(schema = @Schema(implementation = OrdineAcquisto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
@@ -107,12 +107,12 @@ public class AcquistoController {
                 OrdineAcquisto updatedOrdineAcquisto = ordineAcquistoService.updateOrdineAcquisto(ordineAcquistoId, request);
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(updatedOrdineAcquisto);
             } catch (ResourceNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Acquisto non trovato per aggiornamento: " + ordineAcquistoId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Purchase not found due to update: " + ordineAcquistoId);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante l'aggiornamento dell'acquisto: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating purchase: " + e.getMessage());
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
 
@@ -130,18 +130,17 @@ public class AcquistoController {
             try {
                 List<OrdineAcquisto> ordiniAcquisto = ordineAcquistoLinkService.getOrdiniAcquistiByAcquirente(acquirenteId);
                 if (ordiniAcquisto.isEmpty()) {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nessun acquisto trovato per l'acquirente: " + acquirenteId);
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No purchases found for buyer: " + acquirenteId);
                 } else {
                     return ResponseEntity.ok(ordiniAcquisto);
                 }
             } catch (ResourceNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Acquirente non trovato: " + acquirenteId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Buyer not found: " + acquirenteId);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante il recupero degli acquisti: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while retrieving purchases: " + e.getMessage());
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
-
 }

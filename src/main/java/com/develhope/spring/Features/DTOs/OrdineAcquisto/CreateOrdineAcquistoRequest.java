@@ -1,7 +1,6 @@
 package com.develhope.spring.Features.DTOs.OrdineAcquisto;
 
 import com.develhope.spring.Features.Entity.OrdineAcquisto.StatoOrdineAcquisto;
-import com.develhope.spring.Features.Entity.Vehicle.Vehicle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

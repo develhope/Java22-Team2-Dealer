@@ -32,7 +32,6 @@ public class SaloneController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved the dealership profit",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = BigDecimal.class))}),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Only admin can access this resource"),
             @ApiResponse(responseCode = "404", description = "No sales or rentals in the given period")
     })
     @GetMapping("/profit")
@@ -49,5 +48,4 @@ public class SaloneController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
-
 }
