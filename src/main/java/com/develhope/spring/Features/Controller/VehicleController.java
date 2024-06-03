@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -263,7 +264,7 @@ public class VehicleController {
         }
     }
 
-    //veicolo piè venduto in una certa data
+    //veicolo più venduto in una certa data
     @Operation(summary = "Get highest priced vehicle sold until a given date")
     @ApiResponses(value = {
             @ApiResponse(
@@ -286,6 +287,5 @@ public class VehicleController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
-
 }
 

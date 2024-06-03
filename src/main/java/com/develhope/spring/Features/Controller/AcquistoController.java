@@ -5,7 +5,6 @@ import com.develhope.spring.Features.Entity.OrdineAcquisto.OrdineAcquisto;
 import com.develhope.spring.Features.Entity.OrdineAcquisto.OrdineAcquistoLink;
 import com.develhope.spring.Features.Entity.User.Role;
 import com.develhope.spring.Features.Entity.User.User;
-import com.develhope.spring.Features.Service.AcquirenteService;
 import com.develhope.spring.Features.Service.OrdineAcquistoLinkService;
 import com.develhope.spring.Features.Service.OrdineAcquistoService;
 import com.develhope.spring.Features.Service.UserService;

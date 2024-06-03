@@ -1,5 +1,6 @@
 package com.develhope.spring.Features.Entity.Noleggio;
 
+import com.develhope.spring.Features.Entity.User.User;
 import com.develhope.spring.Features.Entity.Vehicle.Vehicle;
 import jakarta.persistence.Table;
 import jakarta.persistence.*;
@@ -34,5 +35,9 @@ public class Noleggio {
     @OneToOne
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicleId;
+
+    @ManyToOne
+    @JoinColumn(name = "venditore_id")
+    private User venditore;
 
 }

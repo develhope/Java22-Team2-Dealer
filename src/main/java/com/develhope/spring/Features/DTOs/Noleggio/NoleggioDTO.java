@@ -1,5 +1,6 @@
 package com.develhope.spring.Features.DTOs.Noleggio;
 
+import com.develhope.spring.Features.Entity.User.User;
 import com.develhope.spring.Features.Entity.Vehicle.Vehicle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,5 +22,6 @@ public class NoleggioDTO {
     private BigDecimal costoTotale;
     private Boolean flagPagato;
     private Vehicle vehicle;
+    private User venditore;
 
 }

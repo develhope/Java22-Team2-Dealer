@@ -16,5 +16,6 @@ public class CreateNoleggioRequest {
     private BigDecimal costoTotale;
     private Boolean flagPagato;
     private Long vehicleId;
+    private Long venditoreId;
 
 }

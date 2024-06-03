@@ -19,4 +19,10 @@ public interface OrdineAcquistoRepository extends JpaRepository<OrdineAcquisto, 
     @Query("SELECT SUM(o.costoTotale) FROM OrdineAcquisto o " + "WHERE o.dataOrdineAcquisto BETWEEN :startDate AND :endDate " + "AND o.flagPagato = true")
     BigDecimal calculateTotalSalesProfit(@Param("startDate") OffsetDateTime startDate, @Param("endDate") OffsetDateTime endDate);
 
+    @Query("SELECT COUNT(oa) FROM OrdineAcquistoLink oaLink " + "JOIN oaLink.ordineAcquisto oa " + "WHERE oaLink.venditore.id = :venditoreId " + "AND oa.dataOrdineAcquisto BETWEEN :startDate AND :endDate " + "AND oa.flagPagato = true")
+    long countSalesByVenditoreAndPeriod(@Param("venditoreId") Long venditoreId, @Param("startDate") OffsetDateTime startDate, @Param("endDate") OffsetDateTime endDate);
+
+    @Query("SELECT SUM(oa.costoTotale) FROM OrdineAcquistoLink oaLink " + "JOIN oaLink.ordineAcquisto oa " + "WHERE oaLink.venditore.id = :venditoreId " + "AND oa.dataOrdineAcquisto BETWEEN :startDate AND :endDate " + "AND oa.flagPagato = true")
+    BigDecimal calculateProfitByVenditoreAndPeriod(@Param("venditoreId") Long venditoreId, @Param("startDate") OffsetDateTime startDate, @Param("endDate") OffsetDateTime endDate);
+
 }
