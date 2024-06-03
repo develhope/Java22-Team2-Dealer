@@ -2,7 +2,6 @@ package com.develhope.spring.Features.Service;
 
 import com.develhope.spring.Features.Entity.User.Role;
 import com.develhope.spring.Features.Entity.User.User;
-import com.develhope.spring.Features.Repository.AcquirenteRepository;
 import com.develhope.spring.Features.Repository.UserRepository;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +12,6 @@ import java.util.Optional;
 
 @Service
 public class AcquirenteService {
-
-    @Autowired
-    private AcquirenteRepository acquirenteRepository;
 
     @Autowired
     private UserRepository userRepository;
