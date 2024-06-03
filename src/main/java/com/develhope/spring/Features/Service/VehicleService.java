@@ -10,6 +10,8 @@ import com.develhope.spring.Features.Entity.Vehicle.Allestimento;
 import com.develhope.spring.Features.Entity.OrdineAcquisto.TipoOrdineAcquisto;
 import com.develhope.spring.Features.Entity.Vehicle.TipoVeicolo;
 import com.develhope.spring.Features.Entity.Vehicle.VehicleCondition;
+import com.develhope.spring.Features.Repository.NoleggioRepository;
+import com.develhope.spring.Features.Repository.OrdineAcquistoRepository;
 import com.develhope.spring.Features.Repository.VehicleRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +30,12 @@ public class VehicleService {
 
     @Autowired
     private VehicleRepository vehicleRepository;
+
+    @Autowired
+    private NoleggioRepository noleggioRepository;
+
+    @Autowired
+    private OrdineAcquistoRepository ordineAcquistoRepository;
 
     public VehicleDTO createVehicle(CreateVehicleRequest vehicleRequest) {
         VehicleModel vehicle = new VehicleModel(vehicleRequest.getMarca(), vehicleRequest.getTipoVeicolo(), vehicleRequest.getModello(), vehicleRequest.getCilindrata(), vehicleRequest.getColore(), vehicleRequest.getPotenza(), vehicleRequest.getTipoDiCambio(), vehicleRequest.getAnnoImmatricolazione(), vehicleRequest.getAlimentazione(), vehicleRequest.getPrezzo(), vehicleRequest.getAllestimento(), vehicleRequest.getAccessori(), vehicleRequest.getVehicleCondition(), vehicleRequest.getTipoOrdineAcquisto());
@@ -188,5 +196,19 @@ public class VehicleService {
         Pageable pageable = PageRequest.of(0, 1);
         List<Vehicle> results = vehicleRepository.findHighestPricedVehicleSoldUntil(date, pageable);
         return results.stream().findFirst().orElse(null);
+    }
+
+    public BigDecimal calculateDealershipProfit(OffsetDateTime startDate, OffsetDateTime endDate) {
+        BigDecimal totalSalesProfit = ordineAcquistoRepository.calculateTotalSalesProfit(startDate, endDate);
+        BigDecimal totalRentalProfit = noleggioRepository.calculateTotalRentalProfit(startDate, endDate);
+
+        if (totalSalesProfit == null && totalRentalProfit == null) {
+            return null;
+        }
+
+        totalSalesProfit = (totalSalesProfit == null ? BigDecimal.ZERO : totalSalesProfit);
+        totalRentalProfit = (totalRentalProfit == null ? BigDecimal.ZERO : totalRentalProfit);
+
+        return totalSalesProfit.add(totalRentalProfit);
     }
 }

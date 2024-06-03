@@ -3,13 +3,13 @@ package com.develhope.spring.Features.Controller;
 import com.develhope.spring.Features.DTOs.Noleggio.CreateNoleggioRequest;
 import com.develhope.spring.Features.DTOs.Noleggio.NoleggioDTO;
 import com.develhope.spring.Features.DTOs.Noleggio.UpdateNoleggioRequest;
-import com.develhope.spring.Features.DTOs.Venditore.VenditoreDTO;
 import com.develhope.spring.Features.Entity.Noleggio.Noleggio;
 import com.develhope.spring.Features.Entity.Noleggio.NoleggioLink;
 import com.develhope.spring.Features.Entity.User.Role;
 import com.develhope.spring.Features.Entity.User.User;
-import com.develhope.spring.Features.Models.NoleggioModel;
-import com.develhope.spring.Features.Service.*;
+import com.develhope.spring.Features.Service.NoleggioLinkService;
+import com.develhope.spring.Features.Service.NoleggioService;
+import com.develhope.spring.Features.Service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,14 +20,9 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/noleggio")
