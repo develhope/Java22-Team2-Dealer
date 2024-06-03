@@ -21,7 +21,7 @@ public class OrdineAcquisto {
     @Column(name = "ordine_acquisto_id", nullable = false)
     private Long ordineAcquistoId;
 
-    @Column(name = "data_ordine", nullable = false)
+    @Column(name = "data_ordine_acquisto", nullable = false)
     private OffsetDateTime dataOrdineAcquisto;
     @Column(name = "data_consegna", nullable = false)
     private OffsetDateTime dataConsegna;

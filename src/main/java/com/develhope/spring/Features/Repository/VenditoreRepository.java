@@ -6,8 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VenditoreRepository extends JpaRepository<Venditore, Long> {
-    Venditore findByEmail(String email);
-
-    Venditore findByEmailAndPassword(String email, String password);
 
 }

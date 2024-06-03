@@ -17,7 +17,8 @@ public class VenditoreModel {
     private String email;
     private String password;
 
-    public VenditoreModel(String nome, String cognome, String telefono, String email, String password) {
+    public VenditoreModel(Long venditoreId, String nome, String cognome, String telefono, String email, String password) {
+        this.venditoreId = venditoreId;
         this.nome = nome;
         this.cognome = cognome;
         this.telefono = telefono;
@@ -25,8 +26,7 @@ public class VenditoreModel {
         this.password = password;
     }
 
-    public VenditoreModel(Long venditoreId, String nome, String cognome, String telefono, String email, String password) {
-        this.venditoreId = venditoreId;
+    public VenditoreModel(String nome, String cognome, String telefono, String email, String password) {
         this.nome = nome;
         this.cognome = cognome;
         this.telefono = telefono;

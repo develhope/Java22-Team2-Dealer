@@ -6,7 +6,6 @@ import com.develhope.spring.Features.Entity.OrdineAcquisto.OrdineAcquistoLink;
 import com.develhope.spring.Features.Entity.OrdineAcquisto.StatoOrdineAcquisto;
 import com.develhope.spring.Features.Entity.User.Role;
 import com.develhope.spring.Features.Entity.User.User;
-import com.develhope.spring.Features.Service.AcquirenteService;
 import com.develhope.spring.Features.Service.OrdineAcquistoLinkService;
 import com.develhope.spring.Features.Service.OrdineAcquistoService;
 import com.develhope.spring.Features.Service.UserService;
@@ -38,7 +37,7 @@ public class OrdineController {
     private UserService userService;
 
     @Operation(summary = "Create a purchase",
-            description = "This endpoint allows an administrator or an acquirente to create a new order.")
+            description = "This endpoint allows an administrator or a seller or a buyer to create a new order.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OrdineAcquisto.class))}),
@@ -57,17 +56,17 @@ public class OrdineController {
                 ordineAcquistoLinkService.createOrdineAcquistoLink(ordineAcquistoLink);
                 return ResponseEntity.status(HttpStatus.CREATED).body(createdOrdineAcquisto);
             } catch (ResourceNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Risorsa non trovata: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found: " + e.getMessage());
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante la creazione dell'ordine: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating order: " + e.getMessage());
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
 
     @Operation(summary = "Delete a purchase",
-            description = "This endpoint allows an administrator to delete an existing order.")
+            description = "This endpoint allows an administrator or a seller or a buyer to delete an existing order.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Accepted", content = @Content),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
@@ -80,19 +79,19 @@ public class OrdineController {
             try {
                 ordineAcquistoLinkService.deleteOrdineAcquistoLink(acquirenteId, ordineAcquistoId);
                 ordineAcquistoService.deleteOrdineAcquisto(ordineAcquistoId);
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body("Ordine cancellato con successo: " + ordineAcquistoId);
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body("Order successfully cancelled: " + ordineAcquistoId);
             } catch (ResourceNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ordine non trovato per cancellazione: " + ordineAcquistoId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order not found due to cancellation: " + ordineAcquistoId);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante la cancellazione dell'ordine: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error canceling order: " + e.getMessage());
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
 
     @Operation(summary = "Update a purchase",
-            description = "This endpoint allows an administrator to update an existing order.")
+            description = "This endpoint allows an administrator or a seller to update an existing order.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Accepted", content = @Content(schema = @Schema(implementation = OrdineAcquisto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
@@ -106,21 +105,21 @@ public class OrdineController {
                 OrdineAcquisto updatedOrdineAcquisto = ordineAcquistoService.updateOrdineAcquisto(ordineAcquistoId, request);
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(updatedOrdineAcquisto);
             } catch (ResourceNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ordine non trovato per aggiornamento: " + ordineAcquistoId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order not found due to update: " + ordineAcquistoId);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante l'aggiornamento dell'ordine: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating order: " + e.getMessage());
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
 
     @Operation(summary = "Get purchases by buyer",
-            description = "This endpoint allows a buyer to get their purchases.")
+            description = "This endpoint allows a seller to get their purchases.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ok", content = @Content(schema = @Schema(implementation = OrdineAcquisto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "404", description = "No purchases found for the buyer"),
+            @ApiResponse(responseCode = "404", description = "Not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping("/getAll/acquirente/{acquirenteId}")
@@ -129,22 +128,22 @@ public class OrdineController {
             try {
                 List<OrdineAcquisto> ordiniAcquisto = ordineAcquistoLinkService.getOrdiniAcquistiByAcquirente(acquirenteId);
                 if (ordiniAcquisto.isEmpty()) {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nessun ordine trovato per l'acquirente: " + acquirenteId);
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No orders found for buyer: " + acquirenteId);
                 } else {
                     return ResponseEntity.ok(ordiniAcquisto);
                 }
             } catch (ResourceNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Acquirente non trovato: " + acquirenteId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Buyer not found: " + acquirenteId);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante il recupero degli ordini: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving orders: " + e.getMessage());
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
 
     @Operation(summary = "Get the status of an order",
-            description = "This endpoint allows to get the status of a specific order.")
+            description = "This endpoint allows a seller to get the status of a specific order.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ok", content = @Content(schema = @Schema(implementation = StatoOrdineAcquisto.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
@@ -158,17 +157,17 @@ public class OrdineController {
                 StatoOrdineAcquisto statoOrdineAcquisto = ordineAcquistoService.getStatoOrdineAcquisto(ordineAcquistoId);
                 return ResponseEntity.ok(statoOrdineAcquisto);
             } catch (ResourceNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ordine non trovato: " + ordineAcquistoId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order not found: " + ordineAcquistoId);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante il recupero dello stato dell'ordine: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving order status: " + e.getMessage());
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
 
     @Operation(summary = "Update the status of an order",
-            description = "This endpoint allows an administrator to update the status of an existing order.")
+            description = "This endpoint allows a seller to update the status of an existing order.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Accepted"),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
@@ -180,19 +179,19 @@ public class OrdineController {
         if (user.getRole() == Role.VENDITORE) {
             try {
                 ordineAcquistoService.updateStatoOrdineAcquisto(ordineAcquistoId, nuovoStato);
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body("Stato dell'ordine aggiornato con successo");
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body("Order status updated successfully");
             } catch (ResourceNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ordine non trovato per aggiornamento dello stato: " + ordineAcquistoId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order not found due to status update: " + ordineAcquistoId);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante l'aggiornamento dello stato dell'ordine: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating order status: " + e.getMessage());
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
 
     @Operation(summary = "Get orders by status",
-            description = "This endpoint allows to get orders filtered by status.")
+            description = "This endpoint allows a buyer to get orders filtered by status.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ok", content = @Content(schema = @Schema(implementation = List.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
@@ -205,11 +204,10 @@ public class OrdineController {
                 List<OrdineAcquisto> ordiniAcquisto = ordineAcquistoService.getOrdiniAcquistiByStato(stato);
                 return ResponseEntity.ok(ordiniAcquisto);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante il recupero degli ordini: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving orders: " + e.getMessage());
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
-
 }

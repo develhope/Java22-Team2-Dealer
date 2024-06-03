@@ -15,5 +15,4 @@ public class AuthorizationController {
     public ResponseEntity<String> showUserDetails(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok("Here is the user data: " + user);
     }
-
 }

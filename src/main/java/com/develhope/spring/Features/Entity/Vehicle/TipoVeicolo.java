@@ -1,6 +1,5 @@
 package com.develhope.spring.Features.Entity.Vehicle;
 
-
 public enum TipoVeicolo {
     AUTO,
     MOTO,

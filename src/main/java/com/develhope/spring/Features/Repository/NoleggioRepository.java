@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.List;
 
 @Repository
 public interface NoleggioRepository extends JpaRepository<Noleggio, Long> {

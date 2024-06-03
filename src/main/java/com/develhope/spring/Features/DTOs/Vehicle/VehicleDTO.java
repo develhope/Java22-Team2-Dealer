@@ -30,4 +30,3 @@ public class VehicleDTO {
     private TipoOrdineAcquisto tipoOrdineAcquisto;
 
 }
-

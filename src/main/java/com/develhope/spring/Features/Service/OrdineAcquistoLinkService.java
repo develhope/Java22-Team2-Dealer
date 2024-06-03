@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class OrdineAcquistoLinkService {
@@ -24,7 +21,7 @@ public class OrdineAcquistoLinkService {
 
     public void deleteOrdineAcquistoLink(Long acquirenteId, Long ordineAcquistoId) throws ResourceNotFoundException {
         OrdineAcquistoLink ordineAcquistoLink = ordineAcquistoLinkRepository.findByAcquirenteUserIdAndOrdineAcquistoOrdineAcquistoId(acquirenteId, ordineAcquistoId)
-                .orElseThrow(() -> new ResourceNotFoundException("Ordine non trovato con acquirente id: " + acquirenteId + " e ordine id: " + ordineAcquistoId));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with buyer id: " + acquirenteId + " and order id: " + ordineAcquistoId));
 
         ordineAcquistoLinkRepository.delete(ordineAcquistoLink);
     }
@@ -32,5 +29,4 @@ public class OrdineAcquistoLinkService {
     public List<OrdineAcquisto> getOrdiniAcquistiByAcquirente(Long acquirenteId) {
         return ordineAcquistoLinkRepository.findOrdiniAcquistiByAcquirenteId(acquirenteId);
     }
-
 }

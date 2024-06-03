@@ -44,7 +44,7 @@ public class NoleggioController {
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = NoleggioDTO.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid input or missing required fields"),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "404", description = "Vehicle not found"),
+            @ApiResponse(responseCode = "404", description = "Buyer not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping("/create/acquirente/{acquirenteId}")
@@ -54,7 +54,7 @@ public class NoleggioController {
                 Noleggio createdNoleggio = noleggioService.createNoleggio(acquirenteId, createNoleggioRequest, user);
                 User acquirente = userService.getUserById(acquirenteId);
                 if (acquirente == null) {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Acquirente non trovato con ID: " + acquirenteId);
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Buyer not found with ID: " + acquirenteId);
                 }
                 NoleggioLink noleggioLink = new NoleggioLink(createdNoleggio, acquirente, user);
                 noleggioLinkService.createNoleggioLink(noleggioLink);
@@ -62,15 +62,15 @@ public class NoleggioController {
             } catch (IllegalArgumentException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante la creazione del noleggio: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating rental: " + e.getMessage());
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
 
     @Operation(summary = "Delete a rental",
-            description = "This endpoint allows an administrator to delete an existing rental.")
+            description = "This endpoint allows an administrator or a seller or a buyer to delete an existing rental.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Accepted", content = @Content),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
@@ -83,19 +83,19 @@ public class NoleggioController {
             try {
                 noleggioLinkService.deleteNoleggioLink(acquirenteId, noleggioId);
                 noleggioService.deleteNoleggio(noleggioId);
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body("Noleggio cancellato con successo: " + noleggioId);
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body("Rental successfully cancelled: " + noleggioId);
             }  catch (ResourceNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Noleggio non trovato per cancellazione: " + noleggioId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rental not found due to cancellation: " + noleggioId);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante la cancellazione del noleggio: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error canceling rental: " + e.getMessage());
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
 
     @Operation(summary = "Update a rental",
-            description = "This endpoint allows an administrator to update an existing rental.")
+            description = "This endpoint allows an administrator or a seller to update an existing rental.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Accepted", content = @Content(schema = @Schema(implementation = Noleggio.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
@@ -109,12 +109,12 @@ public class NoleggioController {
                 Noleggio updatedNoleggio = noleggioService.updateNoleggio(noleggioId, updateNoleggioRequest);
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(updatedNoleggio);
             } catch (IllegalArgumentException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Noleggio non trovato: " + noleggioId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rental not found: " + noleggioId);
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante l'aggiornamento del noleggio: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating rental: " + e.getMessage());
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
 
@@ -132,16 +132,15 @@ public class NoleggioController {
             try {
                 List<Noleggio> noleggi = noleggioLinkService.findNoleggiByAcquirente(acquirenteId);
                 if (noleggi.isEmpty()) {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nessun noleggio trovato per l'acquirente: " + acquirenteId);
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No rentals found for buyer: " + acquirenteId);
                 } else {
                     return ResponseEntity.ok(noleggi);
                 }
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante il recupero dei noleggi: " + e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while retrieving rentals: " + e.getMessage());
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Accesso non autorizzato");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
-
 }
